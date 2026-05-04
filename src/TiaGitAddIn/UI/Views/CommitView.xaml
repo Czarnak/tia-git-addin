@@ -20,7 +20,6 @@
         <TextBox Text="{Binding CommitMessage, UpdateSourceTrigger=PropertyChanged}" 
                  AcceptsReturn="True" 
                  TextWrapping="Wrap" 
-                 SpellCheck.IsEnabled="True"
                  VerticalScrollBarVisibility="Auto"
                  Grid.Row="1" Margin="0,5"/>
 

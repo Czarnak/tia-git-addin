@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: Publish TIA Add-In
+    runs-on: [self-hosted, Windows]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore TiaGitAddIn.sln
+
+      - name: Build add-in package
+        run: dotnet build TiaGitAddIn.sln --configuration Release --no-restore
+
+      - name: Capture tag commit message
+        shell: pwsh
+        run: |
+          git log -1 --pretty=%B $env:GITHUB_SHA | Out-File -FilePath release-notes.md -Encoding utf8
+
+      - name: Verify add-in package
+        shell: pwsh
+        run: |
+          $packagePath = "src/TiaGitAddIn/bin/Release/net48/TiaGitAddIn.addin"
+          if (-not (Test-Path $packagePath)) {
+            throw "Expected package missing: $packagePath"
+          }
+
+      - name: Upload add-in artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TiaGitAddIn
+          path: src/TiaGitAddIn/bin/Release/net48/TiaGitAddIn.addin
+          if-no-files-found: error
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body_path: release-notes.md
+          files: src/TiaGitAddIn/bin/Release/net48/TiaGitAddIn.addin
