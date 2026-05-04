@@ -65,9 +65,11 @@ nunit-*.xml
 .idea/
 
 .claude/
+.codex/
+.gemini/
+
 priv/
-graphify-out/cache/
-graphify-out/manifest.json
-graphify-out/cost.json
-*.log
-.dotnet-home/
+
+AGENTS.md
+CLAUDE.md
+GEMINI.md

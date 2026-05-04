@@ -1,0 +1,76 @@
+using System.Linq;
+using TiaGitAddIn.Models;
+using TiaGitAddIn.Services;
+using Xunit;
+
+namespace TiaGitAddIn.Tests.Services
+{
+    public sealed class GitOutputParserTests
+    {
+        [Fact]
+        public void ParseStatusMapsPorcelainEntries()
+        {
+            GitStatus status = GitOutputParser.ParseStatus(
+                "## main...origin/main [ahead 1]\n" +
+                " M Blocks/Main.scl\n" +
+                "A  Tags/Plant.xml\n" +
+                "?? New/Device.xml\n" +
+                "UU Conflicts/Block.scl\n");
+
+            Assert.Equal("main", status.CurrentBranch);
+            Assert.Equal("origin/main", status.TrackingBranch);
+            Assert.Equal(1, status.AheadBy);
+            Assert.Equal(4, status.Entries.Count);
+            Assert.Contains(status.Entries, entry =>
+                entry.FilePath == "Blocks/Main.scl" &&
+                entry.IndexStatus == FileStatus.Unmodified &&
+                entry.WorkTreeStatus == FileStatus.Modified);
+            Assert.Contains(status.Entries, entry =>
+                entry.FilePath == "Tags/Plant.xml" &&
+                entry.IndexStatus == FileStatus.Added &&
+                entry.WorkTreeStatus == FileStatus.Unmodified);
+            Assert.Contains(status.Entries, entry =>
+                entry.FilePath == "New/Device.xml" &&
+                entry.IndexStatus == FileStatus.Untracked &&
+                entry.WorkTreeStatus == FileStatus.Untracked);
+            Assert.True(status.HasConflicts);
+        }
+
+        [Fact]
+        public void ParseCommitLogSkipsMalformedLines()
+        {
+            var commits = GitOutputParser.ParseCommitLog(
+                "abc123\u001fJane Engineer\u001f2026-05-01T12:00:00+00:00\u001fInitial export\u001fdef456\n" +
+                "malformed\n").ToList();
+
+            Assert.Single(commits);
+            Assert.Equal("abc123", commits[0].Hash);
+            Assert.Equal("Jane Engineer", commits[0].AuthorName);
+            Assert.Equal("Initial export", commits[0].Subject);
+            Assert.Equal("def456", commits[0].ParentHash);
+        }
+
+        [Fact]
+        public void ParseStatusReadsFreshRepositoryBranch()
+        {
+            GitStatus status = GitOutputParser.ParseStatus("## No commits yet on main\n");
+
+            Assert.Equal("main", status.CurrentBranch);
+            Assert.Null(status.TrackingBranch);
+        }
+
+        [Fact]
+        public void ParseRemotesPreservesUrlsWithSpaces()
+        {
+            var remotes = GitOutputParser.ParseRemotes(
+                "origin\tC:/repos/remote with space (fetch)\n" +
+                "origin\tC:/repos/remote with space (push)\n").ToList();
+
+            Assert.Equal(2, remotes.Count);
+            Assert.All(remotes, remote => Assert.Equal("origin", remote.Name));
+            Assert.All(remotes, remote => Assert.Equal("C:/repos/remote with space", remote.Url));
+            Assert.Equal("fetch", remotes[0].Purpose);
+            Assert.Equal("push", remotes[1].Purpose);
+        }
+    }
+}
