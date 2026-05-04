@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using TiaGitAddIn.UI.ViewModels;
 
 namespace TiaGitAddIn.UI.Views
@@ -16,16 +17,24 @@ namespace TiaGitAddIn.UI.Views
             this.viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
             DataContext = viewModel;
             Title = "TIA Git";
-            Width = 860;
-            Height = 620;
-            MinWidth = 720;
-            MinHeight = 480;
+            Width = 980;
+            Height = 660;
+            MinWidth = 760;
+            MinHeight = 500;
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            Content = BuildContent();
+            Content = BuildContent(viewModel);
             Loaded += OnLoaded;
         }
 
-        private static FrameworkElement BuildContent()
+        private static FrameworkElement BuildContent(MainViewModel vm)
+        {
+            Grid root = new Grid();
+            root.Children.Add(BuildShell(vm));
+            root.Children.Add(BuildBusyOverlay());
+            return root;
+        }
+
+        private static FrameworkElement BuildShell(MainViewModel vm)
         {
             DockPanel shell = new DockPanel
             {
@@ -33,7 +42,7 @@ namespace TiaGitAddIn.UI.Views
             };
 
             shell.Children.Add(BuildHeader());
-            shell.Children.Add(BuildTabs());
+            shell.Children.Add(BuildTabs(vm));
             return shell;
         }
 
@@ -71,7 +80,7 @@ namespace TiaGitAddIn.UI.Views
             return header;
         }
 
-        private static FrameworkElement BuildTabs()
+        private static FrameworkElement BuildTabs(MainViewModel vm)
         {
             return new TabControl
             {
@@ -80,129 +89,97 @@ namespace TiaGitAddIn.UI.Views
                     new TabItem
                     {
                         Header = "Status",
-                        Content = BuildStatusTab()
+                        Content = new StatusView { DataContext = vm.Status }
                     },
                     new TabItem
                     {
                         Header = "Commit",
-                        Content = BuildCommitTab()
+                        Content = new CommitView { DataContext = vm.Commit }
+                    },
+                    new TabItem
+                    {
+                        Header = "Branch",
+                        Content = new BranchView { DataContext = vm.Branch }
+                    },
+                    new TabItem
+                    {
+                        Header = "History",
+                        Content = new HistoryView { DataContext = vm.History }
+                    },
+                    new TabItem
+                    {
+                        Header = "Diff",
+                        Content = new DiffView { DataContext = vm.Diff }
+                    },
+                    new TabItem
+                    {
+                        Header = "Settings",
+                        Content = new SettingsView { DataContext = vm.Settings }
                     }
                 }
             };
         }
 
-        private static FrameworkElement BuildStatusTab()
+        private static FrameworkElement BuildBusyOverlay()
         {
-            DockPanel panel = new DockPanel
+            Grid overlay = new Grid
             {
-                Margin = new Thickness(8)
+                Background = new SolidColorBrush(Color.FromArgb(160, 20, 20, 20)),
+                IsHitTestVisible = true
             };
-
-            StackPanel toolbar = new StackPanel
+            overlay.SetBinding(UIElement.VisibilityProperty, new Binding("IsBusy")
             {
-                Orientation = Orientation.Horizontal,
-                Margin = new Thickness(0, 0, 0, 8)
-            };
-            DockPanel.SetDock(toolbar, Dock.Top);
-            toolbar.Children.Add(CreateButton("Refresh", "Status.RefreshCommand"));
-            toolbar.Children.Add(CreateButton("Stage", "Status.StageSelectedCommand"));
-            toolbar.Children.Add(CreateButton("Unstage", "Status.UnstageSelectedCommand"));
-
-            TextBlock summary = new TextBlock
-            {
-                Margin = new Thickness(0, 0, 0, 8)
-            };
-            summary.SetBinding(TextBlock.TextProperty, new Binding("Status.StatusSummary"));
-            DockPanel.SetDock(summary, Dock.Top);
-
-            TextBlock operation = new TextBlock
-            {
-                Margin = new Thickness(0, 8, 0, 0)
-            };
-            operation.SetBinding(TextBlock.TextProperty, new Binding("Status.LastOperationMessage"));
-            DockPanel.SetDock(operation, Dock.Bottom);
-
-            ListView list = new ListView();
-            list.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("Status.Entries"));
-            list.SetBinding(System.Windows.Controls.Primitives.Selector.SelectedItemProperty, new Binding("Status.SelectedEntry")
-            {
-                Mode = BindingMode.TwoWay
+                Converter = new BooleanToVisibilityConverter()
             });
-            list.View = new GridView
+
+            Border card = new Border
             {
-                Columns =
-                {
-                    new GridViewColumn { Header = "File", DisplayMemberBinding = new Binding("FilePath"), Width = 520 },
-                    new GridViewColumn { Header = "Area", DisplayMemberBinding = new Binding("Area"), Width = 120 },
-                    new GridViewColumn { Header = "Status", DisplayMemberBinding = new Binding("StatusText"), Width = 120 }
-                }
+                Background = new SolidColorBrush(Color.FromArgb(245, 30, 30, 30)),
+                CornerRadius = new CornerRadius(8),
+                Padding = new Thickness(40, 28, 40, 28),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                MinWidth = 280
             };
 
-            panel.Children.Add(toolbar);
-            panel.Children.Add(summary);
-            panel.Children.Add(operation);
-            panel.Children.Add(list);
-            return panel;
-        }
-
-        private static FrameworkElement BuildCommitTab()
-        {
-            DockPanel panel = new DockPanel
+            StackPanel panel = new StackPanel
             {
-                Margin = new Thickness(8)
+                HorizontalAlignment = HorizontalAlignment.Center
             };
 
-            TextBox message = new TextBox
+            ProgressBar progress = new ProgressBar
             {
-                AcceptsReturn = true,
-                MinHeight = 120,
-                TextWrapping = TextWrapping.Wrap,
-                VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+                IsIndeterminate = true,
+                Width = 220,
+                Height = 4,
+                Margin = new Thickness(0, 0, 0, 16)
             };
-            message.SetBinding(TextBox.TextProperty, new Binding("Commit.CommitMessage")
-            {
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
-            DockPanel.SetDock(message, Dock.Top);
 
-            Button commit = CreateButton("Commit", "Commit.CommitCommand");
-            commit.HorizontalAlignment = HorizontalAlignment.Left;
-            commit.Margin = new Thickness(0, 8, 0, 0);
-            DockPanel.SetDock(commit, Dock.Top);
-
-            TextBlock validation = new TextBlock
+            TextBlock message = new TextBlock
             {
-                Margin = new Thickness(0, 8, 0, 0)
+                Foreground = Brushes.White,
+                FontSize = 13,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 20),
+                TextAlignment = TextAlignment.Center
             };
-            validation.SetBinding(TextBlock.TextProperty, new Binding("Commit.ValidationMessage"));
-            DockPanel.SetDock(validation, Dock.Top);
+            message.SetBinding(TextBlock.TextProperty, new Binding("BusyMessage"));
 
-            TextBlock operation = new TextBlock
+            Button cancel = new Button
             {
-                Margin = new Thickness(0, 8, 0, 0)
+                Content = "Cancel",
+                MinWidth = 90,
+                Padding = new Thickness(20, 6, 20, 6),
+                HorizontalAlignment = HorizontalAlignment.Center
             };
-            operation.SetBinding(TextBlock.TextProperty, new Binding("Commit.LastOperationMessage"));
-            DockPanel.SetDock(operation, Dock.Top);
+            cancel.SetBinding(Button.CommandProperty, new Binding("CancelCommand"));
 
+            panel.Children.Add(progress);
             panel.Children.Add(message);
-            panel.Children.Add(commit);
-            panel.Children.Add(validation);
-            panel.Children.Add(operation);
-            return panel;
-        }
-
-        private static Button CreateButton(string text, string commandPath)
-        {
-            Button button = new Button
-            {
-                Content = text,
-                MinWidth = 88,
-                Margin = new Thickness(0, 0, 8, 0),
-                Padding = new Thickness(10, 4, 10, 4)
-            };
-            button.SetBinding(Button.CommandProperty, new Binding(commandPath));
-            return button;
+            panel.Children.Add(cancel);
+            card.Child = panel;
+            overlay.Children.Add(card);
+            return overlay;
         }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)

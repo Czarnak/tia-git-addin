@@ -86,7 +86,7 @@ namespace TiaGitAddIn.UI
                     configuration.RepositoryPath);
 
                 return GitPanelLaunchResult.Ok(() =>
-                    new MainViewModel(configuration.RepositoryPath, gitService, WpfUiDispatcher.FromCurrentThread()));
+                    new MainViewModel(configuration.RepositoryPath, gitService, configurationService, WpfUiDispatcher.FromCurrentThread()));
             }
             catch (Exception ex)
             {

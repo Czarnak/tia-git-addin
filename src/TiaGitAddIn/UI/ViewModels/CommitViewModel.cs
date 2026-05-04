@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using TiaGitAddIn.Models;
@@ -14,7 +15,9 @@ namespace TiaGitAddIn.UI.ViewModels
         private string commitMessage = string.Empty;
         private string validationMessage = string.Empty;
         private string lastOperationMessage = string.Empty;
+        private string busyMessage = string.Empty;
         private bool isBusy;
+        private CancellationTokenSource? cts;
 
         public CommitViewModel(
             IGitService gitService,
@@ -25,6 +28,7 @@ namespace TiaGitAddIn.UI.ViewModels
             this.gitService = gitService ?? throw new ArgumentNullException(nameof(gitService));
             this.refreshStatusAsync = refreshStatusAsync ?? throw new ArgumentNullException(nameof(refreshStatusAsync));
             CommitCommand = new AsyncCommand(CommitAsync, () => CanCommit);
+            CancelCommand = new RelayCommand(_ => cts?.Cancel(), _ => IsBusy);
         }
 
         public string CommitMessage
@@ -53,6 +57,12 @@ namespace TiaGitAddIn.UI.ViewModels
             private set => SetProperty(lastOperationMessage, value, updated => lastOperationMessage = updated);
         }
 
+        public string BusyMessage
+        {
+            get => busyMessage;
+            private set => SetProperty(busyMessage, value ?? string.Empty, updated => busyMessage = updated);
+        }
+
         public bool IsBusy
         {
             get => isBusy;
@@ -62,6 +72,7 @@ namespace TiaGitAddIn.UI.ViewModels
                 {
                     OnPropertyChanged(nameof(CanCommit));
                     ((AsyncCommand)CommitCommand).RaiseCanExecuteChanged();
+                    ((RelayCommand)CancelCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -69,6 +80,7 @@ namespace TiaGitAddIn.UI.ViewModels
         public bool CanCommit => !IsBusy && !string.IsNullOrWhiteSpace(CommitMessage);
 
         public ICommand CommitCommand { get; }
+        public ICommand CancelCommand { get; }
 
         public async Task CommitAsync()
         {
@@ -81,10 +93,14 @@ namespace TiaGitAddIn.UI.ViewModels
                 return;
             }
 
+            cts?.Cancel();
+            cts = new CancellationTokenSource();
+            var ct = cts.Token;
             IsBusy = true;
+            BusyMessage = "Committing…";
             try
             {
-                OperationResult result = await gitService.CommitAsync(message).ConfigureAwait(true);
+                OperationResult result = await gitService.CommitAsync(message, ct).ConfigureAwait(true);
                 LastOperationMessage = BuildOperationMessage(result);
                 if (result.Success)
                 {
@@ -92,9 +108,18 @@ namespace TiaGitAddIn.UI.ViewModels
                     await refreshStatusAsync().ConfigureAwait(true);
                 }
             }
+            catch (OperationCanceledException)
+            {
+                LastOperationMessage = "Cancelled.";
+            }
+            catch (Exception ex)
+            {
+                LastOperationMessage = $"Error: {ex.Message}";
+            }
             finally
             {
                 IsBusy = false;
+                BusyMessage = string.Empty;
             }
         }
 
