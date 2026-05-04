@@ -38,34 +38,52 @@ namespace TiaGitAddIn.Services
             return GitOutputParser.ParseStatus(result.StandardOutput);
         }
 
-        public async Task<OperationResult> StageAsync(string filePath, CancellationToken ct = default)
+        public async Task<OperationResult> StageAsync(IReadOnlyList<string> filePaths, CancellationToken ct = default)
         {
-            ValidationResult validation = PathValidator.Validate(filePath);
-            if (!validation.IsValid)
+            if (filePaths == null || filePaths.Count == 0)
             {
-                return OperationResult.Fail(validation.ErrorMessage);
+                return OperationResult.Ok("No files to stage.");
             }
 
-            GitProcessResult result = await RunExclusiveAsync(
-                new[] { "add", "--", filePath },
-                ct).ConfigureAwait(false);
+            foreach (string path in filePaths)
+            {
+                ValidationResult validation = PathValidator.Validate(path);
+                if (!validation.IsValid)
+                {
+                    return OperationResult.Fail(validation.ErrorMessage);
+                }
+            }
 
-            return ToOperationResult(result, "File staged.", "Unable to stage file.");
+            List<string> args = new List<string> { "add", "--" };
+            args.AddRange(filePaths);
+
+            GitProcessResult result = await RunExclusiveAsync(args, ct).ConfigureAwait(false);
+
+            return ToOperationResult(result, "Files staged.", "Unable to stage files.");
         }
 
-        public async Task<OperationResult> UnstageAsync(string filePath, CancellationToken ct = default)
+        public async Task<OperationResult> UnstageAsync(IReadOnlyList<string> filePaths, CancellationToken ct = default)
         {
-            ValidationResult validation = PathValidator.Validate(filePath);
-            if (!validation.IsValid)
+            if (filePaths == null || filePaths.Count == 0)
             {
-                return OperationResult.Fail(validation.ErrorMessage);
+                return OperationResult.Ok("No files to unstage.");
             }
 
-            GitProcessResult result = await RunExclusiveAsync(
-                new[] { "reset", "HEAD", "--", filePath },
-                ct).ConfigureAwait(false);
+            foreach (string path in filePaths)
+            {
+                ValidationResult validation = PathValidator.Validate(path);
+                if (!validation.IsValid)
+                {
+                    return OperationResult.Fail(validation.ErrorMessage);
+                }
+            }
 
-            return ToOperationResult(result, "File unstaged.", "Unable to unstage file.");
+            List<string> args = new List<string> { "restore", "--staged", "--" };
+            args.AddRange(filePaths);
+
+            GitProcessResult result = await RunExclusiveAsync(args, ct).ConfigureAwait(false);
+
+            return ToOperationResult(result, "Files unstaged.", "Unable to unstage files.");
         }
 
         public async Task<OperationResult> CommitAsync(string message, CancellationToken ct = default)

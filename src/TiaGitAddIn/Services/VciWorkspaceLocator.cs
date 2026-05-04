@@ -13,7 +13,21 @@ namespace TiaGitAddIn.Services
                 return null;
             }
 
-            foreach (string propertyName in new[] { "WorkspacePath", "Path", "Directory", "Location" })
+            string? directPath = ResolvePath(projectContext);
+            if (!string.IsNullOrWhiteSpace(directPath))
+            {
+                return directPath;
+            }
+
+            foreach (string propertyName in new[]
+            {
+                "WorkspacePath",
+                "DirectoryInfo",
+                "FileInfo",
+                "Path",
+                "Directory",
+                "Location"
+            })
             {
                 object? value = TryReadProperty(projectContext, propertyName);
                 string? path = ResolvePath(value);

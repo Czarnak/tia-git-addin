@@ -9,9 +9,9 @@ namespace TiaGitAddIn.Services
     {
         Task<GitStatus> GetStatusAsync(CancellationToken ct = default);
 
-        Task<OperationResult> StageAsync(string filePath, CancellationToken ct = default);
+        Task<OperationResult> StageAsync(IReadOnlyList<string> filePaths, CancellationToken ct = default);
 
-        Task<OperationResult> UnstageAsync(string filePath, CancellationToken ct = default);
+        Task<OperationResult> UnstageAsync(IReadOnlyList<string> filePaths, CancellationToken ct = default);
 
         Task<OperationResult> CommitAsync(string message, CancellationToken ct = default);
 

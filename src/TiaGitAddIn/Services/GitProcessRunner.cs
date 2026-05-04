@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TiaGitAddIn.Configuration;
+using AddInProcess = Siemens.Engineering.AddIn.Utilities.Process;
+using AddInProcessStartInfo = Siemens.Engineering.AddIn.Utilities.ProcessStartInfo;
 
 namespace TiaGitAddIn.Services
 {
@@ -51,9 +52,9 @@ namespace TiaGitAddIn.Services
             IReadOnlyList<string> arguments,
             CancellationToken cancellationToken)
         {
-            using (Process process = new Process())
+            using (AddInProcess process = new AddInProcess())
             {
-                process.StartInfo = new ProcessStartInfo
+                process.StartInfo = new AddInProcessStartInfo
                 {
                     FileName = gitExecutablePath,
                     Arguments = BuildArgumentString(arguments),
@@ -112,7 +113,7 @@ namespace TiaGitAddIn.Services
             return builder.ToString();
         }
 
-        private static void TryKill(Process process)
+        private static void TryKill(AddInProcess process)
         {
             try
             {

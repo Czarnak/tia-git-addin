@@ -27,6 +27,9 @@
       <System.Security.Permissions.UIPermission>
         <Comment>Required for WPF dialogs hosted by the add-in.</Comment>
       </System.Security.Permissions.UIPermission>
+      <System.Security.Permissions.SecurityPermission.UnmanagedCode>
+        <Comment>Required because WPF Window construction demands unmanaged-code security permission in the TIA Add-In sandbox.</Comment>
+      </System.Security.Permissions.SecurityPermission.UnmanagedCode>
       <Siemens.Engineering.AddIn.Permissions.ProcessStartPermission>
         <Comment>Required to start local git.exe for Git operations.</Comment>
       </Siemens.Engineering.AddIn.Permissions.ProcessStartPermission>

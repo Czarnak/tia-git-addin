@@ -46,6 +46,48 @@ namespace TiaGitAddIn.Tests.Services
             }
         }
 
+        [Fact]
+        public void TryGetWorkspacePathAcceptsVciWorkspaceFolderDirectoryInfoProperty()
+        {
+            string root = Directory.CreateDirectory(
+                Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
+            try
+            {
+                VciWorkspaceLocator locator = new VciWorkspaceLocator();
+
+                string? path = locator.TryGetWorkspacePath(
+                    new WorkspaceFolderLikeContext(new DirectoryInfo(root)));
+
+                Assert.Equal(root, path);
+            }
+            finally
+            {
+                Directory.Delete(root, recursive: true);
+            }
+        }
+
+        [Fact]
+        public void TryGetWorkspacePathAcceptsVciWorkspaceFileFileInfoProperty()
+        {
+            string root = Directory.CreateDirectory(
+                Path.Combine(Path.GetTempPath(), Path.GetRandomFileName())).FullName;
+            string filePath = Path.Combine(root, "Block.xml");
+            File.WriteAllText(filePath, "<Block />");
+            try
+            {
+                VciWorkspaceLocator locator = new VciWorkspaceLocator();
+
+                string? path = locator.TryGetWorkspacePath(
+                    new WorkspaceFileLikeContext(new FileInfo(filePath)));
+
+                Assert.Equal(root, path);
+            }
+            finally
+            {
+                Directory.Delete(root, recursive: true);
+            }
+        }
+
         private sealed class ProjectWithPath
         {
             public ProjectWithPath(string path)
@@ -54,6 +96,26 @@ namespace TiaGitAddIn.Tests.Services
             }
 
             public string Path { get; }
+        }
+
+        private sealed class WorkspaceFolderLikeContext
+        {
+            public WorkspaceFolderLikeContext(DirectoryInfo directoryInfo)
+            {
+                DirectoryInfo = directoryInfo;
+            }
+
+            public DirectoryInfo DirectoryInfo { get; }
+        }
+
+        private sealed class WorkspaceFileLikeContext
+        {
+            public WorkspaceFileLikeContext(FileInfo fileInfo)
+            {
+                FileInfo = fileInfo;
+            }
+
+            public FileInfo FileInfo { get; }
         }
     }
 }
