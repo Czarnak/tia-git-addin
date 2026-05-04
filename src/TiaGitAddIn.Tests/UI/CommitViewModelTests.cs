@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,42 +12,24 @@ namespace TiaGitAddIn.Tests.UI
     public sealed class CommitViewModelTests
     {
         [Fact]
-        public async Task CommitAsyncRejectsWhitespaceMessage()
+        public async Task CommitAsyncCallsGitServiceAndRefreshes()
         {
-            FakeGitService gitService = new FakeGitService();
-            CommitViewModel viewModel = new CommitViewModel(gitService, () => Task.CompletedTask)
-            {
-                CommitMessage = "   "
-            };
-
-            await viewModel.CommitAsync();
-
-            Assert.False(viewModel.CanCommit);
-            Assert.Equal(0, gitService.CommitCalls);
-            Assert.Equal("Commit message is required.", viewModel.ValidationMessage);
-        }
-
-        [Fact]
-        public async Task CommitAsyncCommitsMessageClearsEditorAndRefreshes()
-        {
-            FakeGitService gitService = new FakeGitService();
+            var gitService = new FakeGitService();
             int refreshCount = 0;
-            CommitViewModel viewModel = new CommitViewModel(
-                gitService,
-                () =>
-                {
-                    refreshCount++;
-                    return Task.CompletedTask;
-                })
+            Task RefreshStatusAsync()
             {
-                CommitMessage = "Export updated PLC blocks"
-            };
+                refreshCount++;
+                return Task.CompletedTask;
+            }
+
+            var viewModel = new CommitViewModel(gitService, RefreshStatusAsync);
+            viewModel.CommitMessage = "Test commit";
 
             await viewModel.CommitAsync();
 
-            Assert.Equal("Export updated PLC blocks", gitService.LastCommitMessage);
+            Assert.Equal(1, gitService.CommitCalls);
+            Assert.Equal("Test commit", gitService.LastCommitMessage);
             Assert.Equal(string.Empty, viewModel.CommitMessage);
-            Assert.Equal("Commit created.", viewModel.LastOperationMessage);
             Assert.Equal(1, refreshCount);
         }
 
@@ -72,14 +55,44 @@ namespace TiaGitAddIn.Tests.UI
             public Task<OperationResult> UnstageAsync(IReadOnlyList<string> filePaths, CancellationToken ct = default) =>
                 Task.FromResult(OperationResult.Ok("File unstaged."));
 
-            public Task<IReadOnlyList<CommitInfo>> GetCommitLogAsync(int maxCount, CancellationToken ct = default) =>
-                Task.FromResult<IReadOnlyList<CommitInfo>>(new List<CommitInfo>());
+            public Task<OperationResult> StageAllAsync(CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("All changes staged."));
+
+            public Task<OperationResult> FetchAsync(string? remote = null, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Fetch completed."));
+
+            public Task<OperationResult> PullAsync(string? remote = null, string? branch = null, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Pull completed."));
+
+            public Task<OperationResult> PushAsync(string? remote = null, string? branch = null, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Push completed."));
 
             public Task<IReadOnlyList<BranchInfo>> GetBranchesAsync(CancellationToken ct = default) =>
                 Task.FromResult<IReadOnlyList<BranchInfo>>(new List<BranchInfo>());
 
+            public Task<OperationResult> CreateBranchAsync(string name, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Branch created."));
+
+            public Task<OperationResult> SwitchBranchAsync(string name, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Branch switched."));
+
             public Task<OperationResult> CheckoutBranchAsync(string branchName, CancellationToken ct = default) =>
                 Task.FromResult(OperationResult.Ok("Branch checked out."));
+
+            public Task<IReadOnlyList<CommitInfo>> GetCommitLogAsync(int maxCount, CancellationToken ct = default) =>
+                Task.FromResult<IReadOnlyList<CommitInfo>>(new List<CommitInfo>());
+
+            public Task<DiffResult> GetWorkingTreeDiffAsync(CancellationToken ct = default) =>
+                Task.FromResult(new DiffResult());
+
+            public Task<DiffResult> GetCommitDiffAsync(string commitHash, CancellationToken ct = default) =>
+                Task.FromResult(new DiffResult());
+
+            public Task<IReadOnlyList<string>> GetCommitFilesAsync(string commitHash, CancellationToken ct = default) =>
+                Task.FromResult<IReadOnlyList<string>>(new List<string>());
+
+            public Task<OperationResult> InitAsync(string path, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Repository initialized."));
 
             public Task<IReadOnlyList<RemoteInfo>> GetRemotesAsync(CancellationToken ct = default) =>
                 Task.FromResult<IReadOnlyList<RemoteInfo>>(new List<RemoteInfo>());

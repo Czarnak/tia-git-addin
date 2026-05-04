@@ -19,6 +19,7 @@
     <None Update="AddInPublisherConfiguration.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="Siemens.Engineering.Base">
       <HintPath>$(TiaPortalPublicApiNet48)\Siemens.Engineering.Base.dll</HintPath>

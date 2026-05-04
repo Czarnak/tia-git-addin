@@ -6,11 +6,16 @@ namespace TiaGitAddIn.UI
 {
     public sealed class AsyncCommand : ICommand
     {
-        private readonly Func<Task> executeAsync;
-        private readonly Func<bool>? canExecute;
+        private readonly Func<object?, Task> executeAsync;
+        private readonly Func<object?, bool>? canExecute;
         private bool isExecuting;
 
-        public AsyncCommand(Func<Task> executeAsync, Func<bool>? canExecute = null)
+        public AsyncCommand(Func<Task> execute, Func<bool>? canExecute = null)
+            : this(_ => execute(), _ => canExecute?.Invoke() ?? true)
+        {
+        }
+
+        public AsyncCommand(Func<object?, Task> executeAsync, Func<object?, bool>? canExecute = null)
         {
             this.executeAsync = executeAsync ?? throw new ArgumentNullException(nameof(executeAsync));
             this.canExecute = canExecute;
@@ -19,7 +24,7 @@ namespace TiaGitAddIn.UI
         public event EventHandler? CanExecuteChanged;
 
         public bool CanExecute(object? parameter) =>
-            !isExecuting && (canExecute == null || canExecute());
+            !isExecuting && (canExecute == null || canExecute(parameter));
 
         public async void Execute(object? parameter)
         {
@@ -32,7 +37,7 @@ namespace TiaGitAddIn.UI
             RaiseCanExecuteChanged();
             try
             {
-                await executeAsync().ConfigureAwait(true);
+                await executeAsync(parameter).ConfigureAwait(true);
             }
             finally
             {

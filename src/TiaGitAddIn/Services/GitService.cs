@@ -86,6 +86,15 @@ namespace TiaGitAddIn.Services
             return ToOperationResult(result, "Files unstaged.", "Unable to unstage files.");
         }
 
+        public async Task<OperationResult> StageAllAsync(CancellationToken ct = default)
+        {
+            GitProcessResult result = await RunExclusiveAsync(
+                new[] { "add", "-A" },
+                ct).ConfigureAwait(false);
+
+            return ToOperationResult(result, "All changes staged.", "Unable to stage all files.");
+        }
+
         public async Task<OperationResult> CommitAsync(string message, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(message))
@@ -98,6 +107,93 @@ namespace TiaGitAddIn.Services
                 ct).ConfigureAwait(false);
 
             return ToOperationResult(result, "Commit created.", "Unable to create commit.");
+        }
+
+        public async Task<OperationResult> FetchAsync(string? remote = null, CancellationToken ct = default)
+        {
+            GitProcessResult result = await RunExclusiveAsync(
+                new[] { "fetch", remote ?? "origin" },
+                ct).ConfigureAwait(false);
+
+            return ToOperationResult(result, "Fetch completed.", "Unable to fetch from remote.");
+        }
+
+        public async Task<OperationResult> PullAsync(string? remote = null, string? branch = null, CancellationToken ct = default)
+        {
+            List<string> args = new List<string> { "pull", remote ?? "origin" };
+            if (!string.IsNullOrWhiteSpace(branch))
+            {
+                args.Add(branch!);
+            }
+
+            GitProcessResult result = await RunExclusiveAsync(args, ct).ConfigureAwait(false);
+
+            return ToOperationResult(result, "Pull completed.", "Unable to pull from remote.");
+        }
+
+        public async Task<OperationResult> PushAsync(string? remote = null, string? branch = null, CancellationToken ct = default)
+        {
+            List<string> args = new List<string> { "push", remote ?? "origin" };
+            if (!string.IsNullOrWhiteSpace(branch))
+            {
+                args.Add(branch!);
+            }
+
+            GitProcessResult result = await RunExclusiveAsync(args, ct).ConfigureAwait(false);
+
+            return ToOperationResult(result, "Push completed.", "Unable to push to remote.");
+        }
+
+        public async Task<IReadOnlyList<BranchInfo>> GetBranchesAsync(CancellationToken ct = default)
+        {
+            GitProcessResult result = await RunAsync(
+                new[] { "branch", "-a", "--format=%(HEAD)%x1f%(refname:short)%x1f%(upstream:short)%x1f%(upstream:track)" },
+                ct).ConfigureAwait(false);
+
+            EnsureSuccess(result, "Unable to read branches.");
+            return GitOutputParser.ParseBranches(result.StandardOutput).ToList();
+        }
+
+        public async Task<OperationResult> CreateBranchAsync(string name, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return OperationResult.Fail("Branch name is required.");
+            }
+
+            GitProcessResult result = await RunExclusiveAsync(
+                new[] { "branch", name },
+                ct).ConfigureAwait(false);
+
+            return ToOperationResult(result, "Branch created.", "Unable to create branch.");
+        }
+
+        public async Task<OperationResult> SwitchBranchAsync(string name, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return OperationResult.Fail("Branch name is required.");
+            }
+
+            GitProcessResult result = await RunExclusiveAsync(
+                new[] { "switch", name },
+                ct).ConfigureAwait(false);
+
+            return ToOperationResult(result, "Branch switched.", "Unable to switch branch.");
+        }
+
+        public async Task<OperationResult> CheckoutBranchAsync(string branchName, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(branchName))
+            {
+                return OperationResult.Fail("Branch name is required.");
+            }
+
+            GitProcessResult result = await RunExclusiveAsync(
+                new[] { "checkout", branchName },
+                ct).ConfigureAwait(false);
+
+            return ToOperationResult(result, "Branch checked out.", "Unable to check out branch.");
         }
 
         public async Task<IReadOnlyList<CommitInfo>> GetCommitLogAsync(
@@ -117,28 +213,43 @@ namespace TiaGitAddIn.Services
             return GitOutputParser.ParseCommitLog(result.StandardOutput).ToList();
         }
 
-        public async Task<IReadOnlyList<BranchInfo>> GetBranchesAsync(CancellationToken ct = default)
+        public async Task<DiffResult> GetWorkingTreeDiffAsync(CancellationToken ct = default)
         {
             GitProcessResult result = await RunAsync(
-                new[] { "branch", "--format=%(HEAD)%x1f%(refname:short)%x1f%(upstream:short)" },
+                new[] { "diff", "HEAD" },
                 ct).ConfigureAwait(false);
 
-            EnsureSuccess(result, "Unable to read branches.");
-            return GitOutputParser.ParseBranches(result.StandardOutput).ToList();
+            EnsureSuccess(result, "Unable to read working tree diff.");
+            return GitOutputParser.ParseDiff(result.StandardOutput);
         }
 
-        public async Task<OperationResult> CheckoutBranchAsync(string branchName, CancellationToken ct = default)
+        public async Task<DiffResult> GetCommitDiffAsync(string commitHash, CancellationToken ct = default)
         {
-            if (string.IsNullOrWhiteSpace(branchName))
-            {
-                return OperationResult.Fail("Branch name is required.");
-            }
-
-            GitProcessResult result = await RunExclusiveAsync(
-                new[] { "checkout", branchName },
+            GitProcessResult result = await RunAsync(
+                new[] { "diff", $"{commitHash}^..{commitHash}" },
                 ct).ConfigureAwait(false);
 
-            return ToOperationResult(result, "Branch checked out.", "Unable to check out branch.");
+            EnsureSuccess(result, "Unable to read commit diff.");
+            return GitOutputParser.ParseDiff(result.StandardOutput);
+        }
+
+        public async Task<IReadOnlyList<string>> GetCommitFilesAsync(string commitHash, CancellationToken ct = default)
+        {
+            GitProcessResult result = await RunAsync(
+                new[] { "diff-tree", "--no-commit-id", "--name-status", "-r", commitHash },
+                ct).ConfigureAwait(false);
+
+            EnsureSuccess(result, "Unable to read commit files.");
+            return GitOutputParser.ParseDiffTree(result.StandardOutput);
+        }
+
+        public async Task<OperationResult> InitAsync(string path, CancellationToken ct = default)
+        {
+            GitProcessResult result = await RunExclusiveAsync(
+                new[] { "init" },
+                ct).ConfigureAwait(false);
+
+            return ToOperationResult(result, "Repository initialized.", "Unable to initialize repository.");
         }
 
         public async Task<IReadOnlyList<RemoteInfo>> GetRemotesAsync(CancellationToken ct = default)

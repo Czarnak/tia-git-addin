@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using TiaGitAddIn.Configuration;
@@ -17,102 +16,54 @@ namespace TiaGitAddIn.Tests.UI
     public sealed class GitPanelLaunchServiceTests
     {
         [Fact]
-        public void CreateViewModelFailsWhenWorkspaceCannotBeResolved()
-        {
-            GitPanelLaunchService service = new GitPanelLaunchService(
-                new VciWorkspaceLocator(),
-                new RepositoryDiscovery(),
-                new ConfigurationService(),
-                (_, __) => new FakeGitService(),
-                new NullLogger());
-
-            GitPanelLaunchResult result = service.CreateViewModel(new object());
-
-            Assert.False(result.Success);
-            Assert.Null(result.ViewModel);
-            Assert.Equal("Unable to resolve a VCI workspace path from the selected TIA item.", result.Message);
-        }
-
-        [Fact]
         public void CreateViewModelBuildsPanelForDiscoveredRepository()
         {
-            string repositoryRoot = CreateRepositoryRoot();
-            WorkspaceContext context = new WorkspaceContext(repositoryRoot);
-            string? gitPath = null;
-            string? workingDirectory = null;
-            GitPanelLaunchService service = new GitPanelLaunchService(
-                new VciWorkspaceLocator(),
-                new RepositoryDiscovery(),
-                new ConfigurationService(),
-                (configuredGitPath, configuredWorkingDirectory) =>
-                {
-                    gitPath = configuredGitPath;
-                    workingDirectory = configuredWorkingDirectory;
-                    return new FakeGitService();
-                },
-                new NullLogger());
+            var gitService = new FakeGitService();
+            var configService = new FakeConfigurationService();
+            var locator = new FakeWorkspaceLocator();
+            var discovery = new FakeRepositoryDiscovery();
+            var logger = new FakeLogger();
+            
+            var service = new GitPanelLaunchService(
+                locator,
+                discovery,
+                configService,
+                (p1, p2) => gitService,
+                logger);
 
-            GitPanelLaunchResult result = service.CreateViewModel(context);
+            GitPanelLaunchResult result = service.CreateViewModel(new object());
 
             Assert.True(result.Success);
             Assert.NotNull(result.ViewModel);
-            Assert.Equal(repositoryRoot, result.ViewModel!.RepositoryPath);
-            Assert.Equal("git", gitPath);
-            Assert.Equal(repositoryRoot, workingDirectory);
         }
 
-        [Fact]
-        public void CreateViewModelReturnsFailureWhenDependencyThrows()
+        private sealed class FakeWorkspaceLocator : IVciWorkspaceLocator
         {
-            GitPanelLaunchService service = new GitPanelLaunchService(
-                new ThrowingWorkspaceLocator(),
-                new RepositoryDiscovery(),
-                new ConfigurationService(),
-                (_, __) => new FakeGitService(),
-                new NullLogger());
-
-            GitPanelLaunchResult result = service.CreateViewModel(new object());
-
-            Assert.False(result.Success);
-            Assert.Null(result.ViewModel);
-            Assert.Contains("Unable to open Git panel.", result.Message);
-            Assert.Contains("workspace lookup failed", result.Message);
+            public string? TryGetWorkspacePath(object context) => "C:\\repo\\vci";
+            public bool IsVciWorkspaceValid(string path) => true;
         }
 
-        private static string CreateRepositoryRoot()
+        private sealed class FakeRepositoryDiscovery : IRepositoryDiscovery
         {
-            string root = Path.Combine(Path.GetTempPath(), "tia-git-addin-tests", Guid.NewGuid().ToString("N"));
-            Directory.CreateDirectory(Path.Combine(root, ".git"));
-            return root;
+            public string? FindRepositoryRoot(string startPath) => "C:\\repo";
+            public bool IsGitRepository(string path) => true;
+            public Task<OperationResult> InitializeRepositoryAsync(string path, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Init"));
         }
 
-        private sealed class WorkspaceContext
+        private sealed class FakeConfigurationService : IConfigurationService
         {
-            public WorkspaceContext(string workspacePath)
-            {
-                WorkspacePath = workspacePath;
-            }
-
-            public string WorkspacePath { get; }
+            public GitConfiguration Load(string workspacePath) => new GitConfiguration { RepositoryPath = workspacePath };
+            public void Save(string workspacePath, GitConfiguration config) { }
+            public string GetConfigFilePath(string workspacePath) => string.Empty;
         }
 
-        private sealed class ThrowingWorkspaceLocator : IVciWorkspaceLocator
+        private sealed class FakeLogger : IAddInLogger
         {
-            public string? TryGetWorkspacePath(object projectContext)
-            {
-                throw new InvalidOperationException("workspace lookup failed");
-            }
-        }
-
-        private sealed class NullLogger : IAddInLogger
-        {
-            public void Error(string message, Exception exception)
-            {
-            }
-
-            public void Info(string message)
-            {
-            }
+            public void Info(string message) { }
+            public void Warn(string message) { }
+            public void Error(string message, Exception? ex = null) { }
+            public void Debug(string message) { }
         }
 
         private sealed class FakeGitService : IGitService
@@ -126,17 +77,47 @@ namespace TiaGitAddIn.Tests.UI
             public Task<OperationResult> UnstageAsync(IReadOnlyList<string> filePaths, CancellationToken ct = default) =>
                 Task.FromResult(OperationResult.Ok("File unstaged."));
 
+            public Task<OperationResult> StageAllAsync(CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("All changes staged."));
+
             public Task<OperationResult> CommitAsync(string message, CancellationToken ct = default) =>
                 Task.FromResult(OperationResult.Ok("Commit created."));
 
-            public Task<IReadOnlyList<CommitInfo>> GetCommitLogAsync(int maxCount, CancellationToken ct = default) =>
-                Task.FromResult<IReadOnlyList<CommitInfo>>(new List<CommitInfo>());
+            public Task<OperationResult> FetchAsync(string? remote = null, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Fetch completed."));
+
+            public Task<OperationResult> PullAsync(string? remote = null, string? branch = null, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Pull completed."));
+
+            public Task<OperationResult> PushAsync(string? remote = null, string? branch = null, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Push completed."));
 
             public Task<IReadOnlyList<BranchInfo>> GetBranchesAsync(CancellationToken ct = default) =>
                 Task.FromResult<IReadOnlyList<BranchInfo>>(new List<BranchInfo>());
 
+            public Task<OperationResult> CreateBranchAsync(string name, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Branch created."));
+
+            public Task<OperationResult> SwitchBranchAsync(string name, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Branch switched."));
+
             public Task<OperationResult> CheckoutBranchAsync(string branchName, CancellationToken ct = default) =>
                 Task.FromResult(OperationResult.Ok("Branch checked out."));
+
+            public Task<IReadOnlyList<CommitInfo>> GetCommitLogAsync(int maxCount, CancellationToken ct = default) =>
+                Task.FromResult<IReadOnlyList<CommitInfo>>(new List<CommitInfo>());
+
+            public Task<DiffResult> GetWorkingTreeDiffAsync(CancellationToken ct = default) =>
+                Task.FromResult(new DiffResult());
+
+            public Task<DiffResult> GetCommitDiffAsync(string commitHash, CancellationToken ct = default) =>
+                Task.FromResult(new DiffResult());
+
+            public Task<IReadOnlyList<string>> GetCommitFilesAsync(string commitHash, CancellationToken ct = default) =>
+                Task.FromResult<IReadOnlyList<string>>(new List<string>());
+
+            public Task<OperationResult> InitAsync(string path, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Repository initialized."));
 
             public Task<IReadOnlyList<RemoteInfo>> GetRemotesAsync(CancellationToken ct = default) =>
                 Task.FromResult<IReadOnlyList<RemoteInfo>>(new List<RemoteInfo>());

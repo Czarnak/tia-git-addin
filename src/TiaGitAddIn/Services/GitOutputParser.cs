@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TiaGitAddIn.Models;
 
 namespace TiaGitAddIn.Services
@@ -68,11 +69,27 @@ namespace TiaGitAddIn.Services
                     continue;
                 }
 
+                string name = fields[1];
+                string? tracking = fields.Length > 2 && fields[2].Length > 0 ? fields[2] : null;
+                int ahead = 0;
+                int behind = 0;
+
+                if (fields.Length > 3)
+                {
+                    string ab = fields[3];
+                    Match aheadMatch = Regex.Match(ab, @"ahead (\d+)");
+                    if (aheadMatch.Success) ahead = int.Parse(aheadMatch.Groups[1].Value);
+                    Match behindMatch = Regex.Match(ab, @"behind (\d+)");
+                    if (behindMatch.Success) behind = int.Parse(behindMatch.Groups[1].Value);
+                }
+
                 yield return new BranchInfo
                 {
-                    Name = fields[1],
+                    Name = name,
                     IsCurrent = fields[0] == "*",
-                    TrackingBranch = fields.Length > 2 && fields[2].Length > 0 ? fields[2] : null
+                    TrackingBranch = tracking,
+                    AheadBy = ahead,
+                    BehindBy = behind
                 };
             }
         }
@@ -104,6 +121,92 @@ namespace TiaGitAddIn.Services
                         remoteWithPurpose.Length - purposeIndex - 3)
                 };
             }
+        }
+
+        public static DiffResult ParseDiff(string output)
+        {
+            List<DiffEntry> entries = new List<DiffEntry>();
+            if (string.IsNullOrWhiteSpace(output)) return new DiffResult { Entries = entries };
+
+            string[] lines = SplitLines(output);
+            DiffEntry? currentEntry = null;
+            DiffHunk? currentHunk = null;
+
+            foreach (string line in lines)
+            {
+                if (line.StartsWith("diff --git", StringComparison.Ordinal))
+                {
+                    currentEntry = new DiffEntry();
+                    entries.Add(currentEntry);
+                    currentHunk = null;
+                    
+                    Match match = Regex.Match(line, @"diff --git a/(.*) b/(.*)");
+                    if (match.Success)
+                    {
+                        currentEntry.FilePath = match.Groups[2].Value;
+                    }
+                }
+                else if (currentEntry != null && line.StartsWith("--- ", StringComparison.Ordinal))
+                {
+                    // Ignore old file path line
+                }
+                else if (currentEntry != null && line.StartsWith("+++ ", StringComparison.Ordinal))
+                {
+                    // Ignore new file path line
+                }
+                else if (currentEntry != null && line.StartsWith("@@ ", StringComparison.Ordinal))
+                {
+                    currentHunk = ParseHunkHeader(line);
+                    var hunks = (List<DiffHunk>)currentEntry.Hunks;
+                    hunks.Add(currentHunk);
+                }
+                else if (currentHunk != null)
+                {
+                    currentHunk.Lines = ((List<DiffLine>)currentHunk.Lines);
+                    var hunkLines = (List<DiffLine>)currentHunk.Lines;
+                    
+                    if (line.StartsWith("+", StringComparison.Ordinal))
+                    {
+                        hunkLines.Add(new DiffLine { Type = DiffLineType.Added, Content = line.Substring(1) });
+                    }
+                    else if (line.StartsWith("-", StringComparison.Ordinal))
+                    {
+                        hunkLines.Add(new DiffLine { Type = DiffLineType.Deleted, Content = line.Substring(1) });
+                    }
+                    else
+                    {
+                        hunkLines.Add(new DiffLine { Type = DiffLineType.Context, Content = line.Length > 0 ? line.Substring(1) : line });
+                    }
+                }
+            }
+
+            return new DiffResult { Entries = entries };
+        }
+
+        private static DiffHunk ParseHunkHeader(string line)
+        {
+            // @@ -1,4 +1,4 @@
+            Match match = Regex.Match(line, @"@@ -(\d+),?(\d*) \+(\d+),?(\d*) @@");
+            if (match.Success)
+            {
+                return new DiffHunk
+                {
+                    Header = line,
+                    OldStart = int.Parse(match.Groups[1].Value),
+                    OldCount = string.IsNullOrEmpty(match.Groups[2].Value) ? 1 : int.Parse(match.Groups[2].Value),
+                    NewStart = int.Parse(match.Groups[3].Value),
+                    NewCount = string.IsNullOrEmpty(match.Groups[4].Value) ? 1 : int.Parse(match.Groups[4].Value),
+                    Lines = new List<DiffLine>()
+                };
+            }
+            return new DiffHunk { Header = line, Lines = new List<DiffLine>() };
+        }
+
+        public static List<string> ParseDiffTree(string output)
+        {
+            return SplitLines(output)
+                .Select(line => line.Split('\t').Last())
+                .ToList();
         }
 
         private static FileStatusEntry ParseStatusEntry(string line)

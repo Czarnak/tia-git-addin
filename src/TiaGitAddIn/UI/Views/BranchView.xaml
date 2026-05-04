@@ -1,0 +1,62 @@
+<UserControl x:Class="TiaGitAddIn.UI.Views.BranchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TiaGitAddIn.UI.Views"
+             xmlns:vm="clr-namespace:TiaGitAddIn.UI.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="Create Branch" Grid.Row="0" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <TextBox Text="{Binding NewBranchName, UpdateSourceTrigger=PropertyChanged}" Width="200" VerticalAlignment="Center"/>
+                <Button Content="Create" Command="{Binding CreateBranchCommand}" Margin="5,0,0,0" Padding="15,2"/>
+            </StackPanel>
+        </GroupBox>
+
+        <ListView ItemsSource="{Binding Branches}" SelectedItem="{Binding SelectedBranch}" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="*" Foreground="Green" FontWeight="Bold" Visibility="{Binding IsCurrent, Converter={StaticResource BoolToVis}}" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Tracking" DisplayMemberBinding="{Binding TrackingBranch}" Width="150"/>
+                    <GridViewColumn Header="Ahead" DisplayMemberBinding="{Binding AheadBy}" Width="60"/>
+                    <GridViewColumn Header="Behind" DisplayMemberBinding="{Binding BehindBy}" Width="60"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,0">
+            <Button Content="Switch to Selected" Command="{Binding SwitchBranchCommand}" Padding="15,5"/>
+            <Separator Margin="10,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
+            <Button Content="Fetch" Command="{Binding FetchCommand}" Padding="15,5"/>
+            <Button Content="Pull" Command="{Binding PullCommand}" Margin="5,0,0,0" Padding="15,5"/>
+            <Button Content="Push" Command="{Binding PushCommand}" Margin="5,0,0,0" Padding="15,5"/>
+        </StackPanel>
+
+        <StatusBar Grid.Row="3" Background="Transparent" Margin="0,10,0,0">
+            <StatusBarItem>
+                <TextBlock Text="{Binding LastOperationMessage}" Foreground="DimGray"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <Button Content="Refresh" Command="{Binding RefreshCommand}" Padding="10,2"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</UserControl>

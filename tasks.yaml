@@ -1,101 +1,5 @@
 tasks:
   - id: task_001
-    title: "Complete Data Models"
-    wave: 1
-    implementation_status: "partial - ChangeType enum missing"
-    description: |
-      Complete the missing data models in src/TiaGitAddIn/Models/:
-      - ChangeType enum: Add, Modify, Delete, Rename, Copy
-    outputs:
-      - src/TiaGitAddIn/Models/ChangeType.cs
-    acceptance_criteria:
-      - "ChangeType enum defined in TiaGitAddIn.Models namespace"
-      - "Enum values match the specification"
-    depends_on: []
-
-  - id: task_002
-    title: "Complete GitService implementation"
-    wave: 3
-    implementation_status: "partial - Core methods implemented; Fetch/Pull/Push/Diff pending"
-    description: |
-      Implement missing methods in IGitService and GitService:
-      - StageAllAsync()
-      - FetchAsync(string? remote, CancellationToken ct)
-      - PullAsync(string? remote, string? branch, CancellationToken ct)
-      - PushAsync(string? remote, string? branch, CancellationToken ct)
-      - CreateBranchAsync(string name, CancellationToken ct)
-      - SwitchBranchAsync(string name, CancellationToken ct)
-      - GetWorkingTreeDiffAsync(CancellationToken ct)
-      - GetCommitDiffAsync(string commitHash, CancellationToken ct)
-      - GetCommitFilesAsync(string commitHash, CancellationToken ct)
-      - InitAsync(string path, CancellationToken ct)
-    outputs:
-      - src/TiaGitAddIn/Services/IGitService.cs
-      - src/TiaGitAddIn/Services/GitService.cs
-    acceptance_criteria:
-      - "All IGitService methods implemented"
-      - "Unit tests added for all new methods"
-    depends_on: [task_001]
-
-  - id: task_003
-    title: "Complete MVVM Infrastructure"
-    wave: 5
-    implementation_status: "partial - ViewModelBase and AsyncCommand done; RelayCommand and Converters pending"
-    description: |
-      Implement missing infrastructure in UI subfolders:
-      - RelayCommand (synchronous) in UI/ViewModels/
-      - BoolToVisibilityConverter in UI/Converters/
-      - FileStatusToColorConverter in UI/Converters/
-      - DiffLineTypeToColorConverter in UI/Converters/
-    outputs:
-      - src/TiaGitAddIn/UI/ViewModels/RelayCommand.cs
-      - src/TiaGitAddIn/UI/Converters/BoolToVisibilityConverter.cs
-      - src/TiaGitAddIn/UI/Converters/FileStatusToColorConverter.cs
-      - src/TiaGitAddIn/UI/Converters/DiffLineTypeToColorConverter.cs
-    acceptance_criteria:
-      - "Converters implement IValueConverter"
-      - "RelayCommand implements ICommand"
-    depends_on: []
-
-  - id: task_004
-    title: "SettingsViewModel and SettingsView"
-    wave: 5
-    description: |
-      Create src/TiaGitAddIn/UI/ViewModels/SettingsViewModel.cs and corresponding View:
-      - Properties for Git path, Repo path, and Defaults.
-      - Browse commands and Save logic.
-    outputs:
-      - src/TiaGitAddIn/UI/ViewModels/SettingsViewModel.cs
-      - src/TiaGitAddIn/UI/Views/SettingsView.xaml
-    depends_on: [task_003]
-
-  - id: task_005
-    title: "Full Status and Commit UI implementation"
-    wave: 6
-    implementation_status: "partial - Minimal VMs exist; Full grouped views and multi-select pending"
-    description: |
-      Enhance Status and Commit UI:
-      - Grouped ListView in StatusView (Staged/Unstaged/Untracked).
-      - Multi-select support for Stage/Unstage commands.
-      - Character count and validation UI in CommitView.
-    outputs:
-      - src/TiaGitAddIn/UI/Views/StatusView.xaml
-      - src/TiaGitAddIn/UI/Views/CommitView.xaml
-    depends_on: [task_002, task_003]
-
-  - id: task_006
-    title: "BranchViewModel + BranchView"
-    wave: 6
-    description: |
-      Create Branch management UI:
-      - List branches, Create, Switch.
-      - Remote operations (Fetch/Pull/Push).
-    outputs:
-      - src/TiaGitAddIn/UI/ViewModels/BranchViewModel.cs
-      - src/TiaGitAddIn/UI/Views/BranchView.xaml
-    depends_on: [task_002, task_003]
-
-  - id: task_007
     title: "HistoryViewModel + HistoryView"
     wave: 7
     description: |
@@ -105,9 +9,9 @@ tasks:
     outputs:
       - src/TiaGitAddIn/UI/ViewModels/HistoryViewModel.cs
       - src/TiaGitAddIn/UI/Views/HistoryView.xaml
-    depends_on: [task_002, task_003]
+    depends_on: []
 
-  - id: task_008
+  - id: task_002
     title: "DiffViewModel + DiffView"
     wave: 7
     description: |
@@ -117,9 +21,9 @@ tasks:
     outputs:
       - src/TiaGitAddIn/UI/ViewModels/DiffViewModel.cs
       - src/TiaGitAddIn/UI/Views/DiffView.xaml
-    depends_on: [task_002, task_003]
+    depends_on: []
 
-  - id: task_009
+  - id: task_003
     title: "GitPanelWindow + MainViewModel Shell Integration"
     wave: 8
     implementation_status: "partial - Minimal shell exists; Multi-tab coordination pending"
@@ -128,11 +32,11 @@ tasks:
     outputs:
       - src/TiaGitAddIn/UI/ViewModels/MainViewModel.cs
       - src/TiaGitAddIn/UI/Views/MainDialog.xaml
-    depends_on: [task_004, task_005, task_006, task_007, task_008]
+    depends_on: [task_001, task_002]
 
-  - id: task_010
+  - id: task_004
     title: "Progress overlay UX and polish"
     wave: 9
     description: |
       Add IsBusy propagation, BusyMessage, and Cancel support across all async commands.
-    depends_on: [task_009]
+    depends_on: [task_003]

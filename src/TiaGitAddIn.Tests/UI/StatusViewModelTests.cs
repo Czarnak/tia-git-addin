@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -12,72 +13,48 @@ namespace TiaGitAddIn.Tests.UI
     public sealed class StatusViewModelTests
     {
         [Fact]
-        public async Task RefreshAsyncPublishesBranchSummaryAndChangedFiles()
+        public async Task RefreshAsyncPopulatesEntriesFromGitService()
         {
-            FakeGitService gitService = new FakeGitService(
-                new GitStatus
+            var status = new GitStatus
+            {
+                CurrentBranch = "main",
+                Entries = new List<FileStatusEntry>
                 {
-                    CurrentBranch = "main",
-                    TrackingBranch = "origin/main",
-                    AheadBy = 1,
-                    Entries = new[]
-                    {
-                        new FileStatusEntry
-                        {
-                            FilePath = "Blocks/Main.scl",
-                            WorkTreeStatus = FileStatus.Modified
-                        },
-                        new FileStatusEntry
-                        {
-                            FilePath = "Tags/Plant.xml",
-                            IndexStatus = FileStatus.Added
-                        }
-                    }
-                });
-
-            StatusViewModel viewModel = new StatusViewModel(gitService);
+                    new FileStatusEntry { FilePath = "file1.txt", IndexStatus = FileStatus.Modified },
+                    new FileStatusEntry { FilePath = "file2.txt", WorkTreeStatus = FileStatus.Added }
+                }
+            };
+            var gitService = new FakeGitService(status);
+            var viewModel = new StatusViewModel(gitService);
 
             await viewModel.RefreshAsync();
 
             Assert.Equal("main", viewModel.CurrentBranch);
-            Assert.Equal("origin/main, ahead 1", viewModel.TrackingSummary);
+            Assert.Equal(1, viewModel.StagedEntries.Count);
+            Assert.Equal(1, viewModel.UntrackedEntries.Count);
             Assert.Equal("2 changed files", viewModel.StatusSummary);
-            Assert.Equal(2, viewModel.Entries.Count);
-            Assert.Contains(viewModel.Entries, entry =>
-                entry.FilePath == "Blocks/Main.scl" &&
-                entry.StatusText == "Modified" &&
-                entry.Area == "Working tree");
-            Assert.Contains(viewModel.Entries, entry =>
-                entry.FilePath == "Tags/Plant.xml" &&
-                entry.StatusText == "Added" &&
-                entry.Area == "Staged");
         }
 
         [Fact]
-        public async Task StageSelectedAsyncStagesFileAndRefreshesStatus()
+        public async Task StageSelectedAsyncCallsGitServiceAndRefreshes()
         {
-            FakeGitService gitService = new FakeGitService(
-                new GitStatus
+            var status1 = new GitStatus
+            {
+                Entries = new List<FileStatusEntry>
                 {
-                    CurrentBranch = "main",
-                    Entries = new[]
-                    {
-                        new FileStatusEntry
-                        {
-                            FilePath = "Blocks/Main.scl",
-                            WorkTreeStatus = FileStatus.Modified
-                        }
-                    }
-                },
-                new GitStatus { CurrentBranch = "main" });
-            StatusViewModel viewModel = new StatusViewModel(gitService);
+                    new FileStatusEntry { FilePath = "file1.txt", WorkTreeStatus = FileStatus.Modified }
+                }
+            };
+            var status2 = new GitStatus { Entries = new List<FileStatusEntry>() };
+            var gitService = new FakeGitService(status1, status2);
+            var viewModel = new StatusViewModel(gitService);
+
             await viewModel.RefreshAsync();
-            viewModel.SelectedEntry = viewModel.Entries.Single();
+            var entryToStage = viewModel.UnstagedEntries[0];
+            await viewModel.StageSelectedAsync(entryToStage);
 
-            await viewModel.StageSelectedAsync();
-
-            Assert.Equal(new[] { "Blocks/Main.scl" }, gitService.StagedPaths);
-            Assert.Empty(viewModel.Entries);
+            Assert.Contains("file1.txt", gitService.StagedPaths);
+            Assert.Empty(viewModel.UnstagedEntries);
             Assert.Equal("File staged.", viewModel.LastOperationMessage);
             Assert.Equal("Working tree clean", viewModel.StatusSummary);
         }
@@ -109,17 +86,47 @@ namespace TiaGitAddIn.Tests.UI
             public Task<OperationResult> UnstageAsync(IReadOnlyList<string> filePaths, CancellationToken ct = default) =>
                 Task.FromResult(OperationResult.Ok("File unstaged."));
 
+            public Task<OperationResult> StageAllAsync(CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("All changes staged."));
+
             public Task<OperationResult> CommitAsync(string message, CancellationToken ct = default) =>
                 Task.FromResult(OperationResult.Ok("Commit created."));
 
-            public Task<IReadOnlyList<CommitInfo>> GetCommitLogAsync(int maxCount, CancellationToken ct = default) =>
-                Task.FromResult<IReadOnlyList<CommitInfo>>(new List<CommitInfo>());
+            public Task<OperationResult> FetchAsync(string? remote = null, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Fetch completed."));
+
+            public Task<OperationResult> PullAsync(string? remote = null, string? branch = null, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Pull completed."));
+
+            public Task<OperationResult> PushAsync(string? remote = null, string? branch = null, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Push completed."));
 
             public Task<IReadOnlyList<BranchInfo>> GetBranchesAsync(CancellationToken ct = default) =>
                 Task.FromResult<IReadOnlyList<BranchInfo>>(new List<BranchInfo>());
 
+            public Task<OperationResult> CreateBranchAsync(string name, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Branch created."));
+
+            public Task<OperationResult> SwitchBranchAsync(string name, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Branch switched."));
+
             public Task<OperationResult> CheckoutBranchAsync(string branchName, CancellationToken ct = default) =>
                 Task.FromResult(OperationResult.Ok("Branch checked out."));
+
+            public Task<IReadOnlyList<CommitInfo>> GetCommitLogAsync(int maxCount, CancellationToken ct = default) =>
+                Task.FromResult<IReadOnlyList<CommitInfo>>(new List<CommitInfo>());
+
+            public Task<DiffResult> GetWorkingTreeDiffAsync(CancellationToken ct = default) =>
+                Task.FromResult(new DiffResult());
+
+            public Task<DiffResult> GetCommitDiffAsync(string commitHash, CancellationToken ct = default) =>
+                Task.FromResult(new DiffResult());
+
+            public Task<IReadOnlyList<string>> GetCommitFilesAsync(string commitHash, CancellationToken ct = default) =>
+                Task.FromResult<IReadOnlyList<string>>(new List<string>());
+
+            public Task<OperationResult> InitAsync(string path, CancellationToken ct = default) =>
+                Task.FromResult(OperationResult.Ok("Repository initialized."));
 
             public Task<IReadOnlyList<RemoteInfo>> GetRemotesAsync(CancellationToken ct = default) =>
                 Task.FromResult<IReadOnlyList<RemoteInfo>>(new List<RemoteInfo>());

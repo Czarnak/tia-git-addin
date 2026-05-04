@@ -8,6 +8,7 @@ namespace TiaGitAddIn.UI.ViewModels
         {
             FilePath = entry.FilePath;
             Area = GetArea(entry);
+            Status = entry.IsStaged ? entry.IndexStatus : entry.WorkTreeStatus;
             StatusText = GetStatusText(entry);
             CanStage = entry.IsUnstaged || entry.IndexStatus == FileStatus.Untracked;
             CanUnstage = entry.IsStaged;
@@ -16,6 +17,8 @@ namespace TiaGitAddIn.UI.ViewModels
         public string FilePath { get; }
 
         public string Area { get; }
+
+        public FileStatus Status { get; }
 
         public string StatusText { get; }
 

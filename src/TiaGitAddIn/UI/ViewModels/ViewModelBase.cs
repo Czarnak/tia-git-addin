@@ -14,6 +14,21 @@ namespace TiaGitAddIn.UI.ViewModels
         }
 
         protected bool SetProperty<T>(
+            ref T field,
+            T newValue,
+            [CallerMemberName] string? propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, newValue))
+            {
+                return false;
+            }
+
+            field = newValue;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        protected bool SetProperty<T>(
             T currentValue,
             T newValue,
             System.Action<T> assign,
