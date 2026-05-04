@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
+using TiaGitAddIn.UI;
 
 namespace TiaGitAddIn.UI.ViewModels
 {
@@ -15,7 +16,11 @@ namespace TiaGitAddIn.UI.ViewModels
         private string lastOperationMessage = string.Empty;
         private bool isBusy;
 
-        public CommitViewModel(IGitService gitService, Func<Task> refreshStatusAsync)
+        public CommitViewModel(
+            IGitService gitService,
+            Func<Task> refreshStatusAsync,
+            IUiDispatcher? uiDispatcher = null)
+            : base(uiDispatcher)
         {
             this.gitService = gitService ?? throw new ArgumentNullException(nameof(gitService));
             this.refreshStatusAsync = refreshStatusAsync ?? throw new ArgumentNullException(nameof(refreshStatusAsync));

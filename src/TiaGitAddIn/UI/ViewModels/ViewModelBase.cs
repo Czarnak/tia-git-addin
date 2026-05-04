@@ -1,16 +1,46 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using TiaGitAddIn.UI;
 
 namespace TiaGitAddIn.UI.ViewModels
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
+        protected ViewModelBase()
+            : this(null)
+        {
+        }
+
+        protected ViewModelBase(IUiDispatcher? uiDispatcher)
+        {
+            UiDispatcher = uiDispatcher ?? ImmediateUiDispatcher.Instance;
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected IUiDispatcher UiDispatcher { get; }
 
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            InvokeOnUI(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
+        }
+
+        protected void InvokeOnUI(System.Action action)
+        {
+            if (action == null)
+            {
+                throw new System.ArgumentNullException(nameof(action));
+            }
+
+            if (UiDispatcher.CheckAccess())
+            {
+                action();
+            }
+            else
+            {
+                UiDispatcher.Invoke(action);
+            }
         }
 
         protected bool SetProperty<T>(
@@ -39,8 +69,11 @@ namespace TiaGitAddIn.UI.ViewModels
                 return false;
             }
 
-            assign(newValue);
-            OnPropertyChanged(propertyName);
+            InvokeOnUI(() =>
+            {
+                assign(newValue);
+                OnPropertyChanged(propertyName);
+            });
             return true;
         }
     }

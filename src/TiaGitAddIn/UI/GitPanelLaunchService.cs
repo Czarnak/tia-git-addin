@@ -4,7 +4,6 @@ using TiaGitAddIn.Logging;
 using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
 using TiaGitAddIn.UI.ViewModels;
-using TiaGitAddIn.UI.Views;
 
 namespace TiaGitAddIn.UI
 {
@@ -79,12 +78,15 @@ namespace TiaGitAddIn.UI
 
                 string resolvedRepositoryRoot = repositoryRoot;
                 GitConfiguration configuration = configurationService.Load(resolvedRepositoryRoot);
+                string gitExecutablePath = string.IsNullOrWhiteSpace(configuration.GitExecutablePath)
+                    ? "git"
+                    : configuration.GitExecutablePath!;
                 IGitService gitService = createGitService(
-                    configuration.GitExecutablePath,
+                    gitExecutablePath,
                     configuration.RepositoryPath);
 
-                return GitPanelLaunchResult.Ok(
-                    new MainViewModel(configuration.RepositoryPath, gitService));
+                return GitPanelLaunchResult.Ok(() =>
+                    new MainViewModel(configuration.RepositoryPath, gitService, WpfUiDispatcher.FromCurrentThread()));
             }
             catch (Exception ex)
             {

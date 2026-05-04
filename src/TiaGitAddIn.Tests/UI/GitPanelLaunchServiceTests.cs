@@ -8,7 +8,6 @@ using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
 using TiaGitAddIn.UI;
 using TiaGitAddIn.UI.ViewModels;
-using TiaGitAddIn.UI.Views;
 using Xunit;
 
 namespace TiaGitAddIn.Tests.UI
@@ -34,7 +33,9 @@ namespace TiaGitAddIn.Tests.UI
             GitPanelLaunchResult result = service.CreateViewModel(new object());
 
             Assert.True(result.Success);
-            Assert.NotNull(result.ViewModel);
+            Assert.NotNull(result.CreateViewModel);
+            MainViewModel viewModel = result.CreateViewModel();
+            Assert.Equal("C:\\repo", viewModel.RepositoryPath);
         }
 
         private sealed class FakeWorkspaceLocator : IVciWorkspaceLocator

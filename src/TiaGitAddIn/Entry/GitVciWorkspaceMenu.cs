@@ -64,13 +64,13 @@ namespace TiaGitAddIn.Entry
                 }
 
                 GitPanelLaunchResult result = launchService.CreateViewModel(context);
-                if (!result.Success || result.ViewModel == null)
+                if (!result.Success || result.CreateViewModel == null)
                 {
                     ShowMessageAsync(result.Message, MessageBoxImage.Warning);
                     return;
                 }
 
-                ShowPanel(result.ViewModel, logger);
+                ShowPanel(result.CreateViewModel, logger);
             }
             catch (Exception ex)
             {
@@ -98,12 +98,13 @@ namespace TiaGitAddIn.Entry
                 image);
         }
 
-        private static void ShowPanel(MainViewModel viewModel, IAddInLogger logger)
+        private static void ShowPanel(Func<MainViewModel> createViewModel, IAddInLogger logger)
         {
             Thread thread = new Thread(() =>
             {
                 try
                 {
+                    MainViewModel viewModel = createViewModel();
                     GitPanelWindow window = new GitPanelWindow(viewModel);
                     window.ShowDialog();
                 }

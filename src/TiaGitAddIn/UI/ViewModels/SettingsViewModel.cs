@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using TiaGitAddIn.Configuration;
 using TiaGitAddIn.Models;
+using TiaGitAddIn.UI;
 
 namespace TiaGitAddIn.UI.ViewModels
 {
@@ -16,7 +17,11 @@ namespace TiaGitAddIn.UI.ViewModels
         private int maxLogEntries = 200;
         private string validationMessage = string.Empty;
 
-        public SettingsViewModel(IConfigurationService configurationService, string repositoryRoot)
+        public SettingsViewModel(
+            IConfigurationService configurationService,
+            string repositoryRoot,
+            IUiDispatcher? uiDispatcher = null)
+            : base(uiDispatcher)
         {
             this.configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
             this.repositoryRoot = repositoryRoot;
@@ -32,7 +37,7 @@ namespace TiaGitAddIn.UI.ViewModels
             get => gitExecutablePath;
             set
             {
-                if (SetProperty(ref gitExecutablePath, value ?? string.Empty))
+                if (SetProperty(gitExecutablePath, value ?? string.Empty, updated => gitExecutablePath = updated))
                 {
                     Validate();
                 }
@@ -42,25 +47,25 @@ namespace TiaGitAddIn.UI.ViewModels
         public string RepositoryPath
         {
             get => repositoryPath;
-            set => SetProperty(ref repositoryPath, value ?? string.Empty);
+            set => SetProperty(repositoryPath, value ?? string.Empty, updated => repositoryPath = updated);
         }
 
         public string DefaultRemote
         {
             get => defaultRemote;
-            set => SetProperty(ref defaultRemote, value ?? string.Empty);
+            set => SetProperty(defaultRemote, value ?? string.Empty, updated => defaultRemote = updated);
         }
 
         public int MaxLogEntries
         {
             get => maxLogEntries;
-            set => SetProperty(ref maxLogEntries, value);
+            set => SetProperty(maxLogEntries, value, updated => maxLogEntries = updated);
         }
 
         public string ValidationMessage
         {
             get => validationMessage;
-            private set => SetProperty(ref validationMessage, value ?? string.Empty);
+            private set => SetProperty(validationMessage, value ?? string.Empty, updated => validationMessage = updated);
         }
 
         public ICommand BrowseGitExeCommand { get; }
@@ -120,7 +125,8 @@ namespace TiaGitAddIn.UI.ViewModels
             {
                 ValidationMessage = string.Empty;
             }
-            ((RelayCommand)SaveCommand).RaiseCanExecuteChanged();
+            InvokeOnUI(() => ((RelayCommand)SaveCommand).RaiseCanExecuteChanged());
         }
+
     }
 }

@@ -1,12 +1,17 @@
 using System;
 using System.Threading.Tasks;
 using TiaGitAddIn.Services;
+using TiaGitAddIn.UI;
 
 namespace TiaGitAddIn.UI.ViewModels
 {
     public sealed class MainViewModel : ViewModelBase
     {
-        public MainViewModel(string repositoryPath, IGitService gitService)
+        public MainViewModel(
+            string repositoryPath,
+            IGitService gitService,
+            IUiDispatcher? uiDispatcher = null)
+            : base(uiDispatcher)
         {
             if (string.IsNullOrWhiteSpace(repositoryPath))
             {
@@ -14,8 +19,8 @@ namespace TiaGitAddIn.UI.ViewModels
             }
 
             RepositoryPath = repositoryPath;
-            Status = new StatusViewModel(gitService);
-            Commit = new CommitViewModel(gitService, Status.RefreshAsync);
+            Status = new StatusViewModel(gitService, UiDispatcher);
+            Commit = new CommitViewModel(gitService, Status.RefreshAsync, UiDispatcher);
         }
 
         public string RepositoryPath { get; }

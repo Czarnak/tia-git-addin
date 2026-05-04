@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
+using TiaGitAddIn.UI;
 
 namespace TiaGitAddIn.UI.ViewModels
 {
@@ -18,7 +19,8 @@ namespace TiaGitAddIn.UI.ViewModels
         private string lastOperationMessage = string.Empty;
         private bool isBusy;
 
-        public BranchViewModel(IGitService gitService)
+        public BranchViewModel(IGitService gitService, IUiDispatcher? uiDispatcher = null)
+            : base(uiDispatcher)
         {
             this.gitService = gitService ?? throw new ArgumentNullException(nameof(gitService));
             
@@ -33,7 +35,7 @@ namespace TiaGitAddIn.UI.ViewModels
         public ObservableCollection<BranchInfo> Branches
         {
             get => branches;
-            private set => SetProperty(ref branches, value);
+            private set => SetProperty(branches, value, updated => branches = updated);
         }
 
         public BranchInfo? SelectedBranch
@@ -41,9 +43,9 @@ namespace TiaGitAddIn.UI.ViewModels
             get => selectedBranch;
             set
             {
-                if (SetProperty(ref selectedBranch, value))
+                if (SetProperty(selectedBranch, value, updated => selectedBranch = updated))
                 {
-                    ((AsyncCommand)SwitchBranchCommand).RaiseCanExecuteChanged();
+                    InvokeOnUI(() => ((AsyncCommand)SwitchBranchCommand).RaiseCanExecuteChanged());
                 }
             }
         }
@@ -53,9 +55,9 @@ namespace TiaGitAddIn.UI.ViewModels
             get => newBranchName;
             set
             {
-                if (SetProperty(ref newBranchName, value ?? string.Empty))
+                if (SetProperty(newBranchName, value ?? string.Empty, updated => newBranchName = updated))
                 {
-                    ((AsyncCommand)CreateBranchCommand).RaiseCanExecuteChanged();
+                    InvokeOnUI(() => ((AsyncCommand)CreateBranchCommand).RaiseCanExecuteChanged());
                 }
             }
         }
@@ -63,7 +65,7 @@ namespace TiaGitAddIn.UI.ViewModels
         public string LastOperationMessage
         {
             get => lastOperationMessage;
-            private set => SetProperty(ref lastOperationMessage, value ?? string.Empty);
+            private set => SetProperty(lastOperationMessage, value ?? string.Empty, updated => lastOperationMessage = updated);
         }
 
         public bool IsBusy
@@ -71,7 +73,7 @@ namespace TiaGitAddIn.UI.ViewModels
             get => isBusy;
             private set
             {
-                if (SetProperty(ref isBusy, value))
+                if (SetProperty(isBusy, value, updated => isBusy = updated))
                 {
                     RaiseCommandStates();
                 }
@@ -90,9 +92,12 @@ namespace TiaGitAddIn.UI.ViewModels
             IsBusy = true;
             try
             {
-                var branchList = await gitService.GetBranchesAsync().ConfigureAwait(true);
-                Branches = new ObservableCollection<BranchInfo>(branchList);
-                SelectedBranch = Branches.FirstOrDefault(b => b.IsCurrent) ?? Branches.FirstOrDefault();
+                var branchList = await gitService.GetBranchesAsync().ConfigureAwait(false);
+                InvokeOnUI(() =>
+                {
+                    Branches = new ObservableCollection<BranchInfo>(branchList);
+                    SelectedBranch = Branches.FirstOrDefault(b => b.IsCurrent) ?? Branches.FirstOrDefault();
+                });
             }
             finally { IsBusy = false; }
         }
@@ -102,13 +107,16 @@ namespace TiaGitAddIn.UI.ViewModels
             IsBusy = true;
             try
             {
-                var result = await gitService.CreateBranchAsync(NewBranchName).ConfigureAwait(true);
-                LastOperationMessage = BuildOperationMessage(result);
-                if (result.Success)
+                var result = await gitService.CreateBranchAsync(NewBranchName).ConfigureAwait(false);
+                InvokeOnUI(() =>
                 {
-                    NewBranchName = string.Empty;
-                    await RefreshAsync().ConfigureAwait(true);
-                }
+                    LastOperationMessage = BuildOperationMessage(result);
+                    if (result.Success)
+                    {
+                        NewBranchName = string.Empty;
+                    }
+                });
+                if (result.Success) await RefreshAsync().ConfigureAwait(false);
             }
             finally { IsBusy = false; }
         }
@@ -119,9 +127,9 @@ namespace TiaGitAddIn.UI.ViewModels
             IsBusy = true;
             try
             {
-                var result = await gitService.SwitchBranchAsync(SelectedBranch.Name).ConfigureAwait(true);
-                LastOperationMessage = BuildOperationMessage(result);
-                if (result.Success) await RefreshAsync().ConfigureAwait(true);
+                var result = await gitService.SwitchBranchAsync(SelectedBranch.Name).ConfigureAwait(false);
+                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
+                if (result.Success) await RefreshAsync().ConfigureAwait(false);
             }
             finally { IsBusy = false; }
         }
@@ -131,8 +139,8 @@ namespace TiaGitAddIn.UI.ViewModels
             IsBusy = true;
             try
             {
-                var result = await gitService.FetchAsync().ConfigureAwait(true);
-                LastOperationMessage = BuildOperationMessage(result);
+                var result = await gitService.FetchAsync().ConfigureAwait(false);
+                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
             }
             finally { IsBusy = false; }
         }
@@ -142,9 +150,9 @@ namespace TiaGitAddIn.UI.ViewModels
             IsBusy = true;
             try
             {
-                var result = await gitService.PullAsync().ConfigureAwait(true);
-                LastOperationMessage = BuildOperationMessage(result);
-                if (result.Success) await RefreshAsync().ConfigureAwait(true);
+                var result = await gitService.PullAsync().ConfigureAwait(false);
+                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
+                if (result.Success) await RefreshAsync().ConfigureAwait(false);
             }
             finally { IsBusy = false; }
         }
@@ -154,8 +162,8 @@ namespace TiaGitAddIn.UI.ViewModels
             IsBusy = true;
             try
             {
-                var result = await gitService.PushAsync().ConfigureAwait(true);
-                LastOperationMessage = BuildOperationMessage(result);
+                var result = await gitService.PushAsync().ConfigureAwait(false);
+                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
             }
             finally { IsBusy = false; }
         }
@@ -167,12 +175,16 @@ namespace TiaGitAddIn.UI.ViewModels
 
         private void RaiseCommandStates()
         {
-            ((AsyncCommand)RefreshCommand).RaiseCanExecuteChanged();
-            ((AsyncCommand)CreateBranchCommand).RaiseCanExecuteChanged();
-            ((AsyncCommand)SwitchBranchCommand).RaiseCanExecuteChanged();
-            ((AsyncCommand)FetchCommand).RaiseCanExecuteChanged();
-            ((AsyncCommand)PullCommand).RaiseCanExecuteChanged();
-            ((AsyncCommand)PushCommand).RaiseCanExecuteChanged();
+            InvokeOnUI(() =>
+            {
+                ((AsyncCommand)RefreshCommand).RaiseCanExecuteChanged();
+                ((AsyncCommand)CreateBranchCommand).RaiseCanExecuteChanged();
+                ((AsyncCommand)SwitchBranchCommand).RaiseCanExecuteChanged();
+                ((AsyncCommand)FetchCommand).RaiseCanExecuteChanged();
+                ((AsyncCommand)PullCommand).RaiseCanExecuteChanged();
+                ((AsyncCommand)PushCommand).RaiseCanExecuteChanged();
+            });
         }
+
     }
 }

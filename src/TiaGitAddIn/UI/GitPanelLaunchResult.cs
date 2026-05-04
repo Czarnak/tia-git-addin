@@ -1,3 +1,4 @@
+using System;
 using TiaGitAddIn.UI.ViewModels;
 
 namespace TiaGitAddIn.UI
@@ -8,13 +9,13 @@ namespace TiaGitAddIn.UI
 
         public string Message { get; set; } = string.Empty;
 
-        public MainViewModel? ViewModel { get; set; }
+        public Func<MainViewModel>? CreateViewModel { get; set; }
 
-        public static GitPanelLaunchResult Ok(MainViewModel viewModel) =>
+        public static GitPanelLaunchResult Ok(Func<MainViewModel> createViewModel) =>
             new GitPanelLaunchResult
             {
                 Success = true,
-                ViewModel = viewModel
+                CreateViewModel = createViewModel
             };
 
         public static GitPanelLaunchResult Fail(string message) =>

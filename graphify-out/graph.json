@@ -9,7 +9,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ConfigurationService.cs",
       "source_location": "L1",
       "id": "tiagitaddin_configuration_configurationservice_cs",
-      "community": 9,
+      "community": 11,
       "norm_label": "configurationservice.cs"
     },
     {
@@ -18,7 +18,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ConfigurationService.cs",
       "source_location": "L6",
       "id": "configuration_configurationservice_tiagitaddin_configuration",
-      "community": 9,
+      "community": 11,
       "norm_label": "tiagitaddin.configuration"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ConfigurationService.cs",
       "source_location": "L8",
       "id": "configuration_configurationservice_configurationservice",
-      "community": 9,
+      "community": 11,
       "norm_label": "configurationservice"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "",
       "source_location": "",
       "id": "iconfigurationservice",
-      "community": 9,
+      "community": 11,
       "norm_label": "iconfigurationservice"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ConfigurationService.cs",
       "source_location": "L12",
       "id": "configuration_configurationservice_configurationservice_load",
-      "community": 9,
+      "community": 11,
       "norm_label": ".load()"
     },
     {
@@ -54,7 +54,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ConfigurationService.cs",
       "source_location": "L44",
       "id": "configuration_configurationservice_configurationservice_save",
-      "community": 9,
+      "community": 11,
       "norm_label": ".save()"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ConfigurationService.cs",
       "source_location": "L53",
       "id": "configuration_configurationservice_configurationservice_getconfigurationpath",
-      "community": 9,
+      "community": 11,
       "norm_label": ".getconfigurationpath()"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ConfigurationService.cs",
       "source_location": "L56",
       "id": "configuration_configurationservice_configurationservice_normalize",
-      "community": 9,
+      "community": 11,
       "norm_label": ".normalize()"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ConfigurationService.cs",
       "source_location": "L81",
       "id": "configuration_configurationservice_configurationservice_ensurevalidrepositoryroot",
-      "community": 9,
+      "community": 11,
       "norm_label": ".ensurevalidrepositoryroot()"
     },
     {
@@ -90,7 +90,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\IConfigurationService.cs",
       "source_location": "L1",
       "id": "tiagitaddin_configuration_iconfigurationservice_cs",
-      "community": 28,
+      "community": 27,
       "norm_label": "iconfigurationservice.cs"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\IConfigurationService.cs",
       "source_location": "L3",
       "id": "configuration_iconfigurationservice_tiagitaddin_configuration",
-      "community": 28,
+      "community": 27,
       "norm_label": "tiagitaddin.configuration"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\IConfigurationService.cs",
       "source_location": "L5",
       "id": "configuration_iconfigurationservice_iconfigurationservice",
-      "community": 28,
+      "community": 27,
       "norm_label": "iconfigurationservice"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\IConfigurationService.cs",
       "source_location": "L7",
       "id": "configuration_iconfigurationservice_iconfigurationservice_load",
-      "community": 28,
+      "community": 27,
       "norm_label": ".load()"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\IConfigurationService.cs",
       "source_location": "L9",
       "id": "configuration_iconfigurationservice_iconfigurationservice_save",
-      "community": 28,
+      "community": 27,
       "norm_label": ".save()"
     },
     {
@@ -135,7 +135,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\PathValidator.cs",
       "source_location": "L1",
       "id": "tiagitaddin_configuration_pathvalidator_cs",
-      "community": 29,
+      "community": 28,
       "norm_label": "pathvalidator.cs"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\PathValidator.cs",
       "source_location": "L5",
       "id": "configuration_pathvalidator_tiagitaddin_configuration",
-      "community": 29,
+      "community": 28,
       "norm_label": "tiagitaddin.configuration"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\PathValidator.cs",
       "source_location": "L7",
       "id": "configuration_pathvalidator_pathvalidator",
-      "community": 29,
+      "community": 28,
       "norm_label": "pathvalidator"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\PathValidator.cs",
       "source_location": "L11",
       "id": "configuration_pathvalidator_pathvalidator_validate",
-      "community": 29,
+      "community": 28,
       "norm_label": ".validate()"
     },
     {
@@ -171,7 +171,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\PathValidator.cs",
       "source_location": "L50",
       "id": "configuration_pathvalidator_pathvalidator_validategitexecutablepath",
-      "community": 29,
+      "community": 28,
       "norm_label": ".validategitexecutablepath()"
     },
     {
@@ -180,7 +180,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ValidationResult.cs",
       "source_location": "L1",
       "id": "tiagitaddin_configuration_validationresult_cs",
-      "community": 30,
+      "community": 29,
       "norm_label": "validationresult.cs"
     },
     {
@@ -189,7 +189,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ValidationResult.cs",
       "source_location": "L1",
       "id": "configuration_validationresult_tiagitaddin_configuration",
-      "community": 30,
+      "community": 29,
       "norm_label": "tiagitaddin.configuration"
     },
     {
@@ -198,7 +198,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ValidationResult.cs",
       "source_location": "L3",
       "id": "configuration_validationresult_validationresult",
-      "community": 30,
+      "community": 29,
       "norm_label": "validationresult"
     },
     {
@@ -207,7 +207,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ValidationResult.cs",
       "source_location": "L9",
       "id": "configuration_validationresult_validationresult_valid",
-      "community": 30,
+      "community": 29,
       "norm_label": ".valid()"
     },
     {
@@ -216,7 +216,7 @@
       "source_file": "TiaGitAddIn\\Configuration\\ValidationResult.cs",
       "source_location": "L12",
       "id": "configuration_validationresult_validationresult_invalid",
-      "community": 30,
+      "community": 29,
       "norm_label": ".invalid()"
     },
     {
@@ -225,7 +225,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciEditorProvider.cs",
       "source_location": "L1",
       "id": "tiagitaddin_entry_gitvcieditorprovider_cs",
-      "community": 31,
+      "community": 30,
       "norm_label": "gitvcieditorprovider.cs"
     },
     {
@@ -234,7 +234,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciEditorProvider.cs",
       "source_location": "L7",
       "id": "entry_gitvcieditorprovider_tiagitaddin_entry",
-      "community": 31,
+      "community": 30,
       "norm_label": "tiagitaddin.entry"
     },
     {
@@ -243,7 +243,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciEditorProvider.cs",
       "source_location": "L9",
       "id": "entry_gitvcieditorprovider_gitvcieditorprovider",
-      "community": 31,
+      "community": 30,
       "norm_label": "gitvcieditorprovider"
     },
     {
@@ -252,7 +252,7 @@
       "source_file": "",
       "source_location": "",
       "id": "vcieditoraddinprovider",
-      "community": 31,
+      "community": 30,
       "norm_label": "vcieditoraddinprovider"
     },
     {
@@ -261,7 +261,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciEditorProvider.cs",
       "source_location": "L18",
       "id": "entry_gitvcieditorprovider_gitvcieditorprovider_getvciworkspaceviewaddinprovider",
-      "community": 31,
+      "community": 30,
       "norm_label": ".getvciworkspaceviewaddinprovider()"
     },
     {
@@ -270,7 +270,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceMenu.cs",
       "source_location": "L1",
       "id": "tiagitaddin_entry_gitvciworkspacemenu_cs",
-      "community": 6,
+      "community": 7,
       "norm_label": "gitvciworkspacemenu.cs"
     },
     {
@@ -279,7 +279,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceMenu.cs",
       "source_location": "L11",
       "id": "entry_gitvciworkspacemenu_tiagitaddin_entry",
-      "community": 6,
+      "community": 7,
       "norm_label": "tiagitaddin.entry"
     },
     {
@@ -288,7 +288,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceMenu.cs",
       "source_location": "L13",
       "id": "entry_gitvciworkspacemenu_gitvciworkspacemenu",
-      "community": 6,
+      "community": 7,
       "norm_label": "gitvciworkspacemenu"
     },
     {
@@ -297,7 +297,7 @@
       "source_file": "",
       "source_location": "",
       "id": "contextmenuaddin",
-      "community": 6,
+      "community": 7,
       "norm_label": "contextmenuaddin"
     },
     {
@@ -306,7 +306,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceMenu.cs",
       "source_location": "L33",
       "id": "entry_gitvciworkspacemenu_gitvciworkspacemenu_buildcontextmenuitems",
-      "community": 6,
+      "community": 7,
       "norm_label": ".buildcontextmenuitems()"
     },
     {
@@ -315,7 +315,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceMenu.cs",
       "source_location": "L45",
       "id": "entry_gitvciworkspacemenu_gitvciworkspacemenu_onopengitpanel",
-      "community": 6,
+      "community": 7,
       "norm_label": ".onopengitpanel()"
     },
     {
@@ -324,7 +324,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceMenu.cs",
       "source_location": "L55",
       "id": "entry_gitvciworkspacemenu_gitvciworkspacemenu_opengitpanel",
-      "community": 6,
+      "community": 7,
       "norm_label": ".opengitpanel()"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceMenu.cs",
       "source_location": "L84",
       "id": "entry_gitvciworkspacemenu_gitvciworkspacemenu_showmessageasync",
-      "community": 6,
+      "community": 7,
       "norm_label": ".showmessageasync()"
     },
     {
@@ -342,7 +342,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceMenu.cs",
       "source_location": "L92",
       "id": "entry_gitvciworkspacemenu_gitvciworkspacemenu_showmessage",
-      "community": 6,
+      "community": 7,
       "norm_label": ".showmessage()"
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceMenu.cs",
       "source_location": "L101",
       "id": "entry_gitvciworkspacemenu_gitvciworkspacemenu_showpanel",
-      "community": 6,
+      "community": 7,
       "norm_label": ".showpanel()"
     },
     {
@@ -360,7 +360,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceViewProvider.cs",
       "source_location": "L1",
       "id": "tiagitaddin_entry_gitvciworkspaceviewprovider_cs",
-      "community": 32,
+      "community": 31,
       "norm_label": "gitvciworkspaceviewprovider.cs"
     },
     {
@@ -369,7 +369,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceViewProvider.cs",
       "source_location": "L8",
       "id": "entry_gitvciworkspaceviewprovider_tiagitaddin_entry",
-      "community": 32,
+      "community": 31,
       "norm_label": "tiagitaddin.entry"
     },
     {
@@ -378,7 +378,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceViewProvider.cs",
       "source_location": "L10",
       "id": "entry_gitvciworkspaceviewprovider_gitvciworkspaceviewprovider",
-      "community": 32,
+      "community": 31,
       "norm_label": "gitvciworkspaceviewprovider"
     },
     {
@@ -387,7 +387,7 @@
       "source_file": "",
       "source_location": "",
       "id": "vciworkspaceviewaddinprovider",
-      "community": 32,
+      "community": 31,
       "norm_label": "vciworkspaceviewaddinprovider"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceViewProvider.cs",
       "source_location": "L23",
       "id": "entry_gitvciworkspaceviewprovider_gitvciworkspaceviewprovider_getcontextmenuaddins",
-      "community": 32,
+      "community": 31,
       "norm_label": ".getcontextmenuaddins()"
     },
     {
@@ -405,7 +405,7 @@
       "source_file": "TiaGitAddIn\\Entry\\MenuSelectionContextResolver.cs",
       "source_location": "L1",
       "id": "tiagitaddin_entry_menuselectioncontextresolver_cs",
-      "community": 23,
+      "community": 22,
       "norm_label": "menuselectioncontextresolver.cs"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "TiaGitAddIn\\Entry\\MenuSelectionContextResolver.cs",
       "source_location": "L6",
       "id": "entry_menuselectioncontextresolver_tiagitaddin_entry",
-      "community": 23,
+      "community": 22,
       "norm_label": "tiagitaddin.entry"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "TiaGitAddIn\\Entry\\MenuSelectionContextResolver.cs",
       "source_location": "L8",
       "id": "entry_menuselectioncontextresolver_menuselectioncontextresolver",
-      "community": 23,
+      "community": 22,
       "norm_label": "menuselectioncontextresolver"
     },
     {
@@ -432,7 +432,7 @@
       "source_file": "TiaGitAddIn\\Entry\\MenuSelectionContextResolver.cs",
       "source_location": "L26",
       "id": "entry_menuselectioncontextresolver_menuselectioncontextresolver_resolve",
-      "community": 23,
+      "community": 22,
       "norm_label": ".resolve()"
     },
     {
@@ -441,7 +441,7 @@
       "source_file": "TiaGitAddIn\\Entry\\MenuSelectionContextResolver.cs",
       "source_location": "L56",
       "id": "entry_menuselectioncontextresolver_menuselectioncontextresolver_tryinvoke",
-      "community": 23,
+      "community": 22,
       "norm_label": ".tryinvoke()"
     },
     {
@@ -450,7 +450,7 @@
       "source_file": "TiaGitAddIn\\Entry\\MenuSelectionContextResolver.cs",
       "source_location": "L86",
       "id": "entry_menuselectioncontextresolver_menuselectioncontextresolver_tryread",
-      "community": 23,
+      "community": 22,
       "norm_label": ".tryread()"
     },
     {
@@ -459,7 +459,7 @@
       "source_file": "TiaGitAddIn\\Entry\\MenuSelectionContextResolver.cs",
       "source_location": "L103",
       "id": "entry_menuselectioncontextresolver_menuselectioncontextresolver_normalize",
-      "community": 23,
+      "community": 22,
       "norm_label": ".normalize()"
     },
     {
@@ -468,7 +468,7 @@
       "source_file": "TiaGitAddIn\\Logging\\FileLogger.cs",
       "source_location": "L1",
       "id": "tiagitaddin_logging_filelogger_cs",
-      "community": 24,
+      "community": 25,
       "norm_label": "filelogger.cs"
     },
     {
@@ -477,7 +477,7 @@
       "source_file": "TiaGitAddIn\\Logging\\FileLogger.cs",
       "source_location": "L4",
       "id": "logging_filelogger_tiagitaddin_logging",
-      "community": 24,
+      "community": 25,
       "norm_label": "tiagitaddin.logging"
     },
     {
@@ -486,7 +486,7 @@
       "source_file": "TiaGitAddIn\\Logging\\FileLogger.cs",
       "source_location": "L6",
       "id": "logging_filelogger_filelogger",
-      "community": 24,
+      "community": 25,
       "norm_label": "filelogger"
     },
     {
@@ -495,7 +495,7 @@
       "source_file": "",
       "source_location": "",
       "id": "iaddinlogger",
-      "community": 0,
+      "community": 1,
       "norm_label": "iaddinlogger"
     },
     {
@@ -504,7 +504,7 @@
       "source_file": "TiaGitAddIn\\Logging\\FileLogger.cs",
       "source_location": "L20",
       "id": "logging_filelogger_filelogger_error",
-      "community": 24,
+      "community": 25,
       "norm_label": ".error()"
     },
     {
@@ -513,7 +513,7 @@
       "source_file": "TiaGitAddIn\\Logging\\FileLogger.cs",
       "source_location": "L25",
       "id": "logging_filelogger_filelogger_info",
-      "community": 24,
+      "community": 25,
       "norm_label": ".info()"
     },
     {
@@ -522,7 +522,7 @@
       "source_file": "TiaGitAddIn\\Logging\\FileLogger.cs",
       "source_location": "L30",
       "id": "logging_filelogger_filelogger_getdefaultlogfilepath",
-      "community": 24,
+      "community": 25,
       "norm_label": ".getdefaultlogfilepath()"
     },
     {
@@ -531,7 +531,7 @@
       "source_file": "TiaGitAddIn\\Logging\\FileLogger.cs",
       "source_location": "L36",
       "id": "logging_filelogger_filelogger_write",
-      "community": 24,
+      "community": 25,
       "norm_label": ".write()"
     },
     {
@@ -540,7 +540,7 @@
       "source_file": "TiaGitAddIn\\Logging\\IAddInLogger.cs",
       "source_location": "L1",
       "id": "tiagitaddin_logging_iaddinlogger_cs",
-      "community": 33,
+      "community": 32,
       "norm_label": "iaddinlogger.cs"
     },
     {
@@ -549,7 +549,7 @@
       "source_file": "TiaGitAddIn\\Logging\\IAddInLogger.cs",
       "source_location": "L3",
       "id": "logging_iaddinlogger_tiagitaddin_logging",
-      "community": 33,
+      "community": 32,
       "norm_label": "tiagitaddin.logging"
     },
     {
@@ -558,7 +558,7 @@
       "source_file": "TiaGitAddIn\\Logging\\IAddInLogger.cs",
       "source_location": "L5",
       "id": "logging_iaddinlogger_iaddinlogger",
-      "community": 33,
+      "community": 32,
       "norm_label": "iaddinlogger"
     },
     {
@@ -567,7 +567,7 @@
       "source_file": "TiaGitAddIn\\Logging\\IAddInLogger.cs",
       "source_location": "L7",
       "id": "logging_iaddinlogger_iaddinlogger_error",
-      "community": 33,
+      "community": 32,
       "norm_label": ".error()"
     },
     {
@@ -576,7 +576,7 @@
       "source_file": "TiaGitAddIn\\Logging\\IAddInLogger.cs",
       "source_location": "L9",
       "id": "logging_iaddinlogger_iaddinlogger_info",
-      "community": 33,
+      "community": 32,
       "norm_label": ".info()"
     },
     {
@@ -585,7 +585,7 @@
       "source_file": "TiaGitAddIn\\Models\\BranchInfo.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_branchinfo_cs",
-      "community": 49,
+      "community": 48,
       "norm_label": "branchinfo.cs"
     },
     {
@@ -594,7 +594,7 @@
       "source_file": "TiaGitAddIn\\Models\\BranchInfo.cs",
       "source_location": "L1",
       "id": "models_branchinfo_tiagitaddin_models",
-      "community": 49,
+      "community": 48,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -603,7 +603,7 @@
       "source_file": "TiaGitAddIn\\Models\\BranchInfo.cs",
       "source_location": "L3",
       "id": "models_branchinfo_branchinfo",
-      "community": 49,
+      "community": 48,
       "norm_label": "branchinfo"
     },
     {
@@ -612,7 +612,7 @@
       "source_file": "TiaGitAddIn\\Models\\ChangeType.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_changetype_cs",
-      "community": 60,
+      "community": 59,
       "norm_label": "changetype.cs"
     },
     {
@@ -621,7 +621,7 @@
       "source_file": "TiaGitAddIn\\Models\\ChangeType.cs",
       "source_location": "L1",
       "id": "models_changetype_tiagitaddin_models",
-      "community": 60,
+      "community": 59,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -630,7 +630,7 @@
       "source_file": "TiaGitAddIn\\Models\\CommitInfo.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_commitinfo_cs",
-      "community": 50,
+      "community": 49,
       "norm_label": "commitinfo.cs"
     },
     {
@@ -639,7 +639,7 @@
       "source_file": "TiaGitAddIn\\Models\\CommitInfo.cs",
       "source_location": "L3",
       "id": "models_commitinfo_tiagitaddin_models",
-      "community": 50,
+      "community": 49,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "TiaGitAddIn\\Models\\CommitInfo.cs",
       "source_location": "L5",
       "id": "models_commitinfo_commitinfo",
-      "community": 50,
+      "community": 49,
       "norm_label": "commitinfo"
     },
     {
@@ -657,7 +657,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffEntry.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_diffentry_cs",
-      "community": 51,
+      "community": 50,
       "norm_label": "diffentry.cs"
     },
     {
@@ -666,7 +666,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffEntry.cs",
       "source_location": "L3",
       "id": "models_diffentry_tiagitaddin_models",
-      "community": 51,
+      "community": 50,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -675,7 +675,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffEntry.cs",
       "source_location": "L5",
       "id": "models_diffentry_diffentry",
-      "community": 51,
+      "community": 50,
       "norm_label": "diffentry"
     },
     {
@@ -684,7 +684,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffHunk.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_diffhunk_cs",
-      "community": 52,
+      "community": 51,
       "norm_label": "diffhunk.cs"
     },
     {
@@ -693,7 +693,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffHunk.cs",
       "source_location": "L3",
       "id": "models_diffhunk_tiagitaddin_models",
-      "community": 52,
+      "community": 51,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -702,7 +702,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffHunk.cs",
       "source_location": "L5",
       "id": "models_diffhunk_diffhunk",
-      "community": 52,
+      "community": 51,
       "norm_label": "diffhunk"
     },
     {
@@ -711,7 +711,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffLine.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_diffline_cs",
-      "community": 53,
+      "community": 52,
       "norm_label": "diffline.cs"
     },
     {
@@ -720,7 +720,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffLine.cs",
       "source_location": "L1",
       "id": "models_diffline_tiagitaddin_models",
-      "community": 53,
+      "community": 52,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -729,7 +729,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffLine.cs",
       "source_location": "L3",
       "id": "models_diffline_diffline",
-      "community": 53,
+      "community": 52,
       "norm_label": "diffline"
     },
     {
@@ -738,7 +738,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffLineType.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_difflinetype_cs",
-      "community": 61,
+      "community": 60,
       "norm_label": "difflinetype.cs"
     },
     {
@@ -747,7 +747,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffLineType.cs",
       "source_location": "L1",
       "id": "models_difflinetype_tiagitaddin_models",
-      "community": 61,
+      "community": 60,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -756,7 +756,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffResult.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_diffresult_cs",
-      "community": 54,
+      "community": 53,
       "norm_label": "diffresult.cs"
     },
     {
@@ -765,7 +765,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffResult.cs",
       "source_location": "L3",
       "id": "models_diffresult_tiagitaddin_models",
-      "community": 54,
+      "community": 53,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -774,7 +774,7 @@
       "source_file": "TiaGitAddIn\\Models\\DiffResult.cs",
       "source_location": "L5",
       "id": "models_diffresult_diffresult",
-      "community": 54,
+      "community": 53,
       "norm_label": "diffresult"
     },
     {
@@ -783,7 +783,7 @@
       "source_file": "TiaGitAddIn\\Models\\FileStatus.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_filestatus_cs",
-      "community": 62,
+      "community": 61,
       "norm_label": "filestatus.cs"
     },
     {
@@ -792,7 +792,7 @@
       "source_file": "TiaGitAddIn\\Models\\FileStatus.cs",
       "source_location": "L1",
       "id": "models_filestatus_tiagitaddin_models",
-      "community": 62,
+      "community": 61,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -801,7 +801,7 @@
       "source_file": "TiaGitAddIn\\Models\\FileStatusEntry.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_filestatusentry_cs",
-      "community": 55,
+      "community": 54,
       "norm_label": "filestatusentry.cs"
     },
     {
@@ -810,7 +810,7 @@
       "source_file": "TiaGitAddIn\\Models\\FileStatusEntry.cs",
       "source_location": "L1",
       "id": "models_filestatusentry_tiagitaddin_models",
-      "community": 55,
+      "community": 54,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -819,7 +819,7 @@
       "source_file": "TiaGitAddIn\\Models\\FileStatusEntry.cs",
       "source_location": "L3",
       "id": "models_filestatusentry_filestatusentry",
-      "community": 55,
+      "community": 54,
       "norm_label": "filestatusentry"
     },
     {
@@ -828,7 +828,7 @@
       "source_file": "TiaGitAddIn\\Models\\GitConfiguration.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_gitconfiguration_cs",
-      "community": 56,
+      "community": 55,
       "norm_label": "gitconfiguration.cs"
     },
     {
@@ -837,7 +837,7 @@
       "source_file": "TiaGitAddIn\\Models\\GitConfiguration.cs",
       "source_location": "L1",
       "id": "models_gitconfiguration_tiagitaddin_models",
-      "community": 56,
+      "community": 55,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -846,7 +846,7 @@
       "source_file": "TiaGitAddIn\\Models\\GitConfiguration.cs",
       "source_location": "L3",
       "id": "models_gitconfiguration_gitconfiguration",
-      "community": 56,
+      "community": 55,
       "norm_label": "gitconfiguration"
     },
     {
@@ -855,7 +855,7 @@
       "source_file": "TiaGitAddIn\\Models\\GitStatus.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_gitstatus_cs",
-      "community": 57,
+      "community": 56,
       "norm_label": "gitstatus.cs"
     },
     {
@@ -864,7 +864,7 @@
       "source_file": "TiaGitAddIn\\Models\\GitStatus.cs",
       "source_location": "L4",
       "id": "models_gitstatus_tiagitaddin_models",
-      "community": 57,
+      "community": 56,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -873,7 +873,7 @@
       "source_file": "TiaGitAddIn\\Models\\GitStatus.cs",
       "source_location": "L6",
       "id": "models_gitstatus_gitstatus",
-      "community": 57,
+      "community": 56,
       "norm_label": "gitstatus"
     },
     {
@@ -882,7 +882,7 @@
       "source_file": "TiaGitAddIn\\Models\\OperationResult.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_operationresult_cs",
-      "community": 34,
+      "community": 33,
       "norm_label": "operationresult.cs"
     },
     {
@@ -891,7 +891,7 @@
       "source_file": "TiaGitAddIn\\Models\\OperationResult.cs",
       "source_location": "L1",
       "id": "models_operationresult_tiagitaddin_models",
-      "community": 34,
+      "community": 33,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -900,7 +900,7 @@
       "source_file": "TiaGitAddIn\\Models\\OperationResult.cs",
       "source_location": "L3",
       "id": "models_operationresult_operationresult",
-      "community": 34,
+      "community": 33,
       "norm_label": "operationresult"
     },
     {
@@ -909,7 +909,7 @@
       "source_file": "TiaGitAddIn\\Models\\OperationResult.cs",
       "source_location": "L11",
       "id": "models_operationresult_operationresult_ok",
-      "community": 34,
+      "community": 33,
       "norm_label": ".ok()"
     },
     {
@@ -918,7 +918,7 @@
       "source_file": "TiaGitAddIn\\Models\\OperationResult.cs",
       "source_location": "L14",
       "id": "models_operationresult_operationresult_fail",
-      "community": 34,
+      "community": 33,
       "norm_label": ".fail()"
     },
     {
@@ -927,7 +927,7 @@
       "source_file": "TiaGitAddIn\\Models\\RemoteInfo.cs",
       "source_location": "L1",
       "id": "tiagitaddin_models_remoteinfo_cs",
-      "community": 58,
+      "community": 57,
       "norm_label": "remoteinfo.cs"
     },
     {
@@ -936,7 +936,7 @@
       "source_file": "TiaGitAddIn\\Models\\RemoteInfo.cs",
       "source_location": "L1",
       "id": "models_remoteinfo_tiagitaddin_models",
-      "community": 58,
+      "community": 57,
       "norm_label": "tiagitaddin.models"
     },
     {
@@ -945,7 +945,7 @@
       "source_file": "TiaGitAddIn\\Models\\RemoteInfo.cs",
       "source_location": "L3",
       "id": "models_remoteinfo_remoteinfo",
-      "community": 58,
+      "community": 57,
       "norm_label": "remoteinfo"
     },
     {
@@ -1026,7 +1026,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L1",
       "id": "tiagitaddin_services_gitoutputparser_cs",
-      "community": 7,
+      "community": 8,
       "norm_label": "gitoutputparser.cs"
     },
     {
@@ -1035,7 +1035,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L8",
       "id": "services_gitoutputparser_tiagitaddin_services",
-      "community": 7,
+      "community": 8,
       "norm_label": "tiagitaddin.services"
     },
     {
@@ -1044,7 +1044,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L10",
       "id": "services_gitoutputparser_gitoutputparser",
-      "community": 7,
+      "community": 8,
       "norm_label": "gitoutputparser"
     },
     {
@@ -1053,7 +1053,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L14",
       "id": "services_gitoutputparser_gitoutputparser_parsestatus",
-      "community": 7,
+      "community": 8,
       "norm_label": ".parsestatus()"
     },
     {
@@ -1062,7 +1062,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L35",
       "id": "services_gitoutputparser_gitoutputparser_parsecommitlog",
-      "community": 7,
+      "community": 8,
       "norm_label": ".parsecommitlog()"
     },
     {
@@ -1071,7 +1071,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L62",
       "id": "services_gitoutputparser_gitoutputparser_parsebranches",
-      "community": 7,
+      "community": 8,
       "norm_label": ".parsebranches()"
     },
     {
@@ -1080,7 +1080,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L97",
       "id": "services_gitoutputparser_gitoutputparser_parseremotes",
-      "community": 7,
+      "community": 8,
       "norm_label": ".parseremotes()"
     },
     {
@@ -1089,7 +1089,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L126",
       "id": "services_gitoutputparser_gitoutputparser_parsediff",
-      "community": 7,
+      "community": 8,
       "norm_label": ".parsediff()"
     },
     {
@@ -1098,7 +1098,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L186",
       "id": "services_gitoutputparser_gitoutputparser_parsehunkheader",
-      "community": 7,
+      "community": 8,
       "norm_label": ".parsehunkheader()"
     },
     {
@@ -1107,7 +1107,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L205",
       "id": "services_gitoutputparser_gitoutputparser_parsedifftree",
-      "community": 7,
+      "community": 8,
       "norm_label": ".parsedifftree()"
     },
     {
@@ -1116,7 +1116,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L212",
       "id": "services_gitoutputparser_gitoutputparser_parsestatusentry",
-      "community": 7,
+      "community": 8,
       "norm_label": ".parsestatusentry()"
     },
     {
@@ -1125,7 +1125,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L235",
       "id": "services_gitoutputparser_gitoutputparser_mapstatus",
-      "community": 7,
+      "community": 8,
       "norm_label": ".mapstatus()"
     },
     {
@@ -1134,7 +1134,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L265",
       "id": "services_gitoutputparser_gitoutputparser_isconflictpair",
-      "community": 7,
+      "community": 8,
       "norm_label": ".isconflictpair()"
     },
     {
@@ -1143,7 +1143,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L269",
       "id": "services_gitoutputparser_gitoutputparser_applybranchstatus",
-      "community": 7,
+      "community": 8,
       "norm_label": ".applybranchstatus()"
     },
     {
@@ -1152,7 +1152,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L292",
       "id": "services_gitoutputparser_gitoutputparser_parseuntrackedbranchname",
-      "community": 7,
+      "community": 8,
       "norm_label": ".parseuntrackedbranchname()"
     },
     {
@@ -1161,7 +1161,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L300",
       "id": "services_gitoutputparser_gitoutputparser_applyaheadbehind",
-      "community": 7,
+      "community": 8,
       "norm_label": ".applyaheadbehind()"
     },
     {
@@ -1170,7 +1170,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitOutputParser.cs",
       "source_location": "L318",
       "id": "services_gitoutputparser_gitoutputparser_splitlines",
-      "community": 7,
+      "community": 8,
       "norm_label": ".splitlines()"
     },
     {
@@ -1179,7 +1179,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitProcessResult.cs",
       "source_location": "L1",
       "id": "tiagitaddin_services_gitprocessresult_cs",
-      "community": 59,
+      "community": 58,
       "norm_label": "gitprocessresult.cs"
     },
     {
@@ -1188,7 +1188,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitProcessResult.cs",
       "source_location": "L1",
       "id": "services_gitprocessresult_tiagitaddin_services",
-      "community": 59,
+      "community": 58,
       "norm_label": "tiagitaddin.services"
     },
     {
@@ -1197,7 +1197,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitProcessResult.cs",
       "source_location": "L3",
       "id": "services_gitprocessresult_gitprocessresult",
-      "community": 59,
+      "community": 58,
       "norm_label": "gitprocessresult"
     },
     {
@@ -1206,7 +1206,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitProcessRunner.cs",
       "source_location": "L1",
       "id": "tiagitaddin_services_gitprocessrunner_cs",
-      "community": 18,
+      "community": 17,
       "norm_label": "gitprocessrunner.cs"
     },
     {
@@ -1215,7 +1215,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitProcessRunner.cs",
       "source_location": "L10",
       "id": "services_gitprocessrunner_tiagitaddin_services",
-      "community": 18,
+      "community": 17,
       "norm_label": "tiagitaddin.services"
     },
     {
@@ -1224,7 +1224,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitProcessRunner.cs",
       "source_location": "L12",
       "id": "services_gitprocessrunner_gitprocessrunner",
-      "community": 18,
+      "community": 17,
       "norm_label": "gitprocessrunner"
     },
     {
@@ -1233,7 +1233,7 @@
       "source_file": "",
       "source_location": "",
       "id": "igitprocessrunner",
-      "community": 18,
+      "community": 17,
       "norm_label": "igitprocessrunner"
     },
     {
@@ -1242,7 +1242,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitProcessRunner.cs",
       "source_location": "L26",
       "id": "services_gitprocessrunner_gitprocessrunner_runasync",
-      "community": 18,
+      "community": 17,
       "norm_label": ".runasync()"
     },
     {
@@ -1251,7 +1251,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitProcessRunner.cs",
       "source_location": "L49",
       "id": "services_gitprocessrunner_gitprocessrunner_runprocess",
-      "community": 18,
+      "community": 17,
       "norm_label": ".runprocess()"
     },
     {
@@ -1260,7 +1260,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitProcessRunner.cs",
       "source_location": "L100",
       "id": "services_gitprocessrunner_gitprocessrunner_buildargumentstring",
-      "community": 18,
+      "community": 17,
       "norm_label": ".buildargumentstring()"
     },
     {
@@ -1269,7 +1269,7 @@
       "source_file": "TiaGitAddIn\\Services\\GitProcessRunner.cs",
       "source_location": "L116",
       "id": "services_gitprocessrunner_gitprocessrunner_trykill",
-      "community": 18,
+      "community": 17,
       "norm_label": ".trykill()"
     },
     {
@@ -1305,7 +1305,7 @@
       "source_file": "",
       "source_location": "",
       "id": "igitservice",
-      "community": 2,
+      "community": 3,
       "norm_label": "igitservice"
     },
     {
@@ -1548,7 +1548,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L1",
       "id": "tiagitaddin_services_igitservice_cs",
-      "community": 5,
+      "community": 6,
       "norm_label": "igitservice.cs"
     },
     {
@@ -1557,7 +1557,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L6",
       "id": "services_igitservice_tiagitaddin_services",
-      "community": 5,
+      "community": 6,
       "norm_label": "tiagitaddin.services"
     },
     {
@@ -1566,7 +1566,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L8",
       "id": "services_igitservice_igitservice",
-      "community": 5,
+      "community": 6,
       "norm_label": "igitservice"
     },
     {
@@ -1575,7 +1575,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L10",
       "id": "services_igitservice_igitservice_getstatusasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getstatusasync()"
     },
     {
@@ -1584,7 +1584,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L12",
       "id": "services_igitservice_igitservice_stageasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".stageasync()"
     },
     {
@@ -1593,7 +1593,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L14",
       "id": "services_igitservice_igitservice_unstageasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".unstageasync()"
     },
     {
@@ -1602,7 +1602,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L16",
       "id": "services_igitservice_igitservice_stageallasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".stageallasync()"
     },
     {
@@ -1611,7 +1611,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L18",
       "id": "services_igitservice_igitservice_commitasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".commitasync()"
     },
     {
@@ -1620,7 +1620,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L20",
       "id": "services_igitservice_igitservice_fetchasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".fetchasync()"
     },
     {
@@ -1629,7 +1629,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L22",
       "id": "services_igitservice_igitservice_pullasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".pullasync()"
     },
     {
@@ -1638,7 +1638,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L24",
       "id": "services_igitservice_igitservice_pushasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".pushasync()"
     },
     {
@@ -1647,7 +1647,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L26",
       "id": "services_igitservice_igitservice_getbranchesasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getbranchesasync()"
     },
     {
@@ -1656,7 +1656,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L28",
       "id": "services_igitservice_igitservice_createbranchasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".createbranchasync()"
     },
     {
@@ -1665,7 +1665,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L30",
       "id": "services_igitservice_igitservice_switchbranchasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".switchbranchasync()"
     },
     {
@@ -1674,7 +1674,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L32",
       "id": "services_igitservice_igitservice_checkoutbranchasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".checkoutbranchasync()"
     },
     {
@@ -1683,7 +1683,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L34",
       "id": "services_igitservice_igitservice_getcommitlogasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getcommitlogasync()"
     },
     {
@@ -1692,7 +1692,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L36",
       "id": "services_igitservice_igitservice_getworkingtreediffasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getworkingtreediffasync()"
     },
     {
@@ -1701,7 +1701,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L38",
       "id": "services_igitservice_igitservice_getcommitdiffasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getcommitdiffasync()"
     },
     {
@@ -1710,7 +1710,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L40",
       "id": "services_igitservice_igitservice_getcommitfilesasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getcommitfilesasync()"
     },
     {
@@ -1719,7 +1719,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L42",
       "id": "services_igitservice_igitservice_initasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".initasync()"
     },
     {
@@ -1728,7 +1728,7 @@
       "source_file": "TiaGitAddIn\\Services\\IGitService.cs",
       "source_location": "L44",
       "id": "services_igitservice_igitservice_getremotesasync",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getremotesasync()"
     },
     {
@@ -1809,7 +1809,7 @@
       "source_file": "TiaGitAddIn\\Services\\OperationSerializer.cs",
       "source_location": "L1",
       "id": "tiagitaddin_services_operationserializer_cs",
-      "community": 21,
+      "community": 20,
       "norm_label": "operationserializer.cs"
     },
     {
@@ -1818,7 +1818,7 @@
       "source_file": "TiaGitAddIn\\Services\\OperationSerializer.cs",
       "source_location": "L5",
       "id": "services_operationserializer_tiagitaddin_services",
-      "community": 21,
+      "community": 20,
       "norm_label": "tiagitaddin.services"
     },
     {
@@ -1827,7 +1827,7 @@
       "source_file": "TiaGitAddIn\\Services\\OperationSerializer.cs",
       "source_location": "L7",
       "id": "services_operationserializer_operationserializer",
-      "community": 21,
+      "community": 20,
       "norm_label": "operationserializer"
     },
     {
@@ -1836,7 +1836,7 @@
       "source_file": "TiaGitAddIn\\Services\\OperationSerializer.cs",
       "source_location": "L13",
       "id": "services_operationserializer_operationserializer_acquireasync",
-      "community": 21,
+      "community": 20,
       "norm_label": ".acquireasync()"
     },
     {
@@ -1845,7 +1845,7 @@
       "source_file": "TiaGitAddIn\\Services\\OperationSerializer.cs",
       "source_location": "L29",
       "id": "services_operationserializer_operationserializer_waitasync",
-      "community": 21,
+      "community": 20,
       "norm_label": ".waitasync()"
     },
     {
@@ -1854,7 +1854,7 @@
       "source_file": "TiaGitAddIn\\Services\\OperationSerializer.cs",
       "source_location": "L35",
       "id": "services_operationserializer_lease",
-      "community": 21,
+      "community": 20,
       "norm_label": "lease"
     },
     {
@@ -1863,7 +1863,7 @@
       "source_file": "",
       "source_location": "",
       "id": "idisposable",
-      "community": 21,
+      "community": 20,
       "norm_label": "idisposable"
     },
     {
@@ -1872,7 +1872,7 @@
       "source_file": "TiaGitAddIn\\Services\\OperationSerializer.cs",
       "source_location": "L45",
       "id": "services_operationserializer_lease_dispose",
-      "community": 21,
+      "community": 20,
       "norm_label": ".dispose()"
     },
     {
@@ -1881,7 +1881,7 @@
       "source_file": "TiaGitAddIn\\Services\\RepositoryDiscovery.cs",
       "source_location": "L1",
       "id": "tiagitaddin_services_repositorydiscovery_cs",
-      "community": 19,
+      "community": 18,
       "norm_label": "repositorydiscovery.cs"
     },
     {
@@ -1890,7 +1890,7 @@
       "source_file": "TiaGitAddIn\\Services\\RepositoryDiscovery.cs",
       "source_location": "L4",
       "id": "services_repositorydiscovery_tiagitaddin_services",
-      "community": 19,
+      "community": 18,
       "norm_label": "tiagitaddin.services"
     },
     {
@@ -1899,7 +1899,7 @@
       "source_file": "TiaGitAddIn\\Services\\RepositoryDiscovery.cs",
       "source_location": "L6",
       "id": "services_repositorydiscovery_repositorydiscovery",
-      "community": 19,
+      "community": 18,
       "norm_label": "repositorydiscovery"
     },
     {
@@ -1908,7 +1908,7 @@
       "source_file": "",
       "source_location": "",
       "id": "irepositorydiscovery",
-      "community": 19,
+      "community": 18,
       "norm_label": "irepositorydiscovery"
     },
     {
@@ -1917,7 +1917,7 @@
       "source_file": "TiaGitAddIn\\Services\\RepositoryDiscovery.cs",
       "source_location": "L8",
       "id": "services_repositorydiscovery_repositorydiscovery_findrepositoryroot",
-      "community": 19,
+      "community": 18,
       "norm_label": ".findrepositoryroot()"
     },
     {
@@ -1926,7 +1926,7 @@
       "source_file": "TiaGitAddIn\\Services\\VciWorkspaceLocator.cs",
       "source_location": "L1",
       "id": "tiagitaddin_services_vciworkspacelocator_cs",
-      "community": 22,
+      "community": 21,
       "norm_label": "vciworkspacelocator.cs"
     },
     {
@@ -1935,7 +1935,7 @@
       "source_file": "TiaGitAddIn\\Services\\VciWorkspaceLocator.cs",
       "source_location": "L5",
       "id": "services_vciworkspacelocator_tiagitaddin_services",
-      "community": 22,
+      "community": 21,
       "norm_label": "tiagitaddin.services"
     },
     {
@@ -1944,7 +1944,7 @@
       "source_file": "TiaGitAddIn\\Services\\VciWorkspaceLocator.cs",
       "source_location": "L7",
       "id": "services_vciworkspacelocator_vciworkspacelocator",
-      "community": 22,
+      "community": 21,
       "norm_label": "vciworkspacelocator"
     },
     {
@@ -1953,7 +1953,7 @@
       "source_file": "",
       "source_location": "",
       "id": "ivciworkspacelocator",
-      "community": 0,
+      "community": 1,
       "norm_label": "ivciworkspacelocator"
     },
     {
@@ -1962,7 +1962,7 @@
       "source_file": "TiaGitAddIn\\Services\\VciWorkspaceLocator.cs",
       "source_location": "L9",
       "id": "services_vciworkspacelocator_vciworkspacelocator_trygetworkspacepath",
-      "community": 22,
+      "community": 21,
       "norm_label": ".trygetworkspacepath()"
     },
     {
@@ -1971,7 +1971,7 @@
       "source_file": "TiaGitAddIn\\Services\\VciWorkspaceLocator.cs",
       "source_location": "L43",
       "id": "services_vciworkspacelocator_vciworkspacelocator_tryreadproperty",
-      "community": 22,
+      "community": 21,
       "norm_label": ".tryreadproperty()"
     },
     {
@@ -1980,7 +1980,7 @@
       "source_file": "TiaGitAddIn\\Services\\VciWorkspaceLocator.cs",
       "source_location": "L60",
       "id": "services_vciworkspacelocator_vciworkspacelocator_resolvepath",
-      "community": 22,
+      "community": 21,
       "norm_label": ".resolvepath()"
     },
     {
@@ -1989,7 +1989,7 @@
       "source_file": "TiaGitAddIn\\Services\\VciWorkspaceLocator.cs",
       "source_location": "L75",
       "id": "services_vciworkspacelocator_vciworkspacelocator_resolvestringpath",
-      "community": 22,
+      "community": 21,
       "norm_label": ".resolvestringpath()"
     },
     {
@@ -1998,7 +1998,7 @@
       "source_file": "TiaGitAddIn\\UI\\AsyncCommand.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_asynccommand_cs",
-      "community": 10,
+      "community": 12,
       "norm_label": "asynccommand.cs"
     },
     {
@@ -2007,7 +2007,7 @@
       "source_file": "TiaGitAddIn\\UI\\AsyncCommand.cs",
       "source_location": "L5",
       "id": "ui_asynccommand_tiagitaddin_ui",
-      "community": 10,
+      "community": 12,
       "norm_label": "tiagitaddin.ui"
     },
     {
@@ -2016,7 +2016,7 @@
       "source_file": "TiaGitAddIn\\UI\\AsyncCommand.cs",
       "source_location": "L7",
       "id": "ui_asynccommand_asynccommand",
-      "community": 10,
+      "community": 12,
       "norm_label": "asynccommand"
     },
     {
@@ -2025,7 +2025,7 @@
       "source_file": "",
       "source_location": "",
       "id": "icommand",
-      "community": 10,
+      "community": 12,
       "norm_label": "icommand"
     },
     {
@@ -2034,7 +2034,7 @@
       "source_file": "TiaGitAddIn\\UI\\AsyncCommand.cs",
       "source_location": "L26",
       "id": "ui_asynccommand_asynccommand_canexecute",
-      "community": 10,
+      "community": 12,
       "norm_label": ".canexecute()"
     },
     {
@@ -2043,7 +2043,7 @@
       "source_file": "TiaGitAddIn\\UI\\AsyncCommand.cs",
       "source_location": "L29",
       "id": "ui_asynccommand_asynccommand_execute",
-      "community": 10,
+      "community": 12,
       "norm_label": ".execute()"
     },
     {
@@ -2052,7 +2052,7 @@
       "source_file": "TiaGitAddIn\\UI\\AsyncCommand.cs",
       "source_location": "L49",
       "id": "ui_asynccommand_asynccommand_raisecanexecutechanged",
-      "community": 10,
+      "community": 12,
       "norm_label": ".raisecanexecutechanged()"
     },
     {
@@ -2061,43 +2061,43 @@
       "source_file": "TiaGitAddIn\\UI\\GitPanelLaunchResult.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_gitpanellaunchresult_cs",
-      "community": 35,
+      "community": 34,
       "norm_label": "gitpanellaunchresult.cs"
     },
     {
       "label": "TiaGitAddIn.UI",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelLaunchResult.cs",
-      "source_location": "L3",
+      "source_location": "L4",
       "id": "ui_gitpanellaunchresult_tiagitaddin_ui",
-      "community": 35,
+      "community": 34,
       "norm_label": "tiagitaddin.ui"
     },
     {
       "label": "GitPanelLaunchResult",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelLaunchResult.cs",
-      "source_location": "L5",
+      "source_location": "L6",
       "id": "ui_gitpanellaunchresult_gitpanellaunchresult",
-      "community": 35,
+      "community": 34,
       "norm_label": "gitpanellaunchresult"
     },
     {
       "label": ".Ok()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelLaunchResult.cs",
-      "source_location": "L13",
+      "source_location": "L14",
       "id": "ui_gitpanellaunchresult_gitpanellaunchresult_ok",
-      "community": 35,
+      "community": 34,
       "norm_label": ".ok()"
     },
     {
       "label": ".Fail()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelLaunchResult.cs",
-      "source_location": "L20",
+      "source_location": "L21",
       "id": "ui_gitpanellaunchresult_gitpanellaunchresult_fail",
-      "community": 35,
+      "community": 34,
       "norm_label": ".fail()"
     },
     {
@@ -2106,35 +2106,188 @@
       "source_file": "TiaGitAddIn\\UI\\GitPanelLaunchService.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_gitpanellaunchservice_cs",
-      "community": 47,
+      "community": 7,
       "norm_label": "gitpanellaunchservice.cs"
     },
     {
       "label": "TiaGitAddIn.UI",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelLaunchService.cs",
-      "source_location": "L9",
+      "source_location": "L8",
       "id": "ui_gitpanellaunchservice_tiagitaddin_ui",
-      "community": 47,
+      "community": 7,
       "norm_label": "tiagitaddin.ui"
     },
     {
       "label": "GitPanelLaunchService",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelLaunchService.cs",
-      "source_location": "L11",
+      "source_location": "L10",
       "id": "ui_gitpanellaunchservice_gitpanellaunchservice",
-      "community": 47,
+      "community": 7,
       "norm_label": "gitpanellaunchservice"
     },
     {
       "label": ".CreateViewModel()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelLaunchService.cs",
-      "source_location": "L61",
+      "source_location": "L60",
       "id": "ui_gitpanellaunchservice_gitpanellaunchservice_createviewmodel",
-      "community": 47,
+      "community": 7,
       "norm_label": ".createviewmodel()"
+    },
+    {
+      "label": "ImmediateUiDispatcher.cs",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\ImmediateUiDispatcher.cs",
+      "source_location": "L1",
+      "id": "tiagitaddin_ui_immediateuidispatcher_cs",
+      "community": 10,
+      "norm_label": "immediateuidispatcher.cs"
+    },
+    {
+      "label": "TiaGitAddIn.UI",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\ImmediateUiDispatcher.cs",
+      "source_location": "L3",
+      "id": "ui_immediateuidispatcher_tiagitaddin_ui",
+      "community": 10,
+      "norm_label": "tiagitaddin.ui"
+    },
+    {
+      "label": "ImmediateUiDispatcher",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\ImmediateUiDispatcher.cs",
+      "source_location": "L5",
+      "id": "ui_immediateuidispatcher_immediateuidispatcher",
+      "community": 10,
+      "norm_label": "immediateuidispatcher"
+    },
+    {
+      "label": "IUiDispatcher",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "id": "iuidispatcher",
+      "community": 10,
+      "norm_label": "iuidispatcher"
+    },
+    {
+      "label": ".CheckAccess()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\ImmediateUiDispatcher.cs",
+      "source_location": "L13",
+      "id": "ui_immediateuidispatcher_immediateuidispatcher_checkaccess",
+      "community": 10,
+      "norm_label": ".checkaccess()"
+    },
+    {
+      "label": ".Invoke()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\ImmediateUiDispatcher.cs",
+      "source_location": "L15",
+      "id": "ui_immediateuidispatcher_immediateuidispatcher_invoke",
+      "community": 10,
+      "norm_label": ".invoke()"
+    },
+    {
+      "label": "IUiDispatcher.cs",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\IUiDispatcher.cs",
+      "source_location": "L1",
+      "id": "tiagitaddin_ui_iuidispatcher_cs",
+      "community": 35,
+      "norm_label": "iuidispatcher.cs"
+    },
+    {
+      "label": "TiaGitAddIn.UI",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\IUiDispatcher.cs",
+      "source_location": "L3",
+      "id": "ui_iuidispatcher_tiagitaddin_ui",
+      "community": 35,
+      "norm_label": "tiagitaddin.ui"
+    },
+    {
+      "label": "IUiDispatcher",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\IUiDispatcher.cs",
+      "source_location": "L5",
+      "id": "ui_iuidispatcher_iuidispatcher",
+      "community": 35,
+      "norm_label": "iuidispatcher"
+    },
+    {
+      "label": ".CheckAccess()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\IUiDispatcher.cs",
+      "source_location": "L7",
+      "id": "ui_iuidispatcher_iuidispatcher_checkaccess",
+      "community": 35,
+      "norm_label": ".checkaccess()"
+    },
+    {
+      "label": ".Invoke()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\IUiDispatcher.cs",
+      "source_location": "L9",
+      "id": "ui_iuidispatcher_iuidispatcher_invoke",
+      "community": 35,
+      "norm_label": ".invoke()"
+    },
+    {
+      "label": "WpfUiDispatcher.cs",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L1",
+      "id": "tiagitaddin_ui_wpfuidispatcher_cs",
+      "community": 10,
+      "norm_label": "wpfuidispatcher.cs"
+    },
+    {
+      "label": "TiaGitAddIn.UI",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L4",
+      "id": "ui_wpfuidispatcher_tiagitaddin_ui",
+      "community": 10,
+      "norm_label": "tiagitaddin.ui"
+    },
+    {
+      "label": "WpfUiDispatcher",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L6",
+      "id": "ui_wpfuidispatcher_wpfuidispatcher",
+      "community": 10,
+      "norm_label": "wpfuidispatcher"
+    },
+    {
+      "label": ".FromCurrentThread()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L15",
+      "id": "ui_wpfuidispatcher_wpfuidispatcher_fromcurrentthread",
+      "community": 10,
+      "norm_label": ".fromcurrentthread()"
+    },
+    {
+      "label": ".CheckAccess()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L18",
+      "id": "ui_wpfuidispatcher_wpfuidispatcher_checkaccess",
+      "community": 10,
+      "norm_label": ".checkaccess()"
+    },
+    {
+      "label": ".Invoke()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L20",
+      "id": "ui_wpfuidispatcher_wpfuidispatcher_invoke",
+      "community": 10,
+      "norm_label": ".invoke()"
     },
     {
       "label": "BoolToVisibilityConverter.cs",
@@ -2142,7 +2295,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\BoolToVisibilityConverter.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_converters_booltovisibilityconverter_cs",
-      "community": 8,
+      "community": 9,
       "norm_label": "booltovisibilityconverter.cs"
     },
     {
@@ -2151,7 +2304,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\BoolToVisibilityConverter.cs",
       "source_location": "L6",
       "id": "converters_booltovisibilityconverter_tiagitaddin_ui_converters",
-      "community": 8,
+      "community": 9,
       "norm_label": "tiagitaddin.ui.converters"
     },
     {
@@ -2160,7 +2313,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\BoolToVisibilityConverter.cs",
       "source_location": "L8",
       "id": "converters_booltovisibilityconverter_booltovisibilityconverter",
-      "community": 8,
+      "community": 9,
       "norm_label": "booltovisibilityconverter"
     },
     {
@@ -2169,7 +2322,7 @@
       "source_file": "",
       "source_location": "",
       "id": "ivalueconverter",
-      "community": 8,
+      "community": 9,
       "norm_label": "ivalueconverter"
     },
     {
@@ -2178,7 +2331,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\BoolToVisibilityConverter.cs",
       "source_location": "L12",
       "id": "converters_booltovisibilityconverter_booltovisibilityconverter_convert",
-      "community": 8,
+      "community": 9,
       "norm_label": ".convert()"
     },
     {
@@ -2187,7 +2340,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\BoolToVisibilityConverter.cs",
       "source_location": "L20",
       "id": "converters_booltovisibilityconverter_booltovisibilityconverter_convertback",
-      "community": 8,
+      "community": 9,
       "norm_label": ".convertback()"
     },
     {
@@ -2196,7 +2349,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\DiffLineTypeToColorConverter.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_converters_difflinetypetocolorconverter_cs",
-      "community": 8,
+      "community": 9,
       "norm_label": "difflinetypetocolorconverter.cs"
     },
     {
@@ -2205,7 +2358,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\DiffLineTypeToColorConverter.cs",
       "source_location": "L7",
       "id": "converters_difflinetypetocolorconverter_tiagitaddin_ui_converters",
-      "community": 8,
+      "community": 9,
       "norm_label": "tiagitaddin.ui.converters"
     },
     {
@@ -2214,7 +2367,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\DiffLineTypeToColorConverter.cs",
       "source_location": "L9",
       "id": "converters_difflinetypetocolorconverter_difflinetypetocolorconverter",
-      "community": 8,
+      "community": 9,
       "norm_label": "difflinetypetocolorconverter"
     },
     {
@@ -2223,7 +2376,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\DiffLineTypeToColorConverter.cs",
       "source_location": "L11",
       "id": "converters_difflinetypetocolorconverter_difflinetypetocolorconverter_convert",
-      "community": 8,
+      "community": 9,
       "norm_label": ".convert()"
     },
     {
@@ -2232,7 +2385,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\DiffLineTypeToColorConverter.cs",
       "source_location": "L25",
       "id": "converters_difflinetypetocolorconverter_difflinetypetocolorconverter_convertback",
-      "community": 8,
+      "community": 9,
       "norm_label": ".convertback()"
     },
     {
@@ -2241,7 +2394,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\FileStatusToColorConverter.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_converters_filestatustocolorconverter_cs",
-      "community": 8,
+      "community": 9,
       "norm_label": "filestatustocolorconverter.cs"
     },
     {
@@ -2250,7 +2403,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\FileStatusToColorConverter.cs",
       "source_location": "L7",
       "id": "converters_filestatustocolorconverter_tiagitaddin_ui_converters",
-      "community": 8,
+      "community": 9,
       "norm_label": "tiagitaddin.ui.converters"
     },
     {
@@ -2259,7 +2412,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\FileStatusToColorConverter.cs",
       "source_location": "L9",
       "id": "converters_filestatustocolorconverter_filestatustocolorconverter",
-      "community": 8,
+      "community": 9,
       "norm_label": "filestatustocolorconverter"
     },
     {
@@ -2268,7 +2421,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\FileStatusToColorConverter.cs",
       "source_location": "L11",
       "id": "converters_filestatustocolorconverter_filestatustocolorconverter_convert",
-      "community": 8,
+      "community": 9,
       "norm_label": ".convert()"
     },
     {
@@ -2277,7 +2430,7 @@
       "source_file": "TiaGitAddIn\\UI\\Converters\\FileStatusToColorConverter.cs",
       "source_location": "L29",
       "id": "converters_filestatustocolorconverter_filestatustocolorconverter_convertback",
-      "community": 8,
+      "community": 9,
       "norm_label": ".convertback()"
     },
     {
@@ -2286,25 +2439,25 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_viewmodels_branchviewmodel_cs",
-      "community": 13,
+      "community": 0,
       "norm_label": "branchviewmodel.cs"
     },
     {
       "label": "TiaGitAddIn.UI.ViewModels",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
-      "source_location": "L10",
+      "source_location": "L11",
       "id": "viewmodels_branchviewmodel_tiagitaddin_ui_viewmodels",
-      "community": 13,
+      "community": 0,
       "norm_label": "tiagitaddin.ui.viewmodels"
     },
     {
       "label": "BranchViewModel",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
-      "source_location": "L12",
+      "source_location": "L13",
       "id": "viewmodels_branchviewmodel_branchviewmodel",
-      "community": 13,
+      "community": 0,
       "norm_label": "branchviewmodel"
     },
     {
@@ -2313,79 +2466,79 @@
       "source_file": "",
       "source_location": "",
       "id": "viewmodelbase",
-      "community": 1,
+      "community": 0,
       "norm_label": "viewmodelbase"
     },
     {
       "label": ".RefreshAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
-      "source_location": "L88",
+      "source_location": "L90",
       "id": "viewmodels_branchviewmodel_branchviewmodel_refreshasync",
-      "community": 13,
+      "community": 0,
       "norm_label": ".refreshasync()"
     },
     {
       "label": ".CreateBranchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
-      "source_location": "L100",
+      "source_location": "L105",
       "id": "viewmodels_branchviewmodel_branchviewmodel_createbranchasync",
-      "community": 13,
+      "community": 0,
       "norm_label": ".createbranchasync()"
     },
     {
       "label": ".SwitchBranchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
-      "source_location": "L116",
+      "source_location": "L124",
       "id": "viewmodels_branchviewmodel_branchviewmodel_switchbranchasync",
-      "community": 13,
+      "community": 0,
       "norm_label": ".switchbranchasync()"
     },
     {
       "label": ".FetchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
-      "source_location": "L129",
+      "source_location": "L137",
       "id": "viewmodels_branchviewmodel_branchviewmodel_fetchasync",
-      "community": 13,
+      "community": 0,
       "norm_label": ".fetchasync()"
     },
     {
       "label": ".PullAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
-      "source_location": "L140",
+      "source_location": "L148",
       "id": "viewmodels_branchviewmodel_branchviewmodel_pullasync",
-      "community": 13,
+      "community": 0,
       "norm_label": ".pullasync()"
     },
     {
       "label": ".PushAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
-      "source_location": "L152",
+      "source_location": "L160",
       "id": "viewmodels_branchviewmodel_branchviewmodel_pushasync",
-      "community": 13,
+      "community": 0,
       "norm_label": ".pushasync()"
     },
     {
       "label": ".BuildOperationMessage()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
-      "source_location": "L163",
+      "source_location": "L171",
       "id": "viewmodels_branchviewmodel_branchviewmodel_buildoperationmessage",
-      "community": 13,
+      "community": 0,
       "norm_label": ".buildoperationmessage()"
     },
     {
       "label": ".RaiseCommandStates()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
-      "source_location": "L168",
+      "source_location": "L176",
       "id": "viewmodels_branchviewmodel_branchviewmodel_raisecommandstates",
-      "community": 13,
+      "community": 0,
       "norm_label": ".raisecommandstates()"
     },
     {
@@ -2394,43 +2547,43 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\CommitViewModel.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_viewmodels_commitviewmodel_cs",
-      "community": 1,
+      "community": 0,
       "norm_label": "commitviewmodel.cs"
     },
     {
       "label": "TiaGitAddIn.UI.ViewModels",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\CommitViewModel.cs",
-      "source_location": "L7",
+      "source_location": "L8",
       "id": "viewmodels_commitviewmodel_tiagitaddin_ui_viewmodels",
-      "community": 1,
+      "community": 0,
       "norm_label": "tiagitaddin.ui.viewmodels"
     },
     {
       "label": "CommitViewModel",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\CommitViewModel.cs",
-      "source_location": "L9",
+      "source_location": "L10",
       "id": "viewmodels_commitviewmodel_commitviewmodel",
-      "community": 1,
+      "community": 0,
       "norm_label": "commitviewmodel"
     },
     {
       "label": ".CommitAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\CommitViewModel.cs",
-      "source_location": "L68",
+      "source_location": "L73",
       "id": "viewmodels_commitviewmodel_commitviewmodel_commitasync",
-      "community": 1,
+      "community": 0,
       "norm_label": ".commitasync()"
     },
     {
       "label": ".BuildOperationMessage()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\CommitViewModel.cs",
-      "source_location": "L96",
+      "source_location": "L101",
       "id": "viewmodels_commitviewmodel_commitviewmodel_buildoperationmessage",
-      "community": 1,
+      "community": 0,
       "norm_label": ".buildoperationmessage()"
     },
     {
@@ -2484,34 +2637,34 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\MainViewModel.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_viewmodels_mainviewmodel_cs",
-      "community": 1,
+      "community": 0,
       "norm_label": "mainviewmodel.cs"
     },
     {
       "label": "TiaGitAddIn.UI.ViewModels",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\MainViewModel.cs",
-      "source_location": "L5",
+      "source_location": "L6",
       "id": "viewmodels_mainviewmodel_tiagitaddin_ui_viewmodels",
-      "community": 1,
+      "community": 0,
       "norm_label": "tiagitaddin.ui.viewmodels"
     },
     {
       "label": "MainViewModel",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\MainViewModel.cs",
-      "source_location": "L7",
+      "source_location": "L8",
       "id": "viewmodels_mainviewmodel_mainviewmodel",
-      "community": 1,
+      "community": 0,
       "norm_label": "mainviewmodel"
     },
     {
       "label": ".RefreshAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\MainViewModel.cs",
-      "source_location": "L27",
+      "source_location": "L32",
       "id": "viewmodels_mainviewmodel_mainviewmodel_refreshasync",
-      "community": 1,
+      "community": 0,
       "norm_label": ".refreshasync()"
     },
     {
@@ -2520,7 +2673,7 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\RelayCommand.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_viewmodels_relaycommand_cs",
-      "community": 10,
+      "community": 12,
       "norm_label": "relaycommand.cs"
     },
     {
@@ -2529,7 +2682,7 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\RelayCommand.cs",
       "source_location": "L4",
       "id": "viewmodels_relaycommand_tiagitaddin_ui_viewmodels",
-      "community": 10,
+      "community": 12,
       "norm_label": "tiagitaddin.ui.viewmodels"
     },
     {
@@ -2538,7 +2691,7 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\RelayCommand.cs",
       "source_location": "L6",
       "id": "viewmodels_relaycommand_relaycommand",
-      "community": 10,
+      "community": 12,
       "norm_label": "relaycommand"
     },
     {
@@ -2547,7 +2700,7 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\RelayCommand.cs",
       "source_location": "L19",
       "id": "viewmodels_relaycommand_relaycommand_canexecute",
-      "community": 10,
+      "community": 12,
       "norm_label": ".canexecute()"
     },
     {
@@ -2556,7 +2709,7 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\RelayCommand.cs",
       "source_location": "L21",
       "id": "viewmodels_relaycommand_relaycommand_execute",
-      "community": 10,
+      "community": 12,
       "norm_label": ".execute()"
     },
     {
@@ -2565,7 +2718,7 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\RelayCommand.cs",
       "source_location": "L23",
       "id": "viewmodels_relaycommand_relaycommand_raisecanexecutechanged",
-      "community": 10,
+      "community": 12,
       "norm_label": ".raisecanexecutechanged()"
     },
     {
@@ -2574,70 +2727,70 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\SettingsViewModel.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_viewmodels_settingsviewmodel_cs",
-      "community": 1,
+      "community": 0,
       "norm_label": "settingsviewmodel.cs"
     },
     {
       "label": "TiaGitAddIn.UI.ViewModels",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\SettingsViewModel.cs",
-      "source_location": "L7",
+      "source_location": "L8",
       "id": "viewmodels_settingsviewmodel_tiagitaddin_ui_viewmodels",
-      "community": 1,
+      "community": 0,
       "norm_label": "tiagitaddin.ui.viewmodels"
     },
     {
       "label": "SettingsViewModel",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\SettingsViewModel.cs",
-      "source_location": "L9",
+      "source_location": "L10",
       "id": "viewmodels_settingsviewmodel_settingsviewmodel",
-      "community": 1,
+      "community": 0,
       "norm_label": "settingsviewmodel"
     },
     {
       "label": ".LoadSettings()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\SettingsViewModel.cs",
-      "source_location": "L69",
+      "source_location": "L74",
       "id": "viewmodels_settingsviewmodel_settingsviewmodel_loadsettings",
-      "community": 1,
+      "community": 0,
       "norm_label": ".loadsettings()"
     },
     {
       "label": ".Save()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\SettingsViewModel.cs",
-      "source_location": "L81",
+      "source_location": "L86",
       "id": "viewmodels_settingsviewmodel_settingsviewmodel_save",
-      "community": 1,
+      "community": 0,
       "norm_label": ".save()"
     },
     {
       "label": ".CanSave()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\SettingsViewModel.cs",
-      "source_location": "L96",
+      "source_location": "L101",
       "id": "viewmodels_settingsviewmodel_settingsviewmodel_cansave",
-      "community": 1,
+      "community": 0,
       "norm_label": ".cansave()"
     },
     {
       "label": ".BrowseGitExe()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\SettingsViewModel.cs",
-      "source_location": "L98",
+      "source_location": "L103",
       "id": "viewmodels_settingsviewmodel_settingsviewmodel_browsegitexe",
-      "community": 1,
+      "community": 0,
       "norm_label": ".browsegitexe()"
     },
     {
       "label": ".Validate()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\SettingsViewModel.cs",
-      "source_location": "L112",
+      "source_location": "L117",
       "id": "viewmodels_settingsviewmodel_settingsviewmodel_validate",
-      "community": 1,
+      "community": 0,
       "norm_label": ".validate()"
     },
     {
@@ -2646,88 +2799,88 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_viewmodels_statusviewmodel_cs",
-      "community": 16,
+      "community": 0,
       "norm_label": "statusviewmodel.cs"
     },
     {
       "label": "TiaGitAddIn.UI.ViewModels",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
-      "source_location": "L10",
+      "source_location": "L11",
       "id": "viewmodels_statusviewmodel_tiagitaddin_ui_viewmodels",
-      "community": 16,
+      "community": 0,
       "norm_label": "tiagitaddin.ui.viewmodels"
     },
     {
       "label": "StatusViewModel",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
-      "source_location": "L12",
+      "source_location": "L13",
       "id": "viewmodels_statusviewmodel_statusviewmodel",
-      "community": 16,
+      "community": 0,
       "norm_label": "statusviewmodel"
     },
     {
       "label": ".RefreshAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
-      "source_location": "L92",
+      "source_location": "L101",
       "id": "viewmodels_statusviewmodel_statusviewmodel_refreshasync",
-      "community": 16,
+      "community": 0,
       "norm_label": ".refreshasync()"
     },
     {
       "label": ".StageSelectedAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
-      "source_location": "L113",
+      "source_location": "L127",
       "id": "viewmodels_statusviewmodel_statusviewmodel_stageselectedasync",
-      "community": 16,
+      "community": 0,
       "norm_label": ".stageselectedasync()"
     },
     {
       "label": ".UnstageSelectedAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
-      "source_location": "L133",
+      "source_location": "L149",
       "id": "viewmodels_statusviewmodel_statusviewmodel_unstageselectedasync",
-      "community": 16,
+      "community": 0,
       "norm_label": ".unstageselectedasync()"
     },
     {
       "label": ".StageAllAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
-      "source_location": "L153",
+      "source_location": "L171",
       "id": "viewmodels_statusviewmodel_statusviewmodel_stageallasync",
-      "community": 16,
+      "community": 0,
       "norm_label": ".stageallasync()"
     },
     {
       "label": ".BuildTrackingSummary()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
-      "source_location": "L165",
+      "source_location": "L185",
       "id": "viewmodels_statusviewmodel_statusviewmodel_buildtrackingsummary",
-      "community": 16,
+      "community": 0,
       "norm_label": ".buildtrackingsummary()"
     },
     {
       "label": ".BuildOperationMessage()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
-      "source_location": "L174",
+      "source_location": "L194",
       "id": "viewmodels_statusviewmodel_statusviewmodel_buildoperationmessage",
-      "community": 16,
+      "community": 0,
       "norm_label": ".buildoperationmessage()"
     },
     {
       "label": ".RaiseCommandStates()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
-      "source_location": "L179",
+      "source_location": "L199",
       "id": "viewmodels_statusviewmodel_statusviewmodel_raisecommandstates",
-      "community": 16,
+      "community": 0,
       "norm_label": ".raisecommandstates()"
     },
     {
@@ -2736,25 +2889,25 @@
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_viewmodels_viewmodelbase_cs",
-      "community": 1,
+      "community": 0,
       "norm_label": "viewmodelbase.cs"
     },
     {
       "label": "TiaGitAddIn.UI.ViewModels",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
-      "source_location": "L5",
+      "source_location": "L6",
       "id": "viewmodels_viewmodelbase_tiagitaddin_ui_viewmodels",
-      "community": 1,
+      "community": 0,
       "norm_label": "tiagitaddin.ui.viewmodels"
     },
     {
       "label": "ViewModelBase",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
-      "source_location": "L7",
+      "source_location": "L8",
       "id": "viewmodels_viewmodelbase_viewmodelbase",
-      "community": 1,
+      "community": 0,
       "norm_label": "viewmodelbase"
     },
     {
@@ -2763,25 +2916,34 @@
       "source_file": "",
       "source_location": "",
       "id": "inotifypropertychanged",
-      "community": 1,
+      "community": 15,
       "norm_label": "inotifypropertychanged"
     },
     {
       "label": ".OnPropertyChanged()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
-      "source_location": "L11",
+      "source_location": "L24",
       "id": "viewmodels_viewmodelbase_viewmodelbase_onpropertychanged",
-      "community": 1,
+      "community": 0,
       "norm_label": ".onpropertychanged()"
+    },
+    {
+      "label": ".InvokeOnUI()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
+      "source_location": "L29",
+      "id": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "community": 0,
+      "norm_label": ".invokeonui()"
     },
     {
       "label": ".SetProperty()",
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
-      "source_location": "L16",
+      "source_location": "L46",
       "id": "viewmodels_viewmodelbase_viewmodelbase_setproperty",
-      "community": 1,
+      "community": 0,
       "norm_label": ".setproperty()"
     },
     {
@@ -2790,7 +2952,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\BranchView.xaml.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_views_branchview_xaml_cs",
-      "community": 11,
+      "community": 13,
       "norm_label": "branchview.xaml.cs"
     },
     {
@@ -2799,7 +2961,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\BranchView.xaml.cs",
       "source_location": "L3",
       "id": "views_branchview_xaml_tiagitaddin_ui_views",
-      "community": 11,
+      "community": 13,
       "norm_label": "tiagitaddin.ui.views"
     },
     {
@@ -2808,7 +2970,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\BranchView.xaml.cs",
       "source_location": "L5",
       "id": "views_branchview_xaml_branchview",
-      "community": 11,
+      "community": 13,
       "norm_label": "branchview"
     },
     {
@@ -2817,7 +2979,7 @@
       "source_file": "",
       "source_location": "",
       "id": "usercontrol",
-      "community": 11,
+      "community": 13,
       "norm_label": "usercontrol"
     },
     {
@@ -2826,7 +2988,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\CommitView.xaml.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_views_commitview_xaml_cs",
-      "community": 11,
+      "community": 13,
       "norm_label": "commitview.xaml.cs"
     },
     {
@@ -2835,7 +2997,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\CommitView.xaml.cs",
       "source_location": "L3",
       "id": "views_commitview_xaml_tiagitaddin_ui_views",
-      "community": 11,
+      "community": 13,
       "norm_label": "tiagitaddin.ui.views"
     },
     {
@@ -2844,7 +3006,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\CommitView.xaml.cs",
       "source_location": "L5",
       "id": "views_commitview_xaml_commitview",
-      "community": 11,
+      "community": 13,
       "norm_label": "commitview"
     },
     {
@@ -2853,7 +3015,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_views_gitpanelwindow_cs",
-      "community": 12,
+      "community": 5,
       "norm_label": "gitpanelwindow.cs"
     },
     {
@@ -2862,7 +3024,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L8",
       "id": "views_gitpanelwindow_tiagitaddin_ui_views",
-      "community": 12,
+      "community": 5,
       "norm_label": "tiagitaddin.ui.views"
     },
     {
@@ -2871,7 +3033,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L10",
       "id": "views_gitpanelwindow_gitpanelwindow",
-      "community": 12,
+      "community": 5,
       "norm_label": "gitpanelwindow"
     },
     {
@@ -2880,7 +3042,7 @@
       "source_file": "",
       "source_location": "",
       "id": "window",
-      "community": 12,
+      "community": 5,
       "norm_label": "window"
     },
     {
@@ -2889,7 +3051,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L28",
       "id": "views_gitpanelwindow_gitpanelwindow_buildcontent",
-      "community": 12,
+      "community": 5,
       "norm_label": ".buildcontent()"
     },
     {
@@ -2898,7 +3060,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L40",
       "id": "views_gitpanelwindow_gitpanelwindow_buildheader",
-      "community": 12,
+      "community": 5,
       "norm_label": ".buildheader()"
     },
     {
@@ -2907,7 +3069,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L74",
       "id": "views_gitpanelwindow_gitpanelwindow_buildtabs",
-      "community": 12,
+      "community": 5,
       "norm_label": ".buildtabs()"
     },
     {
@@ -2916,7 +3078,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L94",
       "id": "views_gitpanelwindow_gitpanelwindow_buildstatustab",
-      "community": 12,
+      "community": 5,
       "norm_label": ".buildstatustab()"
     },
     {
@@ -2925,7 +3087,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L148",
       "id": "views_gitpanelwindow_gitpanelwindow_buildcommittab",
-      "community": 12,
+      "community": 5,
       "norm_label": ".buildcommittab()"
     },
     {
@@ -2934,7 +3096,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L195",
       "id": "views_gitpanelwindow_gitpanelwindow_createbutton",
-      "community": 12,
+      "community": 5,
       "norm_label": ".createbutton()"
     },
     {
@@ -2943,7 +3105,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L208",
       "id": "views_gitpanelwindow_gitpanelwindow_onloaded",
-      "community": 12,
+      "community": 5,
       "norm_label": ".onloaded()"
     },
     {
@@ -2952,7 +3114,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\GitPanelWindow.cs",
       "source_location": "L214",
       "id": "views_gitpanelwindow_gitpanelwindow_refreshonloadasync",
-      "community": 12,
+      "community": 5,
       "norm_label": ".refreshonloadasync()"
     },
     {
@@ -2961,7 +3123,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\SettingsView.xaml.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_views_settingsview_xaml_cs",
-      "community": 11,
+      "community": 13,
       "norm_label": "settingsview.xaml.cs"
     },
     {
@@ -2970,7 +3132,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\SettingsView.xaml.cs",
       "source_location": "L3",
       "id": "views_settingsview_xaml_tiagitaddin_ui_views",
-      "community": 11,
+      "community": 13,
       "norm_label": "tiagitaddin.ui.views"
     },
     {
@@ -2979,7 +3141,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\SettingsView.xaml.cs",
       "source_location": "L5",
       "id": "views_settingsview_xaml_settingsview",
-      "community": 11,
+      "community": 13,
       "norm_label": "settingsview"
     },
     {
@@ -2988,7 +3150,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\StatusView.xaml.cs",
       "source_location": "L1",
       "id": "tiagitaddin_ui_views_statusview_xaml_cs",
-      "community": 11,
+      "community": 13,
       "norm_label": "statusview.xaml.cs"
     },
     {
@@ -2997,7 +3159,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\StatusView.xaml.cs",
       "source_location": "L3",
       "id": "views_statusview_xaml_tiagitaddin_ui_views",
-      "community": 11,
+      "community": 13,
       "norm_label": "tiagitaddin.ui.views"
     },
     {
@@ -3006,7 +3168,7 @@
       "source_file": "TiaGitAddIn\\UI\\Views\\StatusView.xaml.cs",
       "source_location": "L5",
       "id": "views_statusview_xaml_statusview",
-      "community": 11,
+      "community": 13,
       "norm_label": "statusview"
     },
     {
@@ -3060,7 +3222,7 @@
       "source_file": "TiaGitAddIn.Tests\\Configuration\\ConfigurationServiceTests.cs",
       "source_location": "L1",
       "id": "tiagitaddin_tests_configuration_configurationservicetests_cs",
-      "community": 27,
+      "community": 26,
       "norm_label": "configurationservicetests.cs"
     },
     {
@@ -3069,7 +3231,7 @@
       "source_file": "TiaGitAddIn.Tests\\Configuration\\ConfigurationServiceTests.cs",
       "source_location": "L6",
       "id": "configuration_configurationservicetests_tiagitaddin_tests_configuration",
-      "community": 27,
+      "community": 26,
       "norm_label": "tiagitaddin.tests.configuration"
     },
     {
@@ -3078,7 +3240,7 @@
       "source_file": "TiaGitAddIn.Tests\\Configuration\\ConfigurationServiceTests.cs",
       "source_location": "L8",
       "id": "configuration_configurationservicetests_configurationservicetests",
-      "community": 27,
+      "community": 26,
       "norm_label": "configurationservicetests"
     },
     {
@@ -3087,7 +3249,7 @@
       "source_file": "TiaGitAddIn.Tests\\Configuration\\ConfigurationServiceTests.cs",
       "source_location": "L10",
       "id": "configuration_configurationservicetests_configurationservicetests_savethenloadroundtripsconfiguration",
-      "community": 27,
+      "community": 26,
       "norm_label": ".savethenloadroundtripsconfiguration()"
     },
     {
@@ -3096,7 +3258,7 @@
       "source_file": "TiaGitAddIn.Tests\\Configuration\\ConfigurationServiceTests.cs",
       "source_location": "L40",
       "id": "configuration_configurationservicetests_configurationservicetests_loadreturnsdefaultconfigurationwhenfileismalformed",
-      "community": 27,
+      "community": 26,
       "norm_label": ".loadreturnsdefaultconfigurationwhenfileismalformed()"
     },
     {
@@ -3105,7 +3267,7 @@
       "source_file": "TiaGitAddIn.Tests\\Configuration\\ConfigurationServiceTests.cs",
       "source_location": "L61",
       "id": "configuration_configurationservicetests_configurationservicetests_loadnormalizesmissingrepositorypath",
-      "community": 27,
+      "community": 26,
       "norm_label": ".loadnormalizesmissingrepositorypath()"
     },
     {
@@ -3213,7 +3375,7 @@
       "source_file": "TiaGitAddIn.Tests\\Entry\\MenuSelectionContextResolverTests.cs",
       "source_location": "L1",
       "id": "tiagitaddin_tests_entry_menuselectioncontextresolvertests_cs",
-      "community": 25,
+      "community": 23,
       "norm_label": "menuselectioncontextresolvertests.cs"
     },
     {
@@ -3222,7 +3384,7 @@
       "source_file": "TiaGitAddIn.Tests\\Entry\\MenuSelectionContextResolverTests.cs",
       "source_location": "L6",
       "id": "entry_menuselectioncontextresolvertests_tiagitaddin_tests_entry",
-      "community": 25,
+      "community": 23,
       "norm_label": "tiagitaddin.tests.entry"
     },
     {
@@ -3231,7 +3393,7 @@
       "source_file": "TiaGitAddIn.Tests\\Entry\\MenuSelectionContextResolverTests.cs",
       "source_location": "L8",
       "id": "entry_menuselectioncontextresolvertests_menuselectioncontextresolvertests",
-      "community": 25,
+      "community": 23,
       "norm_label": "menuselectioncontextresolvertests"
     },
     {
@@ -3240,7 +3402,7 @@
       "source_file": "TiaGitAddIn.Tests\\Entry\\MenuSelectionContextResolverTests.cs",
       "source_location": "L10",
       "id": "entry_menuselectioncontextresolvertests_menuselectioncontextresolvertests_resolveusesnongenericselectionmethodwhengenericoverloadexists",
-      "community": 25,
+      "community": 23,
       "norm_label": ".resolveusesnongenericselectionmethodwhengenericoverloadexists()"
     },
     {
@@ -3249,7 +3411,7 @@
       "source_file": "TiaGitAddIn.Tests\\Entry\\MenuSelectionContextResolverTests.cs",
       "source_location": "L22",
       "id": "entry_menuselectioncontextresolvertests_menuselectioncontextresolvertests_invokeresolve",
-      "community": 25,
+      "community": 23,
       "norm_label": ".invokeresolve()"
     },
     {
@@ -3258,7 +3420,7 @@
       "source_file": "TiaGitAddIn.Tests\\Entry\\MenuSelectionContextResolverTests.cs",
       "source_location": "L34",
       "id": "entry_menuselectioncontextresolvertests_providerwithambiguousselectionmethods",
-      "community": 25,
+      "community": 23,
       "norm_label": "providerwithambiguousselectionmethods"
     },
     {
@@ -3267,7 +3429,7 @@
       "source_file": "TiaGitAddIn.Tests\\Entry\\MenuSelectionContextResolverTests.cs",
       "source_location": "L43",
       "id": "entry_menuselectioncontextresolvertests_providerwithambiguousselectionmethods_getselection",
-      "community": 25,
+      "community": 23,
       "norm_label": ".getselection()"
     },
     {
@@ -3321,7 +3483,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitArgumentEscaperTests.cs",
       "source_location": "L1",
       "id": "tiagitaddin_tests_services_gitargumentescapertests_cs",
-      "community": 48,
+      "community": 47,
       "norm_label": "gitargumentescapertests.cs"
     },
     {
@@ -3330,7 +3492,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitArgumentEscaperTests.cs",
       "source_location": "L4",
       "id": "services_gitargumentescapertests_tiagitaddin_tests_services",
-      "community": 48,
+      "community": 47,
       "norm_label": "tiagitaddin.tests.services"
     },
     {
@@ -3339,7 +3501,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitArgumentEscaperTests.cs",
       "source_location": "L6",
       "id": "services_gitargumentescapertests_gitargumentescapertests",
-      "community": 48,
+      "community": 47,
       "norm_label": "gitargumentescapertests"
     },
     {
@@ -3348,7 +3510,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitArgumentEscaperTests.cs",
       "source_location": "L8",
       "id": "services_gitargumentescapertests_gitargumentescapertests_escapepreserveswindowsargumentmeaning",
-      "community": 48,
+      "community": 47,
       "norm_label": ".escapepreserveswindowsargumentmeaning()"
     },
     {
@@ -3357,7 +3519,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitOutputParserTests.cs",
       "source_location": "L1",
       "id": "tiagitaddin_tests_services_gitoutputparsertests_cs",
-      "community": 26,
+      "community": 24,
       "norm_label": "gitoutputparsertests.cs"
     },
     {
@@ -3366,7 +3528,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitOutputParserTests.cs",
       "source_location": "L6",
       "id": "services_gitoutputparsertests_tiagitaddin_tests_services",
-      "community": 26,
+      "community": 24,
       "norm_label": "tiagitaddin.tests.services"
     },
     {
@@ -3375,7 +3537,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitOutputParserTests.cs",
       "source_location": "L8",
       "id": "services_gitoutputparsertests_gitoutputparsertests",
-      "community": 26,
+      "community": 24,
       "norm_label": "gitoutputparsertests"
     },
     {
@@ -3384,7 +3546,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitOutputParserTests.cs",
       "source_location": "L10",
       "id": "services_gitoutputparsertests_gitoutputparsertests_parsestatusmapsporcelainentries",
-      "community": 26,
+      "community": 24,
       "norm_label": ".parsestatusmapsporcelainentries()"
     },
     {
@@ -3393,7 +3555,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitOutputParserTests.cs",
       "source_location": "L39",
       "id": "services_gitoutputparsertests_gitoutputparsertests_parsecommitlogskipsmalformedlines",
-      "community": 26,
+      "community": 24,
       "norm_label": ".parsecommitlogskipsmalformedlines()"
     },
     {
@@ -3402,7 +3564,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitOutputParserTests.cs",
       "source_location": "L53",
       "id": "services_gitoutputparsertests_gitoutputparsertests_parsestatusreadsfreshrepositorybranch",
-      "community": 26,
+      "community": 24,
       "norm_label": ".parsestatusreadsfreshrepositorybranch()"
     },
     {
@@ -3411,7 +3573,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\GitOutputParserTests.cs",
       "source_location": "L62",
       "id": "services_gitoutputparsertests_gitoutputparsertests_parseremotespreservesurlswithspaces",
-      "community": 26,
+      "community": 24,
       "norm_label": ".parseremotespreservesurlswithspaces()"
     },
     {
@@ -3465,7 +3627,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\VciWorkspaceLocatorTests.cs",
       "source_location": "L1",
       "id": "tiagitaddin_tests_services_vciworkspacelocatortests_cs",
-      "community": 17,
+      "community": 16,
       "norm_label": "vciworkspacelocatortests.cs"
     },
     {
@@ -3474,7 +3636,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\VciWorkspaceLocatorTests.cs",
       "source_location": "L5",
       "id": "services_vciworkspacelocatortests_tiagitaddin_tests_services",
-      "community": 17,
+      "community": 16,
       "norm_label": "tiagitaddin.tests.services"
     },
     {
@@ -3483,7 +3645,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\VciWorkspaceLocatorTests.cs",
       "source_location": "L7",
       "id": "services_vciworkspacelocatortests_vciworkspacelocatortests",
-      "community": 17,
+      "community": 16,
       "norm_label": "vciworkspacelocatortests"
     },
     {
@@ -3492,7 +3654,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\VciWorkspaceLocatorTests.cs",
       "source_location": "L9",
       "id": "services_vciworkspacelocatortests_vciworkspacelocatortests_trygetworkspacepathacceptsdirectorypathproperty",
-      "community": 17,
+      "community": 16,
       "norm_label": ".trygetworkspacepathacceptsdirectorypathproperty()"
     },
     {
@@ -3501,7 +3663,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\VciWorkspaceLocatorTests.cs",
       "source_location": "L28",
       "id": "services_vciworkspacelocatortests_vciworkspacelocatortests_trygetworkspacepathusesparentdirectoryforprojectfilepath",
-      "community": 17,
+      "community": 16,
       "norm_label": ".trygetworkspacepathusesparentdirectoryforprojectfilepath()"
     },
     {
@@ -3510,7 +3672,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\VciWorkspaceLocatorTests.cs",
       "source_location": "L49",
       "id": "services_vciworkspacelocatortests_vciworkspacelocatortests_trygetworkspacepathacceptsvciworkspacefolderdirectoryinfoproperty",
-      "community": 17,
+      "community": 16,
       "norm_label": ".trygetworkspacepathacceptsvciworkspacefolderdirectoryinfoproperty()"
     },
     {
@@ -3519,7 +3681,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\VciWorkspaceLocatorTests.cs",
       "source_location": "L69",
       "id": "services_vciworkspacelocatortests_vciworkspacelocatortests_trygetworkspacepathacceptsvciworkspacefilefileinfoproperty",
-      "community": 17,
+      "community": 16,
       "norm_label": ".trygetworkspacepathacceptsvciworkspacefilefileinfoproperty()"
     },
     {
@@ -3528,7 +3690,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\VciWorkspaceLocatorTests.cs",
       "source_location": "L91",
       "id": "services_vciworkspacelocatortests_projectwithpath",
-      "community": 17,
+      "community": 16,
       "norm_label": "projectwithpath"
     },
     {
@@ -3537,7 +3699,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\VciWorkspaceLocatorTests.cs",
       "source_location": "L101",
       "id": "services_vciworkspacelocatortests_workspacefolderlikecontext",
-      "community": 17,
+      "community": 16,
       "norm_label": "workspacefolderlikecontext"
     },
     {
@@ -3546,7 +3708,7 @@
       "source_file": "TiaGitAddIn.Tests\\Services\\VciWorkspaceLocatorTests.cs",
       "source_location": "L111",
       "id": "services_vciworkspacelocatortests_workspacefilelikecontext",
-      "community": 17,
+      "community": 16,
       "norm_label": "workspacefilelikecontext"
     },
     {
@@ -3555,7 +3717,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L1",
       "id": "tiagitaddin_tests_ui_commitviewmodeltests_cs",
-      "community": 2,
+      "community": 3,
       "norm_label": "commitviewmodeltests.cs"
     },
     {
@@ -3564,7 +3726,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L10",
       "id": "ui_commitviewmodeltests_tiagitaddin_tests_ui",
-      "community": 2,
+      "community": 3,
       "norm_label": "tiagitaddin.tests.ui"
     },
     {
@@ -3573,7 +3735,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L12",
       "id": "ui_commitviewmodeltests_commitviewmodeltests",
-      "community": 2,
+      "community": 3,
       "norm_label": "commitviewmodeltests"
     },
     {
@@ -3582,7 +3744,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L14",
       "id": "ui_commitviewmodeltests_commitviewmodeltests_commitasynccallsgitserviceandrefreshes",
-      "community": 2,
+      "community": 3,
       "norm_label": ".commitasynccallsgitserviceandrefreshes()"
     },
     {
@@ -3591,7 +3753,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L36",
       "id": "ui_commitviewmodeltests_fakegitservice",
-      "community": 2,
+      "community": 3,
       "norm_label": "fakegitservice"
     },
     {
@@ -3600,7 +3762,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L42",
       "id": "ui_commitviewmodeltests_fakegitservice_commitasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".commitasync()"
     },
     {
@@ -3609,7 +3771,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L49",
       "id": "ui_commitviewmodeltests_fakegitservice_getstatusasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".getstatusasync()"
     },
     {
@@ -3618,7 +3780,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L52",
       "id": "ui_commitviewmodeltests_fakegitservice_stageasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".stageasync()"
     },
     {
@@ -3627,7 +3789,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L55",
       "id": "ui_commitviewmodeltests_fakegitservice_unstageasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".unstageasync()"
     },
     {
@@ -3636,7 +3798,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L58",
       "id": "ui_commitviewmodeltests_fakegitservice_stageallasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".stageallasync()"
     },
     {
@@ -3645,7 +3807,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L61",
       "id": "ui_commitviewmodeltests_fakegitservice_fetchasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".fetchasync()"
     },
     {
@@ -3654,7 +3816,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L64",
       "id": "ui_commitviewmodeltests_fakegitservice_pullasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".pullasync()"
     },
     {
@@ -3663,7 +3825,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L67",
       "id": "ui_commitviewmodeltests_fakegitservice_pushasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".pushasync()"
     },
     {
@@ -3672,7 +3834,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L70",
       "id": "ui_commitviewmodeltests_fakegitservice_getbranchesasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".getbranchesasync()"
     },
     {
@@ -3681,7 +3843,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L73",
       "id": "ui_commitviewmodeltests_fakegitservice_createbranchasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".createbranchasync()"
     },
     {
@@ -3690,7 +3852,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L76",
       "id": "ui_commitviewmodeltests_fakegitservice_switchbranchasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".switchbranchasync()"
     },
     {
@@ -3699,7 +3861,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L79",
       "id": "ui_commitviewmodeltests_fakegitservice_checkoutbranchasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".checkoutbranchasync()"
     },
     {
@@ -3708,7 +3870,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L82",
       "id": "ui_commitviewmodeltests_fakegitservice_getcommitlogasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".getcommitlogasync()"
     },
     {
@@ -3717,7 +3879,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L85",
       "id": "ui_commitviewmodeltests_fakegitservice_getworkingtreediffasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".getworkingtreediffasync()"
     },
     {
@@ -3726,7 +3888,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L88",
       "id": "ui_commitviewmodeltests_fakegitservice_getcommitdiffasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".getcommitdiffasync()"
     },
     {
@@ -3735,7 +3897,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L91",
       "id": "ui_commitviewmodeltests_fakegitservice_getcommitfilesasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".getcommitfilesasync()"
     },
     {
@@ -3744,7 +3906,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L94",
       "id": "ui_commitviewmodeltests_fakegitservice_initasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".initasync()"
     },
     {
@@ -3753,7 +3915,7 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L97",
       "id": "ui_commitviewmodeltests_fakegitservice_getremotesasync",
-      "community": 2,
+      "community": 3,
       "norm_label": ".getremotesasync()"
     },
     {
@@ -3762,349 +3924,349 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
       "source_location": "L1",
       "id": "tiagitaddin_tests_ui_gitpanellaunchservicetests_cs",
-      "community": 0,
+      "community": 1,
       "norm_label": "gitpanellaunchservicetests.cs"
     },
     {
       "label": "TiaGitAddIn.Tests.UI",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L14",
+      "source_location": "L13",
       "id": "ui_gitpanellaunchservicetests_tiagitaddin_tests_ui",
-      "community": 0,
+      "community": 1,
       "norm_label": "tiagitaddin.tests.ui"
     },
     {
       "label": "GitPanelLaunchServiceTests",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L16",
+      "source_location": "L15",
       "id": "ui_gitpanellaunchservicetests_gitpanellaunchservicetests",
-      "community": 0,
+      "community": 1,
       "norm_label": "gitpanellaunchservicetests"
     },
     {
       "label": ".CreateViewModelBuildsPanelForDiscoveredRepository()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L18",
+      "source_location": "L17",
       "id": "ui_gitpanellaunchservicetests_gitpanellaunchservicetests_createviewmodelbuildspanelfordiscoveredrepository",
-      "community": 0,
+      "community": 1,
       "norm_label": ".createviewmodelbuildspanelfordiscoveredrepository()"
     },
     {
       "label": "FakeWorkspaceLocator",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L40",
+      "source_location": "L41",
       "id": "ui_gitpanellaunchservicetests_fakeworkspacelocator",
-      "community": 0,
+      "community": 1,
       "norm_label": "fakeworkspacelocator"
     },
     {
       "label": ".TryGetWorkspacePath()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L42",
+      "source_location": "L43",
       "id": "ui_gitpanellaunchservicetests_fakeworkspacelocator_trygetworkspacepath",
-      "community": 0,
+      "community": 1,
       "norm_label": ".trygetworkspacepath()"
     },
     {
       "label": ".IsVciWorkspaceValid()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L43",
+      "source_location": "L44",
       "id": "ui_gitpanellaunchservicetests_fakeworkspacelocator_isvciworkspacevalid",
-      "community": 0,
+      "community": 1,
       "norm_label": ".isvciworkspacevalid()"
     },
     {
       "label": "FakeRepositoryDiscovery",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L46",
+      "source_location": "L47",
       "id": "ui_gitpanellaunchservicetests_fakerepositorydiscovery",
-      "community": 19,
+      "community": 18,
       "norm_label": "fakerepositorydiscovery"
     },
     {
       "label": ".FindRepositoryRoot()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L48",
+      "source_location": "L49",
       "id": "ui_gitpanellaunchservicetests_fakerepositorydiscovery_findrepositoryroot",
-      "community": 19,
+      "community": 18,
       "norm_label": ".findrepositoryroot()"
     },
     {
       "label": ".IsGitRepository()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L49",
+      "source_location": "L50",
       "id": "ui_gitpanellaunchservicetests_fakerepositorydiscovery_isgitrepository",
-      "community": 19,
+      "community": 18,
       "norm_label": ".isgitrepository()"
     },
     {
       "label": ".InitializeRepositoryAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L50",
+      "source_location": "L51",
       "id": "ui_gitpanellaunchservicetests_fakerepositorydiscovery_initializerepositoryasync",
-      "community": 19,
+      "community": 18,
       "norm_label": ".initializerepositoryasync()"
     },
     {
       "label": "FakeConfigurationService",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L54",
+      "source_location": "L55",
       "id": "ui_gitpanellaunchservicetests_fakeconfigurationservice",
-      "community": 9,
+      "community": 11,
       "norm_label": "fakeconfigurationservice"
     },
     {
       "label": ".Load()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L56",
+      "source_location": "L57",
       "id": "ui_gitpanellaunchservicetests_fakeconfigurationservice_load",
-      "community": 9,
+      "community": 11,
       "norm_label": ".load()"
     },
     {
       "label": ".Save()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L57",
+      "source_location": "L58",
       "id": "ui_gitpanellaunchservicetests_fakeconfigurationservice_save",
-      "community": 9,
+      "community": 11,
       "norm_label": ".save()"
     },
     {
       "label": ".GetConfigFilePath()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L58",
+      "source_location": "L59",
       "id": "ui_gitpanellaunchservicetests_fakeconfigurationservice_getconfigfilepath",
-      "community": 9,
+      "community": 11,
       "norm_label": ".getconfigfilepath()"
     },
     {
       "label": "FakeLogger",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L61",
+      "source_location": "L62",
       "id": "ui_gitpanellaunchservicetests_fakelogger",
-      "community": 0,
+      "community": 1,
       "norm_label": "fakelogger"
     },
     {
       "label": ".Info()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L63",
+      "source_location": "L64",
       "id": "ui_gitpanellaunchservicetests_fakelogger_info",
-      "community": 0,
+      "community": 1,
       "norm_label": ".info()"
     },
     {
       "label": ".Warn()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L64",
+      "source_location": "L65",
       "id": "ui_gitpanellaunchservicetests_fakelogger_warn",
-      "community": 0,
+      "community": 1,
       "norm_label": ".warn()"
     },
     {
       "label": ".Error()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L65",
+      "source_location": "L66",
       "id": "ui_gitpanellaunchservicetests_fakelogger_error",
-      "community": 0,
+      "community": 1,
       "norm_label": ".error()"
     },
     {
       "label": ".Debug()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L66",
+      "source_location": "L67",
       "id": "ui_gitpanellaunchservicetests_fakelogger_debug",
-      "community": 0,
+      "community": 1,
       "norm_label": ".debug()"
     },
     {
       "label": "FakeGitService",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L69",
+      "source_location": "L70",
       "id": "ui_gitpanellaunchservicetests_fakegitservice",
-      "community": 0,
+      "community": 1,
       "norm_label": "fakegitservice"
     },
     {
       "label": ".GetStatusAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L71",
+      "source_location": "L72",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_getstatusasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".getstatusasync()"
     },
     {
       "label": ".StageAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L74",
+      "source_location": "L75",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_stageasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".stageasync()"
     },
     {
       "label": ".UnstageAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L77",
+      "source_location": "L78",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_unstageasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".unstageasync()"
     },
     {
       "label": ".StageAllAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L80",
+      "source_location": "L81",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_stageallasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".stageallasync()"
     },
     {
       "label": ".CommitAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L83",
+      "source_location": "L84",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_commitasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".commitasync()"
     },
     {
       "label": ".FetchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L86",
+      "source_location": "L87",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_fetchasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".fetchasync()"
     },
     {
       "label": ".PullAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L89",
+      "source_location": "L90",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_pullasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".pullasync()"
     },
     {
       "label": ".PushAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L92",
+      "source_location": "L93",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_pushasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".pushasync()"
     },
     {
       "label": ".GetBranchesAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L95",
+      "source_location": "L96",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_getbranchesasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".getbranchesasync()"
     },
     {
       "label": ".CreateBranchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L98",
+      "source_location": "L99",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_createbranchasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".createbranchasync()"
     },
     {
       "label": ".SwitchBranchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L101",
+      "source_location": "L102",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_switchbranchasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".switchbranchasync()"
     },
     {
       "label": ".CheckoutBranchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L104",
+      "source_location": "L105",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_checkoutbranchasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".checkoutbranchasync()"
     },
     {
       "label": ".GetCommitLogAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L107",
+      "source_location": "L108",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_getcommitlogasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".getcommitlogasync()"
     },
     {
       "label": ".GetWorkingTreeDiffAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L110",
+      "source_location": "L111",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_getworkingtreediffasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".getworkingtreediffasync()"
     },
     {
       "label": ".GetCommitDiffAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L113",
+      "source_location": "L114",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_getcommitdiffasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".getcommitdiffasync()"
     },
     {
       "label": ".GetCommitFilesAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L116",
+      "source_location": "L117",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_getcommitfilesasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".getcommitfilesasync()"
     },
     {
       "label": ".InitAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L119",
+      "source_location": "L120",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_initasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".initasync()"
     },
     {
       "label": ".GetRemotesAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
-      "source_location": "L122",
+      "source_location": "L123",
       "id": "ui_gitpanellaunchservicetests_fakegitservice_getremotesasync",
-      "community": 0,
+      "community": 1,
       "norm_label": ".getremotesasync()"
     },
     {
@@ -4113,222 +4275,258 @@
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
       "source_location": "L1",
       "id": "tiagitaddin_tests_ui_statusviewmodeltests_cs",
-      "community": 3,
+      "community": 2,
       "norm_label": "statusviewmodeltests.cs"
     },
     {
       "label": "TiaGitAddIn.Tests.UI",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L11",
+      "source_location": "L12",
       "id": "ui_statusviewmodeltests_tiagitaddin_tests_ui",
-      "community": 3,
+      "community": 2,
       "norm_label": "tiagitaddin.tests.ui"
     },
     {
       "label": "StatusViewModelTests",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L13",
+      "source_location": "L14",
       "id": "ui_statusviewmodeltests_statusviewmodeltests",
-      "community": 3,
+      "community": 2,
       "norm_label": "statusviewmodeltests"
     },
     {
       "label": ".RefreshAsyncPopulatesEntriesFromGitService()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L15",
+      "source_location": "L16",
       "id": "ui_statusviewmodeltests_statusviewmodeltests_refreshasyncpopulatesentriesfromgitservice",
-      "community": 3,
+      "community": 2,
       "norm_label": ".refreshasyncpopulatesentriesfromgitservice()"
+    },
+    {
+      "label": ".RefreshAsyncUsesConfiguredUiDispatcherForBoundUpdates()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
+      "source_location": "L39",
+      "id": "ui_statusviewmodeltests_statusviewmodeltests_refreshasyncusesconfigureduidispatcherforboundupdates",
+      "community": 2,
+      "norm_label": ".refreshasyncusesconfigureduidispatcherforboundupdates()"
     },
     {
       "label": ".StageSelectedAsyncCallsGitServiceAndRefreshes()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L38",
+      "source_location": "L61",
       "id": "ui_statusviewmodeltests_statusviewmodeltests_stageselectedasynccallsgitserviceandrefreshes",
-      "community": 3,
+      "community": 2,
       "norm_label": ".stageselectedasynccallsgitserviceandrefreshes()"
     },
     {
       "label": "FakeGitService",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L62",
+      "source_location": "L85",
       "id": "ui_statusviewmodeltests_fakegitservice",
-      "community": 3,
+      "community": 2,
       "norm_label": "fakegitservice"
     },
     {
       "label": ".GetStatusAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L75",
+      "source_location": "L98",
       "id": "ui_statusviewmodeltests_fakegitservice_getstatusasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".getstatusasync()"
     },
     {
       "label": ".StageAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L80",
+      "source_location": "L103",
       "id": "ui_statusviewmodeltests_fakegitservice_stageasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".stageasync()"
     },
     {
       "label": ".UnstageAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L86",
+      "source_location": "L109",
       "id": "ui_statusviewmodeltests_fakegitservice_unstageasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".unstageasync()"
     },
     {
       "label": ".StageAllAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L89",
+      "source_location": "L112",
       "id": "ui_statusviewmodeltests_fakegitservice_stageallasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".stageallasync()"
     },
     {
       "label": ".CommitAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L92",
+      "source_location": "L115",
       "id": "ui_statusviewmodeltests_fakegitservice_commitasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".commitasync()"
     },
     {
       "label": ".FetchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L95",
+      "source_location": "L118",
       "id": "ui_statusviewmodeltests_fakegitservice_fetchasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".fetchasync()"
     },
     {
       "label": ".PullAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L98",
+      "source_location": "L121",
       "id": "ui_statusviewmodeltests_fakegitservice_pullasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".pullasync()"
     },
     {
       "label": ".PushAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L101",
+      "source_location": "L124",
       "id": "ui_statusviewmodeltests_fakegitservice_pushasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".pushasync()"
     },
     {
       "label": ".GetBranchesAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L104",
+      "source_location": "L127",
       "id": "ui_statusviewmodeltests_fakegitservice_getbranchesasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".getbranchesasync()"
     },
     {
       "label": ".CreateBranchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L107",
+      "source_location": "L130",
       "id": "ui_statusviewmodeltests_fakegitservice_createbranchasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".createbranchasync()"
     },
     {
       "label": ".SwitchBranchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L110",
+      "source_location": "L133",
       "id": "ui_statusviewmodeltests_fakegitservice_switchbranchasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".switchbranchasync()"
     },
     {
       "label": ".CheckoutBranchAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L113",
+      "source_location": "L136",
       "id": "ui_statusviewmodeltests_fakegitservice_checkoutbranchasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".checkoutbranchasync()"
     },
     {
       "label": ".GetCommitLogAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L116",
+      "source_location": "L139",
       "id": "ui_statusviewmodeltests_fakegitservice_getcommitlogasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".getcommitlogasync()"
     },
     {
       "label": ".GetWorkingTreeDiffAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L119",
+      "source_location": "L142",
       "id": "ui_statusviewmodeltests_fakegitservice_getworkingtreediffasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".getworkingtreediffasync()"
     },
     {
       "label": ".GetCommitDiffAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L122",
+      "source_location": "L145",
       "id": "ui_statusviewmodeltests_fakegitservice_getcommitdiffasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".getcommitdiffasync()"
     },
     {
       "label": ".GetCommitFilesAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L125",
+      "source_location": "L148",
       "id": "ui_statusviewmodeltests_fakegitservice_getcommitfilesasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".getcommitfilesasync()"
     },
     {
       "label": ".InitAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L128",
+      "source_location": "L151",
       "id": "ui_statusviewmodeltests_fakegitservice_initasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".initasync()"
     },
     {
       "label": ".GetRemotesAsync()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
-      "source_location": "L131",
+      "source_location": "L154",
       "id": "ui_statusviewmodeltests_fakegitservice_getremotesasync",
-      "community": 3,
+      "community": 2,
       "norm_label": ".getremotesasync()"
+    },
+    {
+      "label": "RecordingUiDispatcher",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
+      "source_location": "L158",
+      "id": "ui_statusviewmodeltests_recordinguidispatcher",
+      "community": 10,
+      "norm_label": "recordinguidispatcher"
+    },
+    {
+      "label": ".CheckAccess()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
+      "source_location": "L162",
+      "id": "ui_statusviewmodeltests_recordinguidispatcher_checkaccess",
+      "community": 10,
+      "norm_label": ".checkaccess()"
+    },
+    {
+      "label": ".Invoke()",
+      "file_type": "code",
+      "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
+      "source_location": "L164",
+      "id": "ui_statusviewmodeltests_recordinguidispatcher_invoke",
+      "community": 10,
+      "norm_label": ".invoke()"
     },
     {
       "label": ".CommitAsyncRejectsWhitespaceMessage()",
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L13",
-      "community": 2,
+      "community": 3,
       "norm_label": ".commitasyncrejectswhitespacemessage()",
       "id": "ui_commitviewmodeltests_commitviewmodeltests_commitasyncrejectswhitespacemessage"
     },
@@ -4337,7 +4535,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\CommitViewModelTests.cs",
       "source_location": "L29",
-      "community": 2,
+      "community": 3,
       "norm_label": ".commitasynccommitsmessageclearseditorandrefreshes()",
       "id": "ui_commitviewmodeltests_commitviewmodeltests_commitasynccommitsmessageclearseditorandrefreshes"
     },
@@ -4346,7 +4544,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
       "source_location": "L19",
-      "community": 0,
+      "community": 1,
       "norm_label": ".createviewmodelfailswhenworkspacecannotberesolved()",
       "id": "ui_gitpanellaunchservicetests_gitpanellaunchservicetests_createviewmodelfailswhenworkspacecannotberesolved"
     },
@@ -4355,7 +4553,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
       "source_location": "L64",
-      "community": 0,
+      "community": 1,
       "norm_label": ".createviewmodelreturnsfailurewhendependencythrows()",
       "id": "ui_gitpanellaunchservicetests_gitpanellaunchservicetests_createviewmodelreturnsfailurewhendependencythrows"
     },
@@ -4364,7 +4562,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
       "source_location": "L82",
-      "community": 0,
+      "community": 1,
       "norm_label": ".createrepositoryroot()",
       "id": "ui_gitpanellaunchservicetests_gitpanellaunchservicetests_createrepositoryroot"
     },
@@ -4373,7 +4571,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
       "source_location": "L89",
-      "community": 0,
+      "community": 1,
       "norm_label": "workspacecontext",
       "id": "ui_gitpanellaunchservicetests_workspacecontext"
     },
@@ -4382,7 +4580,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
       "source_location": "L99",
-      "community": 0,
+      "community": 1,
       "norm_label": "throwingworkspacelocator",
       "id": "ui_gitpanellaunchservicetests_throwingworkspacelocator"
     },
@@ -4391,7 +4589,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
       "source_location": "L101",
-      "community": 0,
+      "community": 1,
       "norm_label": ".trygetworkspacepath()",
       "id": "ui_gitpanellaunchservicetests_throwingworkspacelocator_trygetworkspacepath"
     },
@@ -4400,7 +4598,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
       "source_location": "L107",
-      "community": 0,
+      "community": 1,
       "norm_label": "nulllogger",
       "id": "ui_gitpanellaunchservicetests_nulllogger"
     },
@@ -4409,7 +4607,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
       "source_location": "L109",
-      "community": 0,
+      "community": 1,
       "norm_label": ".error()",
       "id": "ui_gitpanellaunchservicetests_nulllogger_error"
     },
@@ -4418,7 +4616,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\GitPanelLaunchServiceTests.cs",
       "source_location": "L113",
-      "community": 0,
+      "community": 1,
       "norm_label": ".info()",
       "id": "ui_gitpanellaunchservicetests_nulllogger_info"
     },
@@ -4427,7 +4625,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
       "source_location": "L14",
-      "community": 3,
+      "community": 2,
       "norm_label": ".refreshasyncpublishesbranchsummaryandchangedfiles()",
       "id": "ui_statusviewmodeltests_statusviewmodeltests_refreshasyncpublishesbranchsummaryandchangedfiles"
     },
@@ -4436,7 +4634,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
       "source_location": "L56",
-      "community": 3,
+      "community": 2,
       "norm_label": ".stageselectedasyncstagesfileandrefreshesstatus()",
       "id": "ui_statusviewmodeltests_statusviewmodeltests_stageselectedasyncstagesfileandrefreshesstatus"
     },
@@ -4445,7 +4643,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\CommitViewModel.cs",
       "source_location": "L1",
-      "community": 1,
+      "community": 15,
       "norm_label": "commitviewmodel.cs",
       "id": "tiagitaddin_ui_commitviewmodel_cs"
     },
@@ -4454,7 +4652,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\CommitViewModel.cs",
       "source_location": "L7",
-      "community": 1,
+      "community": 15,
       "norm_label": "tiagitaddin.ui",
       "id": "ui_commitviewmodel_tiagitaddin_ui"
     },
@@ -4463,7 +4661,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\CommitViewModel.cs",
       "source_location": "L9",
-      "community": 1,
+      "community": 15,
       "norm_label": "commitviewmodel",
       "id": "ui_commitviewmodel_commitviewmodel"
     },
@@ -4472,7 +4670,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\CommitViewModel.cs",
       "source_location": "L68",
-      "community": 1,
+      "community": 15,
       "norm_label": ".commitasync()",
       "id": "ui_commitviewmodel_commitviewmodel_commitasync"
     },
@@ -4481,7 +4679,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\CommitViewModel.cs",
       "source_location": "L96",
-      "community": 1,
+      "community": 15,
       "norm_label": ".buildoperationmessage()",
       "id": "ui_commitviewmodel_commitviewmodel_buildoperationmessage"
     },
@@ -4535,7 +4733,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L1",
-      "community": 15,
+      "community": 5,
       "norm_label": "gitpanelwindow.cs",
       "id": "tiagitaddin_ui_gitpanelwindow_cs"
     },
@@ -4544,7 +4742,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L7",
-      "community": 15,
+      "community": 5,
       "norm_label": "tiagitaddin.ui",
       "id": "ui_gitpanelwindow_tiagitaddin_ui"
     },
@@ -4553,7 +4751,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L9",
-      "community": 15,
+      "community": 5,
       "norm_label": "gitpanelwindow",
       "id": "ui_gitpanelwindow_gitpanelwindow"
     },
@@ -4562,7 +4760,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L27",
-      "community": 15,
+      "community": 5,
       "norm_label": ".buildcontent()",
       "id": "ui_gitpanelwindow_gitpanelwindow_buildcontent"
     },
@@ -4571,7 +4769,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L39",
-      "community": 15,
+      "community": 5,
       "norm_label": ".buildheader()",
       "id": "ui_gitpanelwindow_gitpanelwindow_buildheader"
     },
@@ -4580,7 +4778,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L73",
-      "community": 15,
+      "community": 5,
       "norm_label": ".buildtabs()",
       "id": "ui_gitpanelwindow_gitpanelwindow_buildtabs"
     },
@@ -4589,7 +4787,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L93",
-      "community": 15,
+      "community": 5,
       "norm_label": ".buildstatustab()",
       "id": "ui_gitpanelwindow_gitpanelwindow_buildstatustab"
     },
@@ -4598,7 +4796,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L147",
-      "community": 15,
+      "community": 5,
       "norm_label": ".buildcommittab()",
       "id": "ui_gitpanelwindow_gitpanelwindow_buildcommittab"
     },
@@ -4607,7 +4805,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L194",
-      "community": 15,
+      "community": 5,
       "norm_label": ".createbutton()",
       "id": "ui_gitpanelwindow_gitpanelwindow_createbutton"
     },
@@ -4616,7 +4814,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L207",
-      "community": 15,
+      "community": 5,
       "norm_label": ".onloaded()",
       "id": "ui_gitpanelwindow_gitpanelwindow_onloaded"
     },
@@ -4625,7 +4823,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\GitPanelWindow.cs",
       "source_location": "L213",
-      "community": 15,
+      "community": 5,
       "norm_label": ".refreshonloadasync()",
       "id": "ui_gitpanelwindow_gitpanelwindow_refreshonloadasync"
     },
@@ -4634,7 +4832,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\MainViewModel.cs",
       "source_location": "L1",
-      "community": 1,
+      "community": 0,
       "norm_label": "mainviewmodel.cs",
       "id": "tiagitaddin_ui_mainviewmodel_cs"
     },
@@ -4643,7 +4841,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\MainViewModel.cs",
       "source_location": "L5",
-      "community": 1,
+      "community": 0,
       "norm_label": "tiagitaddin.ui",
       "id": "ui_mainviewmodel_tiagitaddin_ui"
     },
@@ -4652,7 +4850,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\MainViewModel.cs",
       "source_location": "L7",
-      "community": 1,
+      "community": 0,
       "norm_label": "mainviewmodel",
       "id": "ui_mainviewmodel_mainviewmodel"
     },
@@ -4661,7 +4859,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\MainViewModel.cs",
       "source_location": "L27",
-      "community": 1,
+      "community": 0,
       "norm_label": ".refreshasync()",
       "id": "ui_mainviewmodel_mainviewmodel_refreshasync"
     },
@@ -4670,7 +4868,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\StatusViewModel.cs",
       "source_location": "L1",
-      "community": 20,
+      "community": 19,
       "norm_label": "statusviewmodel.cs",
       "id": "tiagitaddin_ui_statusviewmodel_cs"
     },
@@ -4679,7 +4877,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\StatusViewModel.cs",
       "source_location": "L9",
-      "community": 20,
+      "community": 19,
       "norm_label": "tiagitaddin.ui",
       "id": "ui_statusviewmodel_tiagitaddin_ui"
     },
@@ -4688,7 +4886,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\StatusViewModel.cs",
       "source_location": "L11",
-      "community": 20,
+      "community": 19,
       "norm_label": "statusviewmodel",
       "id": "ui_statusviewmodel_statusviewmodel"
     },
@@ -4697,7 +4895,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\StatusViewModel.cs",
       "source_location": "L99",
-      "community": 20,
+      "community": 19,
       "norm_label": ".refreshasync()",
       "id": "ui_statusviewmodel_statusviewmodel_refreshasync"
     },
@@ -4706,7 +4904,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\StatusViewModel.cs",
       "source_location": "L119",
-      "community": 20,
+      "community": 19,
       "norm_label": ".stageselectedasync()",
       "id": "ui_statusviewmodel_statusviewmodel_stageselectedasync"
     },
@@ -4715,7 +4913,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\StatusViewModel.cs",
       "source_location": "L135",
-      "community": 20,
+      "community": 19,
       "norm_label": ".unstageselectedasync()",
       "id": "ui_statusviewmodel_statusviewmodel_unstageselectedasync"
     },
@@ -4724,7 +4922,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\StatusViewModel.cs",
       "source_location": "L151",
-      "community": 20,
+      "community": 19,
       "norm_label": ".buildtrackingsummary()",
       "id": "ui_statusviewmodel_statusviewmodel_buildtrackingsummary"
     },
@@ -4733,7 +4931,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\StatusViewModel.cs",
       "source_location": "L173",
-      "community": 20,
+      "community": 19,
       "norm_label": ".buildoperationmessage()",
       "id": "ui_statusviewmodel_statusviewmodel_buildoperationmessage"
     },
@@ -4742,7 +4940,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\StatusViewModel.cs",
       "source_location": "L180",
-      "community": 20,
+      "community": 19,
       "norm_label": ".raisecommandstates()",
       "id": "ui_statusviewmodel_statusviewmodel_raisecommandstates"
     },
@@ -4751,7 +4949,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModelBase.cs",
       "source_location": "L1",
-      "community": 1,
+      "community": 15,
       "norm_label": "viewmodelbase.cs",
       "id": "tiagitaddin_ui_viewmodelbase_cs"
     },
@@ -4760,7 +4958,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModelBase.cs",
       "source_location": "L5",
-      "community": 1,
+      "community": 15,
       "norm_label": "tiagitaddin.ui",
       "id": "ui_viewmodelbase_tiagitaddin_ui"
     },
@@ -4769,7 +4967,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModelBase.cs",
       "source_location": "L7",
-      "community": 1,
+      "community": 15,
       "norm_label": "viewmodelbase",
       "id": "ui_viewmodelbase_viewmodelbase"
     },
@@ -4778,7 +4976,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModelBase.cs",
       "source_location": "L11",
-      "community": 1,
+      "community": 15,
       "norm_label": ".onpropertychanged()",
       "id": "ui_viewmodelbase_viewmodelbase_onpropertychanged"
     },
@@ -4787,7 +4985,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\UI\\ViewModelBase.cs",
       "source_location": "L16",
-      "community": 1,
+      "community": 15,
       "norm_label": ".setproperty()",
       "id": "ui_viewmodelbase_viewmodelbase_setproperty"
     },
@@ -4796,7 +4994,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\Entry\\GitProjectTreeMenu.cs",
       "source_location": "L1",
-      "community": 6,
+      "community": 7,
       "norm_label": "gitprojecttreemenu.cs",
       "id": "tiagitaddin_entry_gitprojecttreemenu_cs"
     },
@@ -4805,7 +5003,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\Entry\\GitProjectTreeMenu.cs",
       "source_location": "L9",
-      "community": 6,
+      "community": 7,
       "norm_label": "tiagitaddin.entry",
       "id": "entry_gitprojecttreemenu_tiagitaddin_entry"
     },
@@ -4814,7 +5012,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\Entry\\GitProjectTreeMenu.cs",
       "source_location": "L11",
-      "community": 6,
+      "community": 7,
       "norm_label": "gitprojecttreemenu",
       "id": "entry_gitprojecttreemenu_gitprojecttreemenu"
     },
@@ -4823,7 +5021,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\Entry\\GitProjectTreeMenu.cs",
       "source_location": "L34",
-      "community": 6,
+      "community": 7,
       "norm_label": ".buildcontextmenuitems()",
       "id": "entry_gitprojecttreemenu_gitprojecttreemenu_buildcontextmenuitems"
     },
@@ -4832,7 +5030,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\Entry\\GitProjectTreeMenu.cs",
       "source_location": "L42",
-      "community": 6,
+      "community": 7,
       "norm_label": ".onopengitpanel()",
       "id": "entry_gitprojecttreemenu_gitprojecttreemenu_onopengitpanel"
     },
@@ -4841,7 +5039,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\Entry\\GitProjectTreeMenu.cs",
       "source_location": "L72",
-      "community": 6,
+      "community": 7,
       "norm_label": ".showmessage()",
       "id": "entry_gitprojecttreemenu_gitprojecttreemenu_showmessage"
     },
@@ -4850,7 +5048,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\Entry\\GitProjectTreeMenu.cs",
       "source_location": "L81",
-      "community": 6,
+      "community": 7,
       "norm_label": ".showpanel()",
       "id": "entry_gitprojecttreemenu_gitprojecttreemenu_showpanel"
     },
@@ -4904,7 +5102,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\Services\\GitProcessRunner.cs",
       "source_location": "L110",
-      "community": 18,
+      "community": 17,
       "norm_label": ".quote()",
       "id": "services_gitprocessrunner_gitprocessrunner_quote"
     },
@@ -4913,7 +5111,7 @@
       "file_type": "code",
       "source_file": "TiaGitAddIn\\Services\\VciWorkspaceLocator.cs",
       "source_location": "L28",
-      "community": 22,
+      "community": 21,
       "norm_label": ".tryreadstringproperty()",
       "id": "services_vciworkspacelocator_vciworkspacelocator_tryreadstringproperty"
     }
@@ -5470,6 +5668,18 @@
       "confidence_score": 1.0,
       "source": "entry_gitvciworkspacemenu_gitvciworkspacemenu_showmessage",
       "target": "entry_gitvciworkspacemenu_gitvciworkspacemenu_showpanel"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\Entry\\GitVciWorkspaceMenu.cs",
+      "source_location": "L107",
+      "weight": 1.0,
+      "_src": "entry_gitvciworkspacemenu_gitvciworkspacemenu_showpanel",
+      "_tgt": "ui_gitpanellaunchservice_gitpanellaunchservice_createviewmodel",
+      "source": "entry_gitvciworkspacemenu_gitvciworkspacemenu_showpanel",
+      "target": "ui_gitpanellaunchservice_gitpanellaunchservice_createviewmodel"
     },
     {
       "relation": "contains",
@@ -8354,6 +8564,198 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\ImmediateUiDispatcher.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "tiagitaddin_ui_immediateuidispatcher_cs",
+      "_tgt": "ui_immediateuidispatcher_tiagitaddin_ui",
+      "source": "tiagitaddin_ui_immediateuidispatcher_cs",
+      "target": "ui_immediateuidispatcher_tiagitaddin_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\ImmediateUiDispatcher.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "tiagitaddin_ui_immediateuidispatcher_cs",
+      "_tgt": "ui_immediateuidispatcher_immediateuidispatcher",
+      "source": "tiagitaddin_ui_immediateuidispatcher_cs",
+      "target": "ui_immediateuidispatcher_immediateuidispatcher",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\ImmediateUiDispatcher.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "ui_immediateuidispatcher_immediateuidispatcher",
+      "_tgt": "iuidispatcher",
+      "source": "ui_immediateuidispatcher_immediateuidispatcher",
+      "target": "iuidispatcher",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\ImmediateUiDispatcher.cs",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_src": "ui_immediateuidispatcher_immediateuidispatcher",
+      "_tgt": "ui_immediateuidispatcher_immediateuidispatcher_checkaccess",
+      "source": "ui_immediateuidispatcher_immediateuidispatcher",
+      "target": "ui_immediateuidispatcher_immediateuidispatcher_checkaccess",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\ImmediateUiDispatcher.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "ui_immediateuidispatcher_immediateuidispatcher",
+      "_tgt": "ui_immediateuidispatcher_immediateuidispatcher_invoke",
+      "source": "ui_immediateuidispatcher_immediateuidispatcher",
+      "target": "ui_immediateuidispatcher_immediateuidispatcher_invoke",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "ui_wpfuidispatcher_wpfuidispatcher",
+      "_tgt": "iuidispatcher",
+      "source": "iuidispatcher",
+      "target": "ui_wpfuidispatcher_wpfuidispatcher",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
+      "source_location": "L158",
+      "weight": 1.0,
+      "_src": "ui_statusviewmodeltests_recordinguidispatcher",
+      "_tgt": "iuidispatcher",
+      "source": "iuidispatcher",
+      "target": "ui_statusviewmodeltests_recordinguidispatcher",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\IUiDispatcher.cs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "tiagitaddin_ui_iuidispatcher_cs",
+      "_tgt": "ui_iuidispatcher_tiagitaddin_ui",
+      "source": "tiagitaddin_ui_iuidispatcher_cs",
+      "target": "ui_iuidispatcher_tiagitaddin_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\IUiDispatcher.cs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "tiagitaddin_ui_iuidispatcher_cs",
+      "_tgt": "ui_iuidispatcher_iuidispatcher",
+      "source": "tiagitaddin_ui_iuidispatcher_cs",
+      "target": "ui_iuidispatcher_iuidispatcher",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\IUiDispatcher.cs",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "ui_iuidispatcher_iuidispatcher",
+      "_tgt": "ui_iuidispatcher_iuidispatcher_checkaccess",
+      "source": "ui_iuidispatcher_iuidispatcher",
+      "target": "ui_iuidispatcher_iuidispatcher_checkaccess",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\IUiDispatcher.cs",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "ui_iuidispatcher_iuidispatcher",
+      "_tgt": "ui_iuidispatcher_iuidispatcher_invoke",
+      "source": "ui_iuidispatcher_iuidispatcher",
+      "target": "ui_iuidispatcher_iuidispatcher_invoke",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "tiagitaddin_ui_wpfuidispatcher_cs",
+      "_tgt": "ui_wpfuidispatcher_tiagitaddin_ui",
+      "source": "tiagitaddin_ui_wpfuidispatcher_cs",
+      "target": "ui_wpfuidispatcher_tiagitaddin_ui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "tiagitaddin_ui_wpfuidispatcher_cs",
+      "_tgt": "ui_wpfuidispatcher_wpfuidispatcher",
+      "source": "tiagitaddin_ui_wpfuidispatcher_cs",
+      "target": "ui_wpfuidispatcher_wpfuidispatcher",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "ui_wpfuidispatcher_wpfuidispatcher",
+      "_tgt": "ui_wpfuidispatcher_wpfuidispatcher_fromcurrentthread",
+      "source": "ui_wpfuidispatcher_wpfuidispatcher",
+      "target": "ui_wpfuidispatcher_wpfuidispatcher_fromcurrentthread",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "ui_wpfuidispatcher_wpfuidispatcher",
+      "_tgt": "ui_wpfuidispatcher_wpfuidispatcher_checkaccess",
+      "source": "ui_wpfuidispatcher_wpfuidispatcher",
+      "target": "ui_wpfuidispatcher_wpfuidispatcher_checkaccess",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\WpfUiDispatcher.cs",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_src": "ui_wpfuidispatcher_wpfuidispatcher",
+      "_tgt": "ui_wpfuidispatcher_wpfuidispatcher_invoke",
+      "source": "ui_wpfuidispatcher_wpfuidispatcher",
+      "target": "ui_wpfuidispatcher_wpfuidispatcher_invoke",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "TiaGitAddIn\\UI\\Converters\\BoolToVisibilityConverter.cs",
       "source_location": "L6",
       "weight": 1.0,
@@ -8785,6 +9187,18 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_src": "viewmodels_branchviewmodel_branchviewmodel_refreshasync",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_branchviewmodel_branchviewmodel_refreshasync",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
       "source_location": "L106",
@@ -8794,6 +9208,18 @@
       "confidence_score": 1.0,
       "source": "viewmodels_branchviewmodel_branchviewmodel_createbranchasync",
       "target": "viewmodels_branchviewmodel_branchviewmodel_buildoperationmessage"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
+      "source_location": "L111",
+      "weight": 1.0,
+      "_src": "viewmodels_branchviewmodel_branchviewmodel_createbranchasync",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_branchviewmodel_branchviewmodel_createbranchasync",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
     },
     {
       "relation": "calls",
@@ -8809,6 +9235,18 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
+      "source_location": "L131",
+      "weight": 1.0,
+      "_src": "viewmodels_branchviewmodel_branchviewmodel_switchbranchasync",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_branchviewmodel_branchviewmodel_switchbranchasync",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
       "source_location": "L135",
@@ -8818,6 +9256,18 @@
       "confidence_score": 1.0,
       "source": "viewmodels_branchviewmodel_branchviewmodel_fetchasync",
       "target": "viewmodels_branchviewmodel_branchviewmodel_buildoperationmessage"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
+      "source_location": "L143",
+      "weight": 1.0,
+      "_src": "viewmodels_branchviewmodel_branchviewmodel_fetchasync",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_branchviewmodel_branchviewmodel_fetchasync",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
     },
     {
       "relation": "calls",
@@ -8833,6 +9283,18 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
+      "source_location": "L154",
+      "weight": 1.0,
+      "_src": "viewmodels_branchviewmodel_branchviewmodel_pullasync",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_branchviewmodel_branchviewmodel_pullasync",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
       "source_location": "L158",
@@ -8842,6 +9304,30 @@
       "confidence_score": 1.0,
       "source": "viewmodels_branchviewmodel_branchviewmodel_pushasync",
       "target": "viewmodels_branchviewmodel_branchviewmodel_buildoperationmessage"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
+      "source_location": "L166",
+      "weight": 1.0,
+      "_src": "viewmodels_branchviewmodel_branchviewmodel_pushasync",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_branchviewmodel_branchviewmodel_pushasync",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\BranchViewModel.cs",
+      "source_location": "L178",
+      "weight": 1.0,
+      "_src": "viewmodels_branchviewmodel_branchviewmodel_raisecommandstates",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_branchviewmodel_branchviewmodel_raisecommandstates",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
     },
     {
       "relation": "contains",
@@ -9168,6 +9654,18 @@
       "target": "viewmodels_viewmodelbase_viewmodelbase_onpropertychanged"
     },
     {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\SettingsViewModel.cs",
+      "source_location": "L128",
+      "weight": 1.0,
+      "_src": "viewmodels_settingsviewmodel_settingsviewmodel_validate",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_settingsviewmodel_settingsviewmodel_validate",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
@@ -9325,6 +9823,18 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
+      "source_location": "L108",
+      "weight": 1.0,
+      "_src": "viewmodels_statusviewmodel_statusviewmodel_refreshasync",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_statusviewmodel_statusviewmodel_refreshasync",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
       "source_location": "L128",
@@ -9334,6 +9844,18 @@
       "confidence_score": 1.0,
       "source": "viewmodels_statusviewmodel_statusviewmodel_stageselectedasync",
       "target": "viewmodels_statusviewmodel_statusviewmodel_buildoperationmessage"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
+      "source_location": "L142",
+      "weight": 1.0,
+      "_src": "viewmodels_statusviewmodel_statusviewmodel_stageselectedasync",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_statusviewmodel_statusviewmodel_stageselectedasync",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
     },
     {
       "relation": "calls",
@@ -9349,6 +9871,18 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
+      "source_location": "L164",
+      "weight": 1.0,
+      "_src": "viewmodels_statusviewmodel_statusviewmodel_unstageselectedasync",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_statusviewmodel_statusviewmodel_unstageselectedasync",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
       "source_location": "L159",
@@ -9358,6 +9892,30 @@
       "confidence_score": 1.0,
       "source": "viewmodels_statusviewmodel_statusviewmodel_stageallasync",
       "target": "viewmodels_statusviewmodel_statusviewmodel_buildoperationmessage"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
+      "source_location": "L178",
+      "weight": 1.0,
+      "_src": "viewmodels_statusviewmodel_statusviewmodel_stageallasync",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_statusviewmodel_statusviewmodel_stageallasync",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\StatusViewModel.cs",
+      "source_location": "L201",
+      "weight": 1.0,
+      "_src": "viewmodels_statusviewmodel_statusviewmodel_raisecommandstates",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_statusviewmodel_statusviewmodel_raisecommandstates",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui"
     },
     {
       "relation": "contains",
@@ -9411,6 +9969,18 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_src": "viewmodels_viewmodelbase_viewmodelbase",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_viewmodelbase_viewmodelbase",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
       "source_location": "L16",
       "weight": 1.0,
       "_src": "viewmodels_viewmodelbase_viewmodelbase",
@@ -9435,6 +10005,18 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "viewmodels_viewmodelbase_viewmodelbase_onpropertychanged",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_viewmodelbase_viewmodelbase_onpropertychanged",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
       "source_location": "L28",
       "weight": 1.0,
       "_src": "viewmodels_viewmodelbase_viewmodelbase_onpropertychanged",
@@ -9442,6 +10024,18 @@
       "confidence_score": 1.0,
       "source": "viewmodels_viewmodelbase_viewmodelbase_onpropertychanged",
       "target": "viewmodels_viewmodelbase_viewmodelbase_setproperty"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn\\UI\\ViewModels\\ViewModelBase.cs",
+      "source_location": "L72",
+      "weight": 1.0,
+      "_src": "viewmodels_viewmodelbase_viewmodelbase_setproperty",
+      "_tgt": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "source": "viewmodels_viewmodelbase_viewmodelbase_invokeonui",
+      "target": "viewmodels_viewmodelbase_viewmodelbase_setproperty",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -11352,6 +11946,18 @@
       "target": "ui_statusviewmodeltests_fakegitservice"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
+      "source_location": "L158",
+      "weight": 1.0,
+      "_src": "tiagitaddin_tests_ui_statusviewmodeltests_cs",
+      "_tgt": "ui_statusviewmodeltests_recordinguidispatcher",
+      "source": "tiagitaddin_tests_ui_statusviewmodeltests_cs",
+      "target": "ui_statusviewmodeltests_recordinguidispatcher",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
@@ -11362,6 +11968,18 @@
       "confidence_score": 1.0,
       "source": "ui_statusviewmodeltests_statusviewmodeltests",
       "target": "ui_statusviewmodeltests_statusviewmodeltests_refreshasyncpopulatesentriesfromgitservice"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_src": "ui_statusviewmodeltests_statusviewmodeltests",
+      "_tgt": "ui_statusviewmodeltests_statusviewmodeltests_refreshasyncusesconfigureduidispatcherforboundupdates",
+      "source": "ui_statusviewmodeltests_statusviewmodeltests",
+      "target": "ui_statusviewmodeltests_statusviewmodeltests_refreshasyncusesconfigureduidispatcherforboundupdates",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -11614,6 +12232,30 @@
       "confidence_score": 1.0,
       "source": "ui_statusviewmodeltests_fakegitservice",
       "target": "ui_statusviewmodeltests_fakegitservice_getremotesasync"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
+      "source_location": "L162",
+      "weight": 1.0,
+      "_src": "ui_statusviewmodeltests_recordinguidispatcher",
+      "_tgt": "ui_statusviewmodeltests_recordinguidispatcher_checkaccess",
+      "source": "ui_statusviewmodeltests_recordinguidispatcher",
+      "target": "ui_statusviewmodeltests_recordinguidispatcher_checkaccess",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "TiaGitAddIn.Tests\\UI\\StatusViewModelTests.cs",
+      "source_location": "L164",
+      "weight": 1.0,
+      "_src": "ui_statusviewmodeltests_recordinguidispatcher",
+      "_tgt": "ui_statusviewmodeltests_recordinguidispatcher_invoke",
+      "source": "ui_statusviewmodeltests_recordinguidispatcher",
+      "target": "ui_statusviewmodeltests_recordinguidispatcher_invoke",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",

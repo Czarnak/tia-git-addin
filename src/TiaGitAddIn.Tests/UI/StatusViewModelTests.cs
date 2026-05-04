@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
+using TiaGitAddIn.UI;
 using TiaGitAddIn.UI.ViewModels;
 using Xunit;
 
@@ -21,7 +22,7 @@ namespace TiaGitAddIn.Tests.UI
                 Entries = new List<FileStatusEntry>
                 {
                     new FileStatusEntry { FilePath = "file1.txt", IndexStatus = FileStatus.Modified },
-                    new FileStatusEntry { FilePath = "file2.txt", WorkTreeStatus = FileStatus.Added }
+                    new FileStatusEntry { FilePath = "file2.txt", IndexStatus = FileStatus.Untracked, WorkTreeStatus = FileStatus.Untracked }
                 }
             };
             var gitService = new FakeGitService(status);
@@ -30,9 +31,31 @@ namespace TiaGitAddIn.Tests.UI
             await viewModel.RefreshAsync();
 
             Assert.Equal("main", viewModel.CurrentBranch);
-            Assert.Equal(1, viewModel.StagedEntries.Count);
-            Assert.Equal(1, viewModel.UntrackedEntries.Count);
+            Assert.Single(viewModel.StagedEntries);
+            Assert.Single(viewModel.UntrackedEntries);
             Assert.Equal("2 changed files", viewModel.StatusSummary);
+        }
+
+        [Fact]
+        public async Task RefreshAsyncUsesConfiguredUiDispatcherForBoundUpdates()
+        {
+            var status = new GitStatus
+            {
+                CurrentBranch = "main",
+                Entries = new List<FileStatusEntry>
+                {
+                    new FileStatusEntry { FilePath = "file1.txt", IndexStatus = FileStatus.Modified }
+                }
+            };
+            var gitService = new FakeGitService(status);
+            var dispatcher = new RecordingUiDispatcher();
+            var viewModel = new StatusViewModel(gitService, dispatcher);
+
+            await viewModel.RefreshAsync();
+
+            Assert.True(dispatcher.InvokeCount > 0);
+            Assert.Equal("main", viewModel.CurrentBranch);
+            Assert.Single(viewModel.StagedEntries);
         }
 
         [Fact]
@@ -130,6 +153,19 @@ namespace TiaGitAddIn.Tests.UI
 
             public Task<IReadOnlyList<RemoteInfo>> GetRemotesAsync(CancellationToken ct = default) =>
                 Task.FromResult<IReadOnlyList<RemoteInfo>>(new List<RemoteInfo>());
+        }
+
+        private sealed class RecordingUiDispatcher : IUiDispatcher
+        {
+            public int InvokeCount { get; private set; }
+
+            public bool CheckAccess() => false;
+
+            public void Invoke(Action action)
+            {
+                InvokeCount++;
+                action();
+            }
         }
     }
 }
