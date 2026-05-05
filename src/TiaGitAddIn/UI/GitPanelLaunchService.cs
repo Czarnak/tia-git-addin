@@ -81,12 +81,28 @@ namespace TiaGitAddIn.UI
                 string gitExecutablePath = string.IsNullOrWhiteSpace(configuration.GitExecutablePath)
                     ? "git"
                     : configuration.GitExecutablePath!;
+                
+                IGitProcessRunner gitProcessRunner = new GitProcessRunner();
                 IGitService gitService = createGitService(
                     gitExecutablePath,
                     configuration.RepositoryPath);
+                
+                IGitFileExtractor gitFileExtractor = new GitFileExtractor(gitProcessRunner, gitExecutablePath, configuration.RepositoryPath, logger);
+                
+                ISactPathResolver sactPathResolver = new SactPathResolver(
+                    configuration.SiemensCompareToolPath, 
+                    configuration.NodeExecutablePath);
+                
+                ISactProcessRunner sactProcessRunner = new SactProcessRunner();
+                ISactService sactService = new SactService(sactPathResolver, sactProcessRunner, logger);
 
                 return GitPanelLaunchResult.Ok(() =>
-                    new MainViewModel(configuration.RepositoryPath, gitService, configurationService, WpfUiDispatcher.FromCurrentThread()));
+                    new MainViewModel(
+                        configuration.RepositoryPath, 
+                        gitService, 
+                        sactService, 
+                        configurationService, 
+                        WpfUiDispatcher.FromCurrentThread()));
             }
             catch (Exception ex)
             {

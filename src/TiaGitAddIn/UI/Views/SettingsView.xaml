@@ -13,6 +13,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -26,17 +28,25 @@
         <TextBox Text="{Binding GitExecutablePath, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
         <Button Content="Browse..." Command="{Binding BrowseGitExeCommand}" Grid.Row="0" Grid.Column="2" Padding="10,2" Margin="5" VerticalAlignment="Center"/>
 
-        <Label Content="Repository Path:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding RepositoryPath}" Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center" IsReadOnly="True" Background="#F0F0F0"/>
+        <Label Content="Siemens Compare Tool:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding SiemensCompareToolPath, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+        <Button Content="Browse..." Command="{Binding BrowseSiemensCompareToolCommand}" Grid.Row="1" Grid.Column="2" Padding="10,2" Margin="5" VerticalAlignment="Center"/>
 
-        <Label Content="Default Remote:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding DefaultRemote, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+        <Label Content="Node Executable Path:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding NodeExecutablePath, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+        <Button Content="Browse..." Command="{Binding BrowseNodeExeCommand}" Grid.Row="2" Grid.Column="2" Padding="10,2" Margin="5" VerticalAlignment="Center"/>
 
-        <Label Content="Max Log Entries:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding MaxLogEntries, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Margin="5" VerticalAlignment="Center" Width="100" HorizontalAlignment="Left"/>
+        <Label Content="Repository Path:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding RepositoryPath}" Grid.Row="3" Grid.Column="1" Margin="5" VerticalAlignment="Center" IsReadOnly="True" Background="#F0F0F0"/>
 
-        <TextBlock Text="{Binding ValidationMessage}" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" Margin="5,10" TextWrapping="Wrap"/>
+        <Label Content="Default Remote:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding DefaultRemote, UpdateSourceTrigger=PropertyChanged}" Grid.Row="4" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
 
-        <Button Content="Save Settings" Command="{Binding SaveCommand}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" Padding="20,5" Margin="5"/>
+        <Label Content="Max Log Entries:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding MaxLogEntries, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Grid.Column="1" Margin="5" VerticalAlignment="Center" Width="100" HorizontalAlignment="Left"/>
+
+        <TextBlock Text="{Binding ValidationMessage}" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Foreground="Red" Margin="5,10" TextWrapping="Wrap"/>
+
+        <Button Content="Save Settings" Command="{Binding SaveCommand}" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" Padding="20,5" Margin="5"/>
     </Grid>
 </UserControl>

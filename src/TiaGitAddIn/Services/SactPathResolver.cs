@@ -9,8 +9,21 @@ namespace TiaGitAddIn.Services
         private const string RegistryKey = @"SOFTWARE\Siemens\Automation\CompareTool";
         private const string DefaultPath = @"C:\Program Files\Siemens\Automation\SIMATIC Automation Compare Tool";
 
+        private readonly string? siemensOverride;
+        private readonly string? nodeOverride;
+
+        public SactPathResolver(string? siemensOverride = null, string? nodeOverride = null)
+        {
+            this.siemensOverride = siemensOverride;
+            this.nodeOverride = nodeOverride;
+        }
+
         public string? ResolveSiemensInstallPath()
         {
+            // 0. Override
+            if (!string.IsNullOrWhiteSpace(siemensOverride) && Directory.Exists(siemensOverride))
+                return siemensOverride;
+
             // 1. Registry (64-bit view preferred for Siemens tools)
             try
             {
@@ -34,6 +47,10 @@ namespace TiaGitAddIn.Services
 
         public string? ResolveNodePath()
         {
+            // 0. Override
+            if (!string.IsNullOrWhiteSpace(nodeOverride))
+                return nodeOverride;
+
             // Check if node is in PATH
             try
             {

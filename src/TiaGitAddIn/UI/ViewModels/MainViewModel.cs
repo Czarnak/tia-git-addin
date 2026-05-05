@@ -16,12 +16,21 @@ namespace TiaGitAddIn.UI.ViewModels
         public MainViewModel(
             string repositoryPath,
             IGitService gitService,
+            IGitFileExtractor gitFileExtractor,
+            ISactService sactService,
             IConfigurationService configurationService,
+            IAddInLogger? logger = null,
             IUiDispatcher? uiDispatcher = null)
             : base(uiDispatcher)
         {
             if (string.IsNullOrWhiteSpace(repositoryPath))
                 throw new ArgumentException("Repository path is required.", nameof(repositoryPath));
+            if (gitService == null)
+                throw new ArgumentNullException(nameof(gitService));
+            if (gitFileExtractor == null)
+                throw new ArgumentNullException(nameof(gitFileExtractor));
+            if (sactService == null)
+                throw new ArgumentNullException(nameof(sactService));
             if (configurationService == null)
                 throw new ArgumentNullException(nameof(configurationService));
 
@@ -30,7 +39,7 @@ namespace TiaGitAddIn.UI.ViewModels
             Commit = new CommitViewModel(gitService, Status.RefreshAsync, UiDispatcher);
             Branch = new BranchViewModel(gitService, UiDispatcher);
             History = new HistoryViewModel(gitService, UiDispatcher);
-            Diff = new DiffViewModel(gitService, UiDispatcher);
+            Diff = new DiffViewModel(gitService, gitFileExtractor, sactService, logger, UiDispatcher);
             Settings = new SettingsViewModel(configurationService, repositoryPath, UiDispatcher);
 
             CancelCommand = new RelayCommand(_ => CancelAll(), _ => IsBusy);

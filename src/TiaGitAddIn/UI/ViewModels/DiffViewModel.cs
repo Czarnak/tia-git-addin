@@ -15,6 +15,9 @@ namespace TiaGitAddIn.UI.ViewModels
     public sealed class DiffViewModel : ViewModelBase
     {
         private readonly IGitService gitService;
+        private readonly IGitFileExtractor gitFileExtractor;
+        private readonly ISactService sactService;
+        private readonly IAddInLogger? logger;
         private ObservableCollection<DiffEntryViewModel> entries = new ObservableCollection<DiffEntryViewModel>();
         private DiffEntryViewModel? selectedEntry;
         private ObservableCollection<DiffLineViewModel> displayedLines = new ObservableCollection<DiffLineViewModel>();
@@ -23,10 +26,18 @@ namespace TiaGitAddIn.UI.ViewModels
         private bool isBusy;
         private CancellationTokenSource? cts;
 
-        public DiffViewModel(IGitService gitService, IUiDispatcher? uiDispatcher = null)
+        public DiffViewModel(
+            IGitService gitService, 
+            IGitFileExtractor gitFileExtractor,
+            ISactService sactService,
+            IAddInLogger? logger = null,
+            IUiDispatcher? uiDispatcher = null)
             : base(uiDispatcher)
         {
             this.gitService = gitService ?? throw new ArgumentNullException(nameof(gitService));
+            this.gitFileExtractor = gitFileExtractor ?? throw new ArgumentNullException(nameof(gitFileExtractor));
+            this.sactService = sactService ?? throw new ArgumentNullException(nameof(sactService));
+            this.logger = logger;
             LoadWorkingTreeCommand = new AsyncCommand(() => LoadWorkingTreeDiffAsync(), () => !IsBusy);
             CancelCommand = new RelayCommand(_ => cts?.Cancel(), _ => IsBusy);
         }
