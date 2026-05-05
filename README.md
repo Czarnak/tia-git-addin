@@ -11,19 +11,21 @@ Implemented:
 - TIA Portal V21 project packaging that emits `TiaGitAddIn.addin`.
 - Minimal project-tree Add-In entry point with an `Open Git Panel...` menu item.
 - Core Git models, path validation, configuration persistence, Git output parsing, process runner, repository discovery, and operation serialization.
-- Unit coverage for the current non-UI foundation.
+- WPF UI architecture (MVVM) with ViewModels and Views for Status, History, Commit, Diff, and Settings.
+- Unit coverage for both foundation and UI logic (34 tests passing).
 
-Not implemented yet:
+In Progress:
 
-- Full WPF Git panel.
-- End-to-end VCI workspace detection in a live TIA Portal project.
-- Fetch, pull, push, branch creation, commit history UI, and diff UI.
+- Full integration of the WPF Git panel with live TIA Portal project context.
+- End-to-end VCI workspace detection and resolution.
+- Hardening of fetch, pull, push, and branch management workflows.
 
 ## Prerequisites
 
 - TIA Portal V21 installed at `C:\Program Files\Siemens\Automation\Portal V21`.
 - .NET SDK compatible with the repo `global.json`.
 - Local Git installation available as `git` or `git.exe`.
+- SIMATIC Automation Compare Tool (SACT) for advanced visual diff features.
 
 ## Build
 
@@ -52,8 +54,6 @@ C:\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\Siemens.Engineering
 dotnet test TiaGitAddIn.sln --no-build
 ```
 
-Current verified result: `37/37` tests passing.
-
 ## Project Layout
 
 ```text
@@ -63,37 +63,31 @@ src/
     Models/          Git and diff data models
     Configuration/   Path validation and project config persistence
     Services/        Git process execution, parsing, repository discovery
-  TiaGitAddIn.Tests/ Unit tests
+    UI/              WPF MVVM components (ViewModels, Views, Converters)
+  TiaGitAddIn.Tests/ Unit and UI logic tests
 ```
 
 ## Roadmap
 
-1. Add-In shell
-   - Replace the placeholder menu action with the WPF main dialog.
-   - Resolve the active TIA project and VCI workspace path reliably.
-   - Add user-facing error handling for unsupported or missing VCI setup.
+1. **Add-In Shell & TIA Integration**
+   - Connect the WPF main dialog to live TIA Portal project events and lifecycle.
+   - Resolve active TIA project and VCI workspace paths reliably across different project types.
+   - Implement user-facing error handling and guidance for missing VCI setups.
 
-2. Repository setup
-   - Detect existing Git repositories from the VCI workspace.
-   - Support initializing a repository for a workspace.
-   - Persist `.tia-git-addin.json` project settings safely.
+2. **Repository Management**
+   - Automate detection of existing Git repositories from the VCI workspace path.
+   - Add UI support for initializing a new Git repository for an active workspace.
 
-3. Status and commit workflow
-   - Display changed, staged, untracked, deleted, and conflicted files.
-   - Stage and unstage individual files or groups.
-   - Validate commit messages and commit staged changes.
+3. **History & Diff Enhancements**
+   - Enhance text diff viewing with better syntax highlighting or TIA-specific block metadata.
+   - Research and implement "Compare with TIA" for binary or graphical artifacts using internal TIA APIs.
 
-4. History and diff workflow
-   - Show commit history with hash, author, date, subject, and changed files.
-   - Compare a selected commit against its parent.
-   - Add text diff viewing for exported source/XML files.
+4. **LAD/FBD Visual Diff Viewer**
+   - Integrate with SIMATIC Automation Compare Tool (SACT) CLI to produce structured JSON diffs.
+   - Implement graphical ladder-logic rendering using WPF Canvas and a custom layout engine.
+   - Support color-coded highlights for semantic network differences (added/removed/changed).
 
-5. Remote and branch workflow
-   - Show branch and remote tracking state.
-   - Support fetch, pull, push, branch creation, and branch switching.
-   - Surface merge conflicts and Git errors without hiding details.
-
-6. TIA Portal integration hardening
-   - Exercise the add-in inside TIA Portal V21 with real VCI workspaces.
-   - Add integration and E2E coverage for the critical commit/history/diff/push flow.
-   - Review permissions before distribution and keep the `.addin` package minimal.
+5. **Hardening & Verification**
+   - Exercise the add-in inside TIA Portal V21 with real-world VCI workspaces.
+   - Add integration and E2E coverage for the end-to-end VCI-to-Git lifecycle.
+   - Review permissions before distribution and optimize the `.addin` package size.
