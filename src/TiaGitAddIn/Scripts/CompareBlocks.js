@@ -14,6 +14,7 @@ const path = require('path');
 // Siemens Models & Adapters
 const { smlToCodeBlockAdapter } = require('@web-engr/sml-to-codeblock-adapter');
 const { CodeBlockCompareConfiguration, CodeBlockComparer } = require('@compare-engineering/codeblock-comparer');
+const { PairedCompareState } = require('@web-engr/codeblock-model');
 
 const args = process.argv.slice(2);
 
@@ -48,7 +49,7 @@ try {
         State: mapState(compareResults.state),
         Interface: serializeInterface(compareResults.properties.get("Interface")),
         Content: serializeContent(compareResults.properties.get("Content")),
-        Attributes: {} // Attributes can be populated if needed
+        Attributes: serializeAttributes(compareResults.properties.get("Attributes"))
     };
 
     // Output JSON to StdOut
@@ -65,7 +66,16 @@ try {
 function mapState(state) {
     if (state === undefined || state === null) return "Equal";
     
-    // The state is typically an object/enum. We check its name or string representation.
+    // Attempt robust mapping using library enum if available
+    // PairedCompareState values: 0=Equal, 1=Changed/Different, 2=MissingOnLeft, 3=MissingOnRight
+    if (typeof state === 'number') {
+        if (state === PairedCompareState.Changed || state === PairedCompareState.Different) return "Changed";
+        if (state === PairedCompareState.MissingOnLeft) return "MissingOnLeft";
+        if (state === PairedCompareState.MissingOnRight) return "MissingOnRight";
+        if (state === PairedCompareState.Equal) return "Equal";
+    }
+
+    // Fallback to string matching
     const s = state.toString();
     if (s.includes("Changed") || s.includes("Different")) return "Changed";
     if (s.includes("MissingOnLeft")) return "MissingOnLeft";
@@ -76,13 +86,32 @@ function mapState(state) {
 }
 
 /**
+ * Helper to get the value from a PropertyResult.
+ */
+function mapValue(res) {
+    if (!res) return null;
+    return res.right !== undefined ? res.right : res.left;
+}
+
+/**
  * Serializes the Interface comparison result.
  */
 function serializeInterface(res) {
     if (!res) return null;
+
+    const sections = {};
+    const sectionsCollection = res.collection ? res.collection.get("Sections") : null;
+    if (sectionsCollection && sectionsCollection.pairedEntries) {
+        for (const [name, sectionRes] of sectionsCollection.pairedEntries) {
+            sections[name] = {
+                State: mapState(sectionRes.state)
+            };
+        }
+    }
+
     return {
         State: mapState(res.state),
-        Sections: {} // Interface sections mapping can be added here
+        Sections: sections
     };
 }
 
@@ -104,6 +133,8 @@ function serializeContent(res) {
                     Left: netRes.left ? netRes.left.Number : null,
                     Right: netRes.right ? netRes.right.Number : null
                 },
+                Title: mapValue(netRes.properties.get("Title")),
+                Comment: mapValue(netRes.properties.get("Comment")),
                 Body: serializeBody(netRes.properties.get("Body"))
             };
         }
@@ -163,4 +194,18 @@ function serializeConnectors(connectors) {
         uId: c.UId || c.uId,
         PartnerUId: c.PartnerUId || c.partnerUId
     }));
+}
+
+/**
+ * Serializes block attributes.
+ */
+function serializeAttributes(res) {
+    if (!res) return {};
+    const attributes = {};
+    if (res.properties) {
+        for (const [name, propRes] of res.properties) {
+            attributes[name] = mapValue(propRes);
+        }
+    }
+    return attributes;
 }
