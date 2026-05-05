@@ -46,6 +46,10 @@
     <PackageReference Include="DiffPlex" Version="1.7.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
   <Target Name="PublishTiaPortalAddIn" AfterTargets="Build" Condition="'$(EnableTiaAddInPackaging)' == 'true'">
     <Error Condition="!Exists('$(TiaAddInPublisherExe)')" Text="TIA Portal V$(TiaPortalVersion) Add-In publisher not found: $(TiaAddInPublisherExe)" />
     <Exec Command="&quot;$(TiaAddInPublisherExe)&quot; --configuration &quot;$(TargetDir)AddInPublisherConfiguration.xml&quot; --outfile &quot;$(TargetDir)$(AssemblyName).addin&quot; --logfile &quot;$(TargetDir)Publisher.log&quot; --verbose --console --skipEngMemberCheck" />

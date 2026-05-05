@@ -11,10 +11,11 @@ namespace TiaGitAddIn.Services
 
         public string? ResolveSiemensInstallPath()
         {
-            // 1. Registry
+            // 1. Registry (64-bit view preferred for Siemens tools)
             try
             {
-                using (var key = Registry.LocalMachine.OpenSubKey(RegistryKey))
+                using (var baseKey = Microsoft.Win32.RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var key = baseKey.OpenSubKey(RegistryKey))
                 {
                     var val = key?.GetValue("InstallDir") as string;
                     if (!string.IsNullOrEmpty(val) && Directory.Exists(val)) return val;
@@ -46,8 +47,15 @@ namespace TiaGitAddIn.Services
                 {
                     if (proc != null)
                     {
-                        proc.WaitForExit();
-                        if (proc.ExitCode == 0) return "node";
+                        // Wait with 2 second timeout to avoid hanging UI thread
+                        if (proc.WaitForExit(2000))
+                        {
+                            if (proc.ExitCode == 0) return "node";
+                        }
+                        else
+                        {
+                            proc.Kill();
+                        }
                     }
                 }
             }
