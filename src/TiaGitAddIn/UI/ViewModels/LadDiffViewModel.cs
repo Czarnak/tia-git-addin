@@ -62,7 +62,7 @@ namespace TiaGitAddIn.UI.ViewModels
         public async Task LoadLadDiffAsync(string? commitHash, string filePath, CancellationToken ct)
         {
             _logger.Info($"LoadLadDiffAsync started for {filePath} at commit {commitHash ?? "WORKING_TREE"}");
-            
+
             if (!IsSactAvailable)
             {
                 _logger.Info("LoadLadDiffAsync: SACT is not available.");
@@ -74,7 +74,7 @@ namespace TiaGitAddIn.UI.ViewModels
             IsBusy = true;
             BusyMessage = "Loading LAD diff...";
             LadDiffError = string.Empty;
-            
+
             if (_uiDispatcher != null)
             {
                 _uiDispatcher.Invoke(() => Networks.Clear());
@@ -97,16 +97,16 @@ namespace TiaGitAddIn.UI.ViewModels
                     _logger.Info("LoadLadDiffAsync: No parent file found, generating fallback (Added) visual diff using right side.");
                     // Entire block is new
                     LadDiffError = "File did not exist in parent commit (initial commit or newly added file). Full block is shown as Added.";
-                    
+
                     var fallbackResult = await _sactService.CompareAsync(rightTempPath, rightTempPath, ct).ConfigureAwait(false);
                     if (fallbackResult != null && fallbackResult.Content != null)
                     {
                         var layouts = LadLayoutEngine.LayoutAll(fallbackResult);
-                        foreach(var network in layouts)
+                        foreach (var network in layouts)
                         {
                             network.DiffState = CompareState.MissingOnLeft; // Overriding to Added
                         }
-                        
+
                         PopulateNetworks(layouts);
                         IsLadDiffLoaded = true;
                     }
@@ -175,7 +175,7 @@ namespace TiaGitAddIn.UI.ViewModels
         {
             IsLadDiffLoaded = false;
             LadDiffError = string.Empty;
-            
+
             if (_uiDispatcher != null)
             {
                 _uiDispatcher.Invoke(() => Networks.Clear());

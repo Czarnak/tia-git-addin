@@ -13,7 +13,7 @@ namespace TiaGitAddIn.Services
                 return null;
             }
 
-            DirectoryInfo? current = new DirectoryInfo(startPath);
+            DirectoryInfo? current = new(startPath);
             while (current != null)
             {
                 if (Directory.Exists(Path.Combine(current.FullName, ".git")) ||

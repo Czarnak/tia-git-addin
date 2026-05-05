@@ -28,16 +28,16 @@ namespace TiaGitAddIn.Services
                 if (dict == null)
                     return null;
 
-                var result = new SactCompareResult();
-                
-                if (dict.TryGetValue("Left", out var leftObj) && leftObj is string leftStr)
+                SactCompareResult result = new();
+
+                if (dict.TryGetValue("Left", out object? leftObj) && leftObj is string leftStr)
                     result.Left = leftStr;
-                if (dict.TryGetValue("Right", out var rightObj) && rightObj is string rightStr)
+                if (dict.TryGetValue("Right", out object? rightObj) && rightObj is string rightStr)
                     result.Right = rightStr;
-                if (dict.TryGetValue("State", out var stateObj) && stateObj is string stateStr)
+                if (dict.TryGetValue("State", out object? stateObj) && stateObj is string stateStr)
                     result.State = ParseCompareState(stateStr);
-                    
-                if (dict.TryGetValue("Interface", out var interfaceObj) && interfaceObj is Dictionary<string, object> interfaceDict)
+
+                if (dict.TryGetValue("Interface", out object? interfaceObj) && interfaceObj is Dictionary<string, object> interfaceDict)
                 {
                     result.Interface = new SactInterfaceResult
                     {
@@ -46,14 +46,14 @@ namespace TiaGitAddIn.Services
                     };
                 }
 
-                if (dict.TryGetValue("Content", out var contentObj) && contentObj is Dictionary<string, object> contentDict)
+                if (dict.TryGetValue("Content", out object? contentObj) && contentObj is Dictionary<string, object> contentDict)
                 {
                     result.Content = new SactContentResult
                     {
                         State = GetState(contentDict)
                     };
-                    
-                    if (contentDict.TryGetValue("Networks", out var networksObj) && networksObj is Dictionary<string, object> networksDict)
+
+                    if (contentDict.TryGetValue("Networks", out object? networksObj) && networksObj is Dictionary<string, object> networksDict)
                     {
                         foreach (var kvp in networksDict)
                         {
@@ -65,7 +65,7 @@ namespace TiaGitAddIn.Services
                     }
                 }
 
-                if (dict.TryGetValue("Attributes", out var attributesObj) && attributesObj is Dictionary<string, object> attributesDict)
+                if (dict.TryGetValue("Attributes", out object? attributesObj) && attributesObj is Dictionary<string, object> attributesDict)
                 {
                     result.Attributes = attributesDict;
                 }
@@ -80,7 +80,7 @@ namespace TiaGitAddIn.Services
 
         private static Dictionary<string, object> JObjectToDictionary(JObject jobj)
         {
-            var dict = new Dictionary<string, object>();
+            Dictionary<string, object> dict = new();
             foreach (var prop in jobj.Properties())
                 dict[prop.Name] = JTokenToObject(prop.Value);
             return dict;
@@ -101,25 +101,25 @@ namespace TiaGitAddIn.Services
 
         private static SactNetworkResult ParseNetwork(Dictionary<string, object> dict)
         {
-            var network = new SactNetworkResult
+            SactNetworkResult network = new()
             {
                 State = GetState(dict)
             };
 
-            if (dict.TryGetValue("Title", out var titleObj) && titleObj is string titleStr)
+            if (dict.TryGetValue("Title", out object? titleObj) && titleObj is string titleStr)
                 network.Title = titleStr;
-            if (dict.TryGetValue("Comment", out var commentObj) && commentObj is string commentStr)
+            if (dict.TryGetValue("Comment", out object? commentObj) && commentObj is string commentStr)
                 network.Comment = commentStr;
 
-            if (dict.TryGetValue("Number", out var numberObj) && numberObj is Dictionary<string, object> numberDict)
+            if (dict.TryGetValue("Number", out object? numberObj) && numberObj is Dictionary<string, object> numberDict)
             {
-                if (numberDict.TryGetValue("Left", out var leftNum) && leftNum is IConvertible leftConv)
+                if (numberDict.TryGetValue("Left", out object? leftNum) && leftNum is IConvertible leftConv)
                     network.Number.Left = leftConv.ToInt32(null);
-                if (numberDict.TryGetValue("Right", out var rightNum) && rightNum is IConvertible rightConv)
+                if (numberDict.TryGetValue("Right", out object? rightNum) && rightNum is IConvertible rightConv)
                     network.Number.Right = rightConv.ToInt32(null);
             }
 
-            if (dict.TryGetValue("Body", out var bodyObj) && bodyObj is Dictionary<string, object> bodyDict)
+            if (dict.TryGetValue("Body", out object? bodyObj) && bodyObj is Dictionary<string, object> bodyDict)
             {
                 foreach (var kvp in bodyDict)
                 {
@@ -135,31 +135,31 @@ namespace TiaGitAddIn.Services
 
         private static SactComponentData ParseComponent(Dictionary<string, object> dict)
         {
-            var comp = new SactComponentData();
+            SactComponentData comp = new();
 
-            if (dict.TryGetValue("name", out var nameObj) && nameObj is string nameStr)
+            if (dict.TryGetValue("name", out object? nameObj) && nameObj is string nameStr)
                 comp.name = nameStr;
-            if (dict.TryGetValue("uId", out var uidObj) && uidObj is string uidStr)
+            if (dict.TryGetValue("uId", out object? uidObj) && uidObj is string uidStr)
                 comp.uId = uidStr;
-                
-            if (dict.TryGetValue("isStartElement", out var startObj) && startObj is bool startBool)
+
+            if (dict.TryGetValue("isStartElement", out object? startObj) && startObj is bool startBool)
                 comp.isStartElement = startBool;
-            if (dict.TryGetValue("negated", out var negatedObj) && negatedObj is bool negatedBool)
+            if (dict.TryGetValue("negated", out object? negatedObj) && negatedObj is bool negatedBool)
                 comp.negated = negatedBool;
-                
-            if (dict.TryGetValue("DisplayName", out var displayObj) && displayObj is string displayStr)
+
+            if (dict.TryGetValue("DisplayName", out object? displayObj) && displayObj is string displayStr)
                 comp.DisplayName = displayStr;
-            if (dict.TryGetValue("TemplateType", out var typeObj) && typeObj is string typeStr)
+            if (dict.TryGetValue("TemplateType", out object? typeObj) && typeObj is string typeStr)
                 comp.TemplateType = typeStr;
 
-            if (dict.TryGetValue("TopOperandConnector", out var topObj) && topObj is Dictionary<string, object> topDict)
+            if (dict.TryGetValue("TopOperandConnector", out object? topObj) && topObj is Dictionary<string, object> topDict)
             {
                 comp.TopOperandConnector = new SactOperandConnector();
-                if (topDict.TryGetValue("DisplayName", out var topDisp) && topDisp is string topDispStr)
+                if (topDict.TryGetValue("DisplayName", out object? topDisp) && topDisp is string topDispStr)
                     comp.TopOperandConnector.DisplayName = topDispStr;
             }
 
-            if (dict.TryGetValue("outputConnectors", out var outObj) && outObj is System.Collections.IEnumerable outEnum)
+            if (dict.TryGetValue("outputConnectors", out object? outObj) && outObj is System.Collections.IEnumerable outEnum)
             {
                 foreach (var item in outEnum.OfType<Dictionary<string, object>>())
                 {
@@ -167,7 +167,7 @@ namespace TiaGitAddIn.Services
                 }
             }
 
-            if (dict.TryGetValue("inputConnectors", out var inObj) && inObj is System.Collections.IEnumerable inEnum)
+            if (dict.TryGetValue("inputConnectors", out object? inObj) && inObj is System.Collections.IEnumerable inEnum)
             {
                 foreach (var item in inEnum.OfType<Dictionary<string, object>>())
                 {
@@ -180,24 +180,24 @@ namespace TiaGitAddIn.Services
 
         private static SactConnectorData ParseConnector(Dictionary<string, object> dict)
         {
-            var conn = new SactConnectorData();
-            if (dict.TryGetValue("uId", out var uidObj) && uidObj is string uidStr)
+            SactConnectorData conn = new();
+            if (dict.TryGetValue("uId", out object? uidObj) && uidObj is string uidStr)
                 conn.uId = uidStr;
-            if (dict.TryGetValue("PartnerUId", out var partnerObj) && partnerObj is string partnerStr)
+            if (dict.TryGetValue("PartnerUId", out object? partnerObj) && partnerObj is string partnerStr)
                 conn.PartnerUId = partnerStr;
             return conn;
         }
 
         private static CompareState GetState(Dictionary<string, object> dict)
         {
-            if (dict.TryGetValue("State", out var stateObj) && stateObj is string stateStr)
+            if (dict.TryGetValue("State", out object? stateObj) && stateObj is string stateStr)
                 return ParseCompareState(stateStr);
             return CompareState.Equal;
         }
 
         private static Dictionary<string, object>? GetDict(Dictionary<string, object> dict, string key)
         {
-            if (dict.TryGetValue(key, out var val) && val is Dictionary<string, object> d)
+            if (dict.TryGetValue(key, out object? val) && val is Dictionary<string, object> d)
                 return d;
             return null;
         }
@@ -206,7 +206,7 @@ namespace TiaGitAddIn.Services
         {
             switch (state)
             {
-                case "Changed": 
+                case "Changed":
                 case "Different": return CompareState.Changed;
                 case "MissingOnLeft": return CompareState.MissingOnLeft;
                 case "MissingOnRight": return CompareState.MissingOnRight;

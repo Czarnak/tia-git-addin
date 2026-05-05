@@ -9,18 +9,12 @@ using AddInProcessStartInfo = Siemens.Engineering.AddIn.Utilities.ProcessStartIn
 
 namespace TiaGitAddIn.Services
 {
-    public sealed class GitProcessRunner : IGitProcessRunner
+    public sealed class GitProcessRunner(TimeSpan timeout) : IGitProcessRunner
     {
-        private readonly TimeSpan timeout;
 
         public GitProcessRunner()
             : this(TimeSpan.FromSeconds(30))
         {
-        }
-
-        public GitProcessRunner(TimeSpan timeout)
-        {
-            this.timeout = timeout;
         }
 
         public Task<GitProcessResult> RunAsync(
@@ -52,7 +46,7 @@ namespace TiaGitAddIn.Services
             IReadOnlyList<string> arguments,
             CancellationToken cancellationToken)
         {
-            using (AddInProcess process = new AddInProcess())
+            using (AddInProcess process = new())
             {
                 process.StartInfo = new AddInProcessStartInfo
                 {
@@ -99,7 +93,7 @@ namespace TiaGitAddIn.Services
 
         private static string BuildArgumentString(IReadOnlyList<string> arguments)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             foreach (string argument in arguments)
             {
                 if (builder.Length > 0)

@@ -6,7 +6,7 @@ namespace TiaGitAddIn.Services
 {
     public sealed class OperationSerializer
     {
-        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim semaphore = new(1, 1);
 
         public bool IsBusy => semaphore.CurrentCount == 0;
 
@@ -32,15 +32,9 @@ namespace TiaGitAddIn.Services
             return true;
         }
 
-        private sealed class Lease : IDisposable
+        private sealed class Lease(SemaphoreSlim semaphore) : IDisposable
         {
-            private readonly SemaphoreSlim semaphore;
             private bool disposed;
-
-            public Lease(SemaphoreSlim semaphore)
-            {
-                this.semaphore = semaphore;
-            }
 
             public void Dispose()
             {

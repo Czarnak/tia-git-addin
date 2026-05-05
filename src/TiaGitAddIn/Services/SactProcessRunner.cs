@@ -7,18 +7,11 @@ using System.Threading.Tasks;
 
 namespace TiaGitAddIn.Services
 {
-    public sealed class SactProcessRunner : ISactProcessRunner
+    public sealed class SactProcessRunner(TimeSpan timeout) : ISactProcessRunner
     {
-        private readonly TimeSpan timeout;
-
         public SactProcessRunner()
             : this(TimeSpan.FromSeconds(30))
         {
-        }
-
-        public SactProcessRunner(TimeSpan timeout)
-        {
-            this.timeout = timeout;
         }
 
         public Task<SactProcessResult> RunAsync(
@@ -38,7 +31,7 @@ namespace TiaGitAddIn.Services
             CancellationToken cancellationToken,
             IDictionary<string, string>? environmentVariables)
         {
-            using (Process process = new Process())
+            using (Process process = new())
             {
                 process.StartInfo = new ProcessStartInfo
                 {
@@ -67,7 +60,7 @@ namespace TiaGitAddIn.Services
                 using (CancellationTokenRegistration cancellation = cancellationToken.Register(() => TryKill(process)))
                 {
                     process.Start();
-                    
+
                     // We need to read the streams asynchronously to avoid deadlocks
                     var outputTask = process.StandardOutput.ReadToEndAsync();
                     var errorTask = process.StandardError.ReadToEndAsync();

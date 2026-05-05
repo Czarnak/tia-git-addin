@@ -105,7 +105,7 @@ namespace TiaGitAddIn.UI.ViewModels
 
         private void Save()
         {
-            var config = new GitConfiguration
+            GitConfiguration config = new()
             {
                 GitExecutablePath = string.IsNullOrWhiteSpace(GitExecutablePath) ? null : GitExecutablePath,
                 SiemensCompareToolPath = string.IsNullOrWhiteSpace(SiemensCompareToolPath) ? null : SiemensCompareToolPath,
@@ -124,7 +124,7 @@ namespace TiaGitAddIn.UI.ViewModels
 
         private void BrowseGitExe()
         {
-            var dialog = new OpenFileDialog
+            OpenFileDialog dialog = new()
             {
                 Filter = "Git Executable (git.exe)|git.exe|All Files (*.*)|*.*",
                 Title = "Select git.exe"
@@ -138,9 +138,9 @@ namespace TiaGitAddIn.UI.ViewModels
 
         private void BrowseSiemensCompareTool()
         {
-            var dialog = new OpenFileDialog
+            OpenFileDialog dialog = new()
             {
-                Filter = "SIMATIC Automation Compare Tool|Compare.exe;CompareTool.exe|All Files (*.*)|*.*",
+                Filter = "SIMATIC Automation Compare Tool|ACTool.exe|All Files (*.*)|*.*",
                 Title = "Select SIMATIC Automation Compare Tool"
             };
 
@@ -152,7 +152,7 @@ namespace TiaGitAddIn.UI.ViewModels
 
         private void BrowseNodeExe()
         {
-            var dialog = new OpenFileDialog
+            OpenFileDialog dialog = new()
             {
                 Filter = "Node Executable (node.exe)|node.exe|All Files (*.*)|*.*",
                 Title = "Select node.exe"

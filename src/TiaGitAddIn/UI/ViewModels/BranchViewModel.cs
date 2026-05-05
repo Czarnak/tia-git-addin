@@ -13,7 +13,7 @@ namespace TiaGitAddIn.UI.ViewModels
     public sealed class BranchViewModel : ViewModelBase
     {
         private readonly IGitService gitService;
-        private ObservableCollection<BranchInfo> branches = new ObservableCollection<BranchInfo>();
+        private ObservableCollection<BranchInfo> branches = new();
         private BranchInfo? selectedBranch;
         private string newBranchName = string.Empty;
         private string lastOperationMessage = string.Empty;

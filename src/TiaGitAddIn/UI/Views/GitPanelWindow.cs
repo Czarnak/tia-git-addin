@@ -28,7 +28,7 @@ namespace TiaGitAddIn.UI.Views
 
         private static FrameworkElement BuildContent(MainViewModel vm)
         {
-            Grid root = new Grid();
+            Grid root = new();
             root.Children.Add(BuildShell(vm));
             root.Children.Add(BuildBusyOverlay());
             return root;
@@ -36,7 +36,8 @@ namespace TiaGitAddIn.UI.Views
 
         private static FrameworkElement BuildShell(MainViewModel vm)
         {
-            DockPanel shell = new DockPanel
+            DockPanel shell = new()
+
             {
                 Margin = new Thickness(12)
             };
@@ -48,14 +49,16 @@ namespace TiaGitAddIn.UI.Views
 
         private static FrameworkElement BuildHeader()
         {
-            StackPanel header = new StackPanel
+            StackPanel header = new()
+
             {
                 Orientation = Orientation.Vertical,
                 Margin = new Thickness(0, 0, 0, 10)
             };
             DockPanel.SetDock(header, Dock.Top);
 
-            TextBlock repository = new TextBlock
+            TextBlock repository = new()
+
             {
                 FontWeight = FontWeights.SemiBold,
                 TextTrimming = TextTrimming.CharacterEllipsis
@@ -65,13 +68,13 @@ namespace TiaGitAddIn.UI.Views
                 StringFormat = "Repository: {0}"
             });
 
-            TextBlock branch = new TextBlock();
+            TextBlock branch = new();
             branch.SetBinding(TextBlock.TextProperty, new Binding("Status.CurrentBranch")
             {
                 StringFormat = "Branch: {0}"
             });
 
-            TextBlock tracking = new TextBlock();
+            TextBlock tracking = new();
             tracking.SetBinding(TextBlock.TextProperty, new Binding("Status.TrackingSummary"));
 
             header.Children.Add(repository);
@@ -122,7 +125,8 @@ namespace TiaGitAddIn.UI.Views
 
         private static FrameworkElement BuildBusyOverlay()
         {
-            Grid overlay = new Grid
+            Grid overlay = new()
+
             {
                 Background = new SolidColorBrush(Color.FromArgb(160, 20, 20, 20)),
                 IsHitTestVisible = true
@@ -132,7 +136,8 @@ namespace TiaGitAddIn.UI.Views
                 Converter = new BooleanToVisibilityConverter()
             });
 
-            Border card = new Border
+            Border card = new()
+
             {
                 Background = new SolidColorBrush(Color.FromArgb(245, 30, 30, 30)),
                 CornerRadius = new CornerRadius(8),
@@ -142,12 +147,14 @@ namespace TiaGitAddIn.UI.Views
                 MinWidth = 280
             };
 
-            StackPanel panel = new StackPanel
+            StackPanel panel = new()
+
             {
                 HorizontalAlignment = HorizontalAlignment.Center
             };
 
-            ProgressBar progress = new ProgressBar
+            ProgressBar progress = new()
+
             {
                 IsIndeterminate = true,
                 Width = 220,
@@ -155,7 +162,8 @@ namespace TiaGitAddIn.UI.Views
                 Margin = new Thickness(0, 0, 0, 16)
             };
 
-            TextBlock message = new TextBlock
+            TextBlock message = new()
+
             {
                 Foreground = Brushes.White,
                 FontSize = 13,
@@ -165,7 +173,8 @@ namespace TiaGitAddIn.UI.Views
             };
             message.SetBinding(TextBlock.TextProperty, new Binding("BusyMessage"));
 
-            Button cancel = new Button
+            Button cancel = new()
+
             {
                 Content = "Cancel",
                 MinWidth = 90,

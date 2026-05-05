@@ -3,18 +3,11 @@ using System.IO;
 
 namespace TiaGitAddIn.Logging
 {
-    public sealed class FileLogger : IAddInLogger
+    public sealed class FileLogger(string logFilePath) : IAddInLogger
     {
-        private readonly string logFilePath;
-
         public FileLogger()
             : this(GetDefaultLogFilePath())
         {
-        }
-
-        public FileLogger(string logFilePath)
-        {
-            this.logFilePath = logFilePath;
         }
 
         public void Error(string message, Exception exception)

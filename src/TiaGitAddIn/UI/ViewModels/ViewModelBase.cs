@@ -5,21 +5,16 @@ using TiaGitAddIn.UI;
 
 namespace TiaGitAddIn.UI.ViewModels
 {
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    public abstract class ViewModelBase(IUiDispatcher? uiDispatcher) : INotifyPropertyChanged
     {
         protected ViewModelBase()
             : this(null)
         {
         }
 
-        protected ViewModelBase(IUiDispatcher? uiDispatcher)
-        {
-            UiDispatcher = uiDispatcher ?? ImmediateUiDispatcher.Instance;
-        }
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected IUiDispatcher UiDispatcher { get; }
+        protected IUiDispatcher UiDispatcher { get; } = uiDispatcher ?? ImmediateUiDispatcher.Instance;
 
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {

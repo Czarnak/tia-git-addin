@@ -21,6 +21,9 @@
       </TIA.ReadWrite>
     </TIAPermissions>
     <SecurityPermissions>
+      <System.Security.Permissions.FileDialogPermission>
+        <Comment>Set paths to Node and SACT.</Comment>
+      </System.Security.Permissions.FileDialogPermission>
       <System.Security.Permissions.FileIOPermission>
         <Comment>Read/write access to the VCI workspace and add-in configuration file.</Comment>
       </System.Security.Permissions.FileIOPermission>

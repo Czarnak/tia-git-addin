@@ -7,18 +7,12 @@ using TiaGitAddIn.UI;
 
 namespace TiaGitAddIn.Entry
 {
-    public sealed class GitVciWorkspaceViewProvider : VciWorkspaceViewAddInProvider
+    public sealed class GitVciWorkspaceViewProvider(
+        GitPanelLaunchService launchService,
+        IAddInLogger logger) : VciWorkspaceViewAddInProvider
     {
-        private readonly GitPanelLaunchService launchService;
-        private readonly IAddInLogger logger;
-
-        public GitVciWorkspaceViewProvider(
-            GitPanelLaunchService launchService,
-            IAddInLogger logger)
-        {
-            this.launchService = launchService ?? throw new ArgumentNullException(nameof(launchService));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
+        private readonly GitPanelLaunchService launchService = launchService ?? throw new ArgumentNullException(nameof(launchService));
+        private readonly IAddInLogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public override IEnumerable<ContextMenuAddIn> GetContextMenuAddIns()
         {

@@ -8,25 +8,13 @@ using TiaGitAddIn.Models;
 
 namespace TiaGitAddIn.Services
 {
-    public sealed class GitService : IGitService
+    public sealed class GitService(
+        IGitProcessRunner runner,
+        OperationSerializer serializer,
+        string gitExecutablePath,
+        string repositoryRoot) : IGitService
     {
         private const string PrettyCommitFormat = "%H%x1f%an%x1f%aI%x1f%s%x1f%P";
-        private readonly IGitProcessRunner runner;
-        private readonly OperationSerializer serializer;
-        private readonly string gitExecutablePath;
-        private readonly string repositoryRoot;
-
-        public GitService(
-            IGitProcessRunner runner,
-            OperationSerializer serializer,
-            string gitExecutablePath,
-            string repositoryRoot)
-        {
-            this.runner = runner;
-            this.serializer = serializer;
-            this.gitExecutablePath = gitExecutablePath;
-            this.repositoryRoot = repositoryRoot;
-        }
 
         public async Task<GitStatus> GetStatusAsync(CancellationToken ct = default)
         {
@@ -54,7 +42,7 @@ namespace TiaGitAddIn.Services
                 }
             }
 
-            List<string> args = new List<string> { "add", "--" };
+            List<string> args = new() { "add", "--" };
             args.AddRange(filePaths);
 
             GitProcessResult result = await RunExclusiveAsync(args, ct).ConfigureAwait(false);
@@ -78,7 +66,7 @@ namespace TiaGitAddIn.Services
                 }
             }
 
-            List<string> args = new List<string> { "restore", "--staged", "--" };
+            List<string> args = new() { "restore", "--staged", "--" };
             args.AddRange(filePaths);
 
             GitProcessResult result = await RunExclusiveAsync(args, ct).ConfigureAwait(false);
@@ -120,7 +108,7 @@ namespace TiaGitAddIn.Services
 
         public async Task<OperationResult> PullAsync(string? remote = null, string? branch = null, CancellationToken ct = default)
         {
-            List<string> args = new List<string> { "pull", remote ?? "origin" };
+            List<string> args = new() { "pull", remote ?? "origin" };
             if (!string.IsNullOrWhiteSpace(branch))
             {
                 args.Add(branch!);
@@ -133,7 +121,7 @@ namespace TiaGitAddIn.Services
 
         public async Task<OperationResult> PushAsync(string? remote = null, string? branch = null, CancellationToken ct = default)
         {
-            List<string> args = new List<string> { "push", remote ?? "origin" };
+            List<string> args = new() { "push", remote ?? "origin" };
             if (!string.IsNullOrWhiteSpace(branch))
             {
                 args.Add(branch!);

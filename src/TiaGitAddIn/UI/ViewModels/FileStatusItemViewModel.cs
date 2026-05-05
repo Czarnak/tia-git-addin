@@ -2,29 +2,20 @@ using TiaGitAddIn.Models;
 
 namespace TiaGitAddIn.UI.ViewModels
 {
-    public sealed class FileStatusItemViewModel
+    public sealed class FileStatusItemViewModel(FileStatusEntry entry)
     {
-        public FileStatusItemViewModel(FileStatusEntry entry)
-        {
-            FilePath = entry.FilePath;
-            Area = GetArea(entry);
-            Status = entry.IsStaged ? entry.IndexStatus : entry.WorkTreeStatus;
-            StatusText = GetStatusText(entry);
-            CanStage = entry.IsUnstaged || entry.IndexStatus == FileStatus.Untracked;
-            CanUnstage = entry.IsStaged;
-        }
 
-        public string FilePath { get; }
+        public string FilePath { get; } = entry.FilePath;
 
-        public string Area { get; }
+        public string Area { get; } = GetArea(entry);
 
-        public FileStatus Status { get; }
+        public FileStatus Status { get; } = entry.IsStaged ? entry.IndexStatus : entry.WorkTreeStatus;
 
-        public string StatusText { get; }
+        public string StatusText { get; } = GetStatusText(entry);
 
-        public bool CanStage { get; }
+        public bool CanStage { get; } = entry.IsUnstaged || entry.IndexStatus == FileStatus.Untracked;
 
-        public bool CanUnstage { get; }
+        public bool CanUnstage { get; } = entry.IsStaged;
 
         private static string GetArea(FileStatusEntry entry)
         {

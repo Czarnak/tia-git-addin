@@ -14,9 +14,9 @@ namespace TiaGitAddIn.UI.ViewModels
         private const int DefaultMaxCount = 100;
 
         private readonly IGitService gitService;
-        private ObservableCollection<CommitInfo> commits = new ObservableCollection<CommitInfo>();
+        private ObservableCollection<CommitInfo> commits = new();
         private CommitInfo? selectedCommit;
-        private ObservableCollection<string> changedFiles = new ObservableCollection<string>();
+        private ObservableCollection<string> changedFiles = new();
         private string lastOperationMessage = string.Empty;
         private string busyMessage = string.Empty;
         private bool isBusy;

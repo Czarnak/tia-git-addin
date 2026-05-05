@@ -10,24 +10,17 @@ using TiaGitAddIn.UI.Views;
 
 namespace TiaGitAddIn.Entry
 {
-    public sealed class GitVciWorkspaceMenu : ContextMenuAddIn
+    public sealed class GitVciWorkspaceMenu(
+        GitPanelLaunchService launchService,
+        IAddInLogger logger) : ContextMenuAddIn(DisplayName)
     {
         private const string DisplayName = "TIA Git";
-        private readonly GitPanelLaunchService launchService;
-        private readonly IAddInLogger logger;
+        private readonly GitPanelLaunchService launchService = launchService ?? throw new ArgumentNullException(nameof(launchService));
+        private readonly IAddInLogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public GitVciWorkspaceMenu()
             : this(new GitPanelLaunchService(), new FileLogger())
         {
-        }
-
-        public GitVciWorkspaceMenu(
-            GitPanelLaunchService launchService,
-            IAddInLogger logger)
-            : base(DisplayName)
-        {
-            this.launchService = launchService ?? throw new ArgumentNullException(nameof(launchService));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         protected override void BuildContextMenuItems(ContextMenuAddInRoot root)
@@ -83,7 +76,7 @@ namespace TiaGitAddIn.Entry
 
         private static void ShowMessageAsync(string message, MessageBoxImage image)
         {
-            Thread thread = new Thread(() => ShowMessage(message, image));
+            Thread thread = new(() => ShowMessage(message, image));
             thread.SetApartmentState(ApartmentState.STA);
             thread.IsBackground = true;
             thread.Start();
@@ -100,12 +93,12 @@ namespace TiaGitAddIn.Entry
 
         private static void ShowPanel(Func<MainViewModel> createViewModel, IAddInLogger logger)
         {
-            Thread thread = new Thread(() =>
+            Thread thread = new(() =>
             {
                 try
                 {
                     MainViewModel viewModel = createViewModel();
-                    GitPanelWindow window = new GitPanelWindow(viewModel);
+                    GitPanelWindow window = new(viewModel);
                     window.ShowDialog();
                 }
                 catch (Exception ex)

@@ -7,13 +7,18 @@ using TiaGitAddIn.UI.ViewModels;
 
 namespace TiaGitAddIn.UI
 {
-    public sealed class GitPanelLaunchService
+    public sealed class GitPanelLaunchService(
+        IVciWorkspaceLocator workspaceLocator,
+        IRepositoryDiscovery repositoryDiscovery,
+        IConfigurationService configurationService,
+        Func<string, string, IGitService> createGitService,
+        IAddInLogger logger)
     {
-        private readonly IVciWorkspaceLocator workspaceLocator;
-        private readonly IRepositoryDiscovery repositoryDiscovery;
-        private readonly IConfigurationService configurationService;
-        private readonly Func<string, string, IGitService> createGitService;
-        private readonly IAddInLogger logger;
+        private readonly IVciWorkspaceLocator workspaceLocator = workspaceLocator ?? throw new ArgumentNullException(nameof(workspaceLocator));
+        private readonly IRepositoryDiscovery repositoryDiscovery = repositoryDiscovery ?? throw new ArgumentNullException(nameof(repositoryDiscovery));
+        private readonly IConfigurationService configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
+        private readonly Func<string, string, IGitService> createGitService = createGitService ?? throw new ArgumentNullException(nameof(createGitService));
+        private readonly IAddInLogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public GitPanelLaunchService()
             : this(
@@ -41,20 +46,6 @@ namespace TiaGitAddIn.UI
                 createGitService,
                 new FileLogger())
         {
-        }
-
-        public GitPanelLaunchService(
-            IVciWorkspaceLocator workspaceLocator,
-            IRepositoryDiscovery repositoryDiscovery,
-            IConfigurationService configurationService,
-            Func<string, string, IGitService> createGitService,
-            IAddInLogger logger)
-        {
-            this.workspaceLocator = workspaceLocator ?? throw new ArgumentNullException(nameof(workspaceLocator));
-            this.repositoryDiscovery = repositoryDiscovery ?? throw new ArgumentNullException(nameof(repositoryDiscovery));
-            this.configurationService = configurationService ?? throw new ArgumentNullException(nameof(configurationService));
-            this.createGitService = createGitService ?? throw new ArgumentNullException(nameof(createGitService));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public GitPanelLaunchResult CreateViewModel(object projectContext)

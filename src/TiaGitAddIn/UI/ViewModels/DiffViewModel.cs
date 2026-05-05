@@ -19,16 +19,16 @@ namespace TiaGitAddIn.UI.ViewModels
         private readonly IGitFileExtractor gitFileExtractor;
         private readonly ISactService sactService;
         private readonly IAddInLogger? logger;
-        private ObservableCollection<DiffEntryViewModel> entries = new ObservableCollection<DiffEntryViewModel>();
+        private ObservableCollection<DiffEntryViewModel> entries = new();
         private DiffEntryViewModel? selectedEntry;
-        private ObservableCollection<DiffLineViewModel> displayedLines = new ObservableCollection<DiffLineViewModel>();
+        private ObservableCollection<DiffLineViewModel> displayedLines = new();
         private string lastOperationMessage = string.Empty;
         private string busyMessage = string.Empty;
         private bool isBusy;
         private CancellationTokenSource? cts;
 
         public DiffViewModel(
-            IGitService gitService, 
+            IGitService gitService,
             IGitFileExtractor gitFileExtractor,
             ISactService sactService,
             IAddInLogger? logger = null,
@@ -172,7 +172,7 @@ namespace TiaGitAddIn.UI.ViewModels
                 return;
             }
 
-            var lines = new List<DiffLineViewModel>();
+            List<DiffLineViewModel> lines = new();
             foreach (var hunk in entry.Entry.Hunks)
             {
                 lines.Add(DiffLineViewModel.FromHunkHeader(hunk.Header));
@@ -187,11 +187,11 @@ namespace TiaGitAddIn.UI.ViewModels
 
     public sealed class DiffEntryViewModel
     {
-        private static readonly HashSet<string> TiaXmlExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        private static readonly HashSet<string> TiaXmlExtensions = new(StringComparer.OrdinalIgnoreCase)
             { ".xml", ".db", ".fc", ".fb", ".ob", ".sdb", ".udt" };
 
         private static readonly string[] TiaPathKeywords =
-            { "Program blocks", "Function blocks", "Data blocks", "Safety blocks", "NetworkSource", "LAD", "FBD", "SFC" };
+            ["Program blocks", "Function blocks", "Data blocks", "Safety blocks", "NetworkSource", "LAD", "FBD", "SFC"];
 
         public DiffEntryViewModel(DiffEntry entry)
         {
@@ -212,9 +212,9 @@ namespace TiaGitAddIn.UI.ViewModels
 
         private static bool DetectTiaArtifact(string path)
         {
-            var ext = Path.GetExtension(path);
+            string ext = Path.GetExtension(path);
             if (!TiaXmlExtensions.Contains(ext)) return false;
-            foreach (var keyword in TiaPathKeywords)
+            foreach (string keyword in TiaPathKeywords)
             {
                 if (path.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
                     return true;
@@ -247,7 +247,7 @@ namespace TiaGitAddIn.UI.ViewModels
         private DiffLineViewModel() { }
 
         public static DiffLineViewModel FromLine(DiffLine line) =>
-            new DiffLineViewModel
+            new()
             {
                 LineType = line.Type,
                 Content = line.Content ?? string.Empty,
@@ -256,7 +256,7 @@ namespace TiaGitAddIn.UI.ViewModels
             };
 
         public static DiffLineViewModel FromHunkHeader(string header) =>
-            new DiffLineViewModel
+            new()
             {
                 LineType = DiffLineType.Header,
                 Content = header ?? string.Empty,

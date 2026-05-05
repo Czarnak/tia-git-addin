@@ -11,14 +11,14 @@ namespace TiaGitAddIn.Services
                 return "\"\"";
             }
 
-            bool mustQuote = argument.IndexOfAny(new[] { ' ', '\t', '"' }) >= 0 ||
+            bool mustQuote = argument.IndexOfAny([' ', '\t', '"']) >= 0 ||
                 argument.EndsWith("\\", System.StringComparison.Ordinal);
             if (!mustQuote)
             {
                 return argument;
             }
 
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             builder.Append('"');
 
             int backslashCount = 0;

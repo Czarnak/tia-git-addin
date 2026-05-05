@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TiaGitAddIn.Configuration;
 using TiaGitAddIn.Logging;
+using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
 using TiaGitAddIn.UI;
 
@@ -81,7 +82,7 @@ namespace TiaGitAddIn.UI.ViewModels
         {
             if (e.PropertyName == nameof(HistoryViewModel.SelectedCommit) && sender is HistoryViewModel)
             {
-                var commit = History.SelectedCommit;
+                CommitInfo? commit = History.SelectedCommit;
                 if (commit != null)
                     await Diff.LoadCommitDiffAsync(commit.Hash).ConfigureAwait(false);
                 return;

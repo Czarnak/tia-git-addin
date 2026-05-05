@@ -14,7 +14,8 @@ namespace TiaGitAddIn.Services
         public static GitStatus ParseStatus(string output)
         {
             string[] lines = SplitLines(output);
-            GitStatus status = new GitStatus
+            GitStatus status = new()
+
             {
                 Entries = lines
                     .Where(line => !line.StartsWith("##", StringComparison.Ordinal))
@@ -125,7 +126,7 @@ namespace TiaGitAddIn.Services
 
         public static DiffResult ParseDiff(string output)
         {
-            List<DiffEntry> entries = new List<DiffEntry>();
+            List<DiffEntry> entries = new();
             if (string.IsNullOrWhiteSpace(output)) return new DiffResult { Entries = entries };
 
             string[] lines = SplitLines(output);
@@ -139,7 +140,7 @@ namespace TiaGitAddIn.Services
                     currentEntry = new DiffEntry();
                     entries.Add(currentEntry);
                     currentHunk = null;
-                    
+
                     Match match = Regex.Match(line, @"diff --git a/(.*) b/(.*)");
                     if (match.Success)
                     {
@@ -157,14 +158,14 @@ namespace TiaGitAddIn.Services
                 else if (currentEntry != null && line.StartsWith("@@ ", StringComparison.Ordinal))
                 {
                     currentHunk = ParseHunkHeader(line);
-                    var hunks = (List<DiffHunk>)currentEntry.Hunks;
+                    List<DiffHunk> hunks = (List<DiffHunk>)currentEntry.Hunks;
                     hunks.Add(currentHunk);
                 }
                 else if (currentHunk != null)
                 {
                     currentHunk.Lines = ((List<DiffLine>)currentHunk.Lines);
-                    var hunkLines = (List<DiffLine>)currentHunk.Lines;
-                    
+                    List<DiffLine> hunkLines = (List<DiffLine>)currentHunk.Lines;
+
                     if (line.StartsWith("+", StringComparison.Ordinal))
                     {
                         hunkLines.Add(new DiffLine { Type = DiffLineType.Added, Content = line.Substring(1) });
@@ -216,7 +217,7 @@ namespace TiaGitAddIn.Services
             string path = line.Substring(3);
             string? originalPath = null;
 
-            string[] renameParts = path.Split(new[] { " -> " }, StringSplitOptions.None);
+            string[] renameParts = path.Split([" -> "], StringSplitOptions.None);
             if (renameParts.Length == 2)
             {
                 originalPath = renameParts[0];
@@ -316,6 +317,6 @@ namespace TiaGitAddIn.Services
         }
 
         private static string[] SplitLines(string output) =>
-            output.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            output.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
     }
 }

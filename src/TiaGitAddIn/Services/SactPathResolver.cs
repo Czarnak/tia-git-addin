@@ -1,22 +1,14 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using Microsoft.Win32;
 
 namespace TiaGitAddIn.Services
 {
-    public sealed class SactPathResolver : ISactPathResolver
+    public sealed class SactPathResolver(string? siemensOverride = null, string? nodeOverride = null) : ISactPathResolver
     {
         private const string RegistryKey = @"SOFTWARE\Siemens\Automation\CompareTool";
         private const string DefaultPath = @"C:\Program Files\Siemens\Automation\SIMATIC Automation Compare Tool";
-
-        private readonly string? siemensOverride;
-        private readonly string? nodeOverride;
-
-        public SactPathResolver(string? siemensOverride = null, string? nodeOverride = null)
-        {
-            this.siemensOverride = siemensOverride;
-            this.nodeOverride = nodeOverride;
-        }
 
         public string? ResolveSiemensInstallPath()
         {
@@ -27,10 +19,10 @@ namespace TiaGitAddIn.Services
             // 1. Registry (64-bit view preferred for Siemens tools)
             try
             {
-                using (var baseKey = Microsoft.Win32.RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (RegistryKey baseKey = Microsoft.Win32.RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
                 using (var key = baseKey.OpenSubKey(RegistryKey))
                 {
-                    var val = key?.GetValue("InstallDir") as string;
+                    string? val = key?.GetValue("InstallDir") as string;
                     if (!string.IsNullOrEmpty(val) && Directory.Exists(val)) return val;
                 }
             }
@@ -54,13 +46,13 @@ namespace TiaGitAddIn.Services
             // Check if node is in PATH
             try
             {
-                var psi = new System.Diagnostics.ProcessStartInfo("node", "-v")
+                ProcessStartInfo psi = new("node", "-v")
                 {
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
                 };
-                using (var proc = System.Diagnostics.Process.Start(psi))
+                using (Process proc = System.Diagnostics.Process.Start(psi))
                 {
                     if (proc != null)
                     {

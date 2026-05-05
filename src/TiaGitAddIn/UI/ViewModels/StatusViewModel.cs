@@ -14,10 +14,10 @@ namespace TiaGitAddIn.UI.ViewModels
     public sealed class StatusViewModel : ViewModelBase
     {
         private readonly IGitService gitService;
-        private ObservableCollection<FileStatusItemViewModel> stagedEntries = new ObservableCollection<FileStatusItemViewModel>();
-        private ObservableCollection<FileStatusItemViewModel> unstagedEntries = new ObservableCollection<FileStatusItemViewModel>();
-        private ObservableCollection<FileStatusItemViewModel> untrackedEntries = new ObservableCollection<FileStatusItemViewModel>();
-        private ObservableCollection<FileStatusItemViewModel> allEntries = new ObservableCollection<FileStatusItemViewModel>();
+        private ObservableCollection<FileStatusItemViewModel> stagedEntries = new();
+        private ObservableCollection<FileStatusItemViewModel> unstagedEntries = new();
+        private ObservableCollection<FileStatusItemViewModel> untrackedEntries = new();
+        private ObservableCollection<FileStatusItemViewModel> allEntries = new();
         private string currentBranch = string.Empty;
         private string trackingSummary = string.Empty;
         private string statusSummary = "Status not loaded";
@@ -158,7 +158,7 @@ namespace TiaGitAddIn.UI.ViewModels
             BusyMessage = "Staging files…";
             try
             {
-                var paths = selectedItems.Select(e => e.FilePath).ToList();
+                List<string> paths = selectedItems.Select(e => e.FilePath).ToList();
                 OperationResult result = await gitService.StageAsync(paths).ConfigureAwait(false);
                 InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
                 if (result.Success) await RefreshAsync().ConfigureAwait(false);
@@ -187,7 +187,7 @@ namespace TiaGitAddIn.UI.ViewModels
             BusyMessage = "Unstaging files…";
             try
             {
-                var paths = selectedItems.Select(e => e.FilePath).ToList();
+                List<string> paths = selectedItems.Select(e => e.FilePath).ToList();
                 OperationResult result = await gitService.UnstageAsync(paths).ConfigureAwait(false);
                 InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
                 if (result.Success) await RefreshAsync().ConfigureAwait(false);
@@ -226,7 +226,7 @@ namespace TiaGitAddIn.UI.ViewModels
 
         private static string BuildTrackingSummary(GitStatus status)
         {
-            List<string> parts = new List<string>();
+            List<string> parts = new();
             if (!string.IsNullOrWhiteSpace(status.TrackingBranch)) parts.Add(status.TrackingBranch!);
             if (status.AheadBy > 0) parts.Add("ahead " + status.AheadBy);
             if (status.BehindBy > 0) parts.Add("behind " + status.BehindBy);

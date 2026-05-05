@@ -3,17 +3,12 @@ using System.Windows.Threading;
 
 namespace TiaGitAddIn.UI
 {
-    public sealed class WpfUiDispatcher : IUiDispatcher
+    public sealed class WpfUiDispatcher(Dispatcher dispatcher) : IUiDispatcher
     {
-        private readonly Dispatcher dispatcher;
-
-        public WpfUiDispatcher(Dispatcher dispatcher)
-        {
-            this.dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
-        }
+        private readonly Dispatcher dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
 
         public static WpfUiDispatcher FromCurrentThread() =>
-            new WpfUiDispatcher(Dispatcher.CurrentDispatcher);
+            new(Dispatcher.CurrentDispatcher);
 
         public bool CheckAccess() => dispatcher.CheckAccess();
 

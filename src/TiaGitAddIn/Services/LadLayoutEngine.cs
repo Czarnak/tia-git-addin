@@ -10,14 +10,14 @@ namespace TiaGitAddIn.Services
     {
         public static List<LadNetworkLayout> LayoutAll(SactCompareResult compareResult)
         {
-            var layouts = new List<LadNetworkLayout>();
+            List<LadNetworkLayout> layouts = new();
 
             if (compareResult.Content == null || compareResult.Content.Networks == null)
             {
                 return layouts;
             }
 
-            var sortedNetworks = compareResult.Content.Networks
+            List<KeyValuePair<string, SactNetworkResult>> sortedNetworks = compareResult.Content.Networks
                 .OrderBy(k => int.TryParse(k.Key, out int i) ? i : int.MaxValue)
                 .ToList();
 
@@ -37,7 +37,7 @@ namespace TiaGitAddIn.Services
 
         public static LadNetworkLayout Layout(SactNetworkResult network)
         {
-            var layout = new LadNetworkLayout
+            LadNetworkLayout layout = new()
             {
                 DiffState = network.State
             };
@@ -48,7 +48,7 @@ namespace TiaGitAddIn.Services
             }
 
             var componentsByUId = network.Body;
-            var componentOwnerByConnectorId = new Dictionary<string, string>();
+            Dictionary<string, string> componentOwnerByConnectorId = new();
 
             foreach (var component in componentsByUId.Values)
             {
@@ -74,8 +74,8 @@ namespace TiaGitAddIn.Services
                 return layout;
             }
 
-            var visited = new HashSet<string>();
-            var queue = new Queue<(SactComponentData component, int col, int row)>();
+            HashSet<string> visited = new();
+            Queue<(SactComponentData component, int col, int row)> queue = new();
 
             queue.Enqueue((startElement, 0, 0));
 
@@ -104,7 +104,7 @@ namespace TiaGitAddIn.Services
                     Operand = current.TopOperandConnector?.DisplayName ?? string.Empty,
                     UId = current.uId,
                     // Assume component state follows network state since there is no individual diff state in SACT models
-                    DiffState = network.State 
+                    DiffState = network.State
                 });
 
                 if (current.name == "LadOrWireData" || current.name == "OrBranch")
@@ -112,7 +112,7 @@ namespace TiaGitAddIn.Services
                     int branchRow = row;
                     foreach (var output in current.outputConnectors)
                     {
-                        if (string.IsNullOrEmpty(output.PartnerUId) || !componentOwnerByConnectorId.TryGetValue(output.PartnerUId, out var partnerCompId))
+                        if (string.IsNullOrEmpty(output.PartnerUId) || !componentOwnerByConnectorId.TryGetValue(output.PartnerUId, out string? partnerCompId))
                         {
                             continue;
                         }
@@ -127,7 +127,7 @@ namespace TiaGitAddIn.Services
                                 ToRow = branchRow,
                                 IsOrBranch = branchRow != row
                             });
-                            
+
                             queue.Enqueue((nextComp, col + 1, branchRow));
                             branchRow++;
                         }
@@ -137,7 +137,7 @@ namespace TiaGitAddIn.Services
                 {
                     foreach (var output in current.outputConnectors)
                     {
-                        if (string.IsNullOrEmpty(output.PartnerUId) || !componentOwnerByConnectorId.TryGetValue(output.PartnerUId, out var partnerCompId))
+                        if (string.IsNullOrEmpty(output.PartnerUId) || !componentOwnerByConnectorId.TryGetValue(output.PartnerUId, out string? partnerCompId))
                         {
                             continue;
                         }

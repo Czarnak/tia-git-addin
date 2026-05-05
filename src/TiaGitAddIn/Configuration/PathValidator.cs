@@ -32,7 +32,7 @@ namespace TiaGitAddIn.Configuration
                 return ValidationResult.Invalid("Path contains control characters.");
             }
 
-            string[] segments = safePath.Split(new[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] segments = safePath.Split(['\\', '/'], StringSplitOptions.RemoveEmptyEntries);
             if (segments.Any(segment => segment == ".."))
             {
                 return ValidationResult.Invalid("Path traversal is not allowed.");

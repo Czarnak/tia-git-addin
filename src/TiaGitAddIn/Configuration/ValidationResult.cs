@@ -7,9 +7,11 @@ namespace TiaGitAddIn.Configuration
         public string ErrorMessage { get; set; } = string.Empty;
 
         public static ValidationResult Valid() =>
-            new ValidationResult { IsValid = true };
+            new()
+            { IsValid = true };
 
         public static ValidationResult Invalid(string errorMessage) =>
-            new ValidationResult { IsValid = false, ErrorMessage = errorMessage };
+            new()
+            { IsValid = false, ErrorMessage = errorMessage };
     }
 }

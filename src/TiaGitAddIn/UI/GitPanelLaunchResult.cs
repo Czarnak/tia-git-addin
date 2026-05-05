@@ -12,14 +12,16 @@ namespace TiaGitAddIn.UI
         public Func<MainViewModel>? CreateViewModel { get; set; }
 
         public static GitPanelLaunchResult Ok(Func<MainViewModel> createViewModel) =>
-            new GitPanelLaunchResult
+            new()
+
             {
                 Success = true,
                 CreateViewModel = createViewModel
             };
 
         public static GitPanelLaunchResult Fail(string message) =>
-            new GitPanelLaunchResult
+            new()
+
             {
                 Success = false,
                 Message = message

@@ -4,21 +4,14 @@ using System.Windows.Input;
 
 namespace TiaGitAddIn.UI
 {
-    public sealed class AsyncCommand : ICommand
+    public sealed class AsyncCommand(Func<object?, Task> executeAsync, Func<object?, bool>? canExecute = null) : ICommand
     {
-        private readonly Func<object?, Task> executeAsync;
-        private readonly Func<object?, bool>? canExecute;
+        private readonly Func<object?, Task> executeAsync = executeAsync ?? throw new ArgumentNullException(nameof(executeAsync));
         private bool isExecuting;
 
         public AsyncCommand(Func<Task> execute, Func<bool>? canExecute = null)
             : this(_ => execute(), _ => canExecute?.Invoke() ?? true)
         {
-        }
-
-        public AsyncCommand(Func<object?, Task> executeAsync, Func<object?, bool>? canExecute = null)
-        {
-            this.executeAsync = executeAsync ?? throw new ArgumentNullException(nameof(executeAsync));
-            this.canExecute = canExecute;
         }
 
         public event EventHandler? CanExecuteChanged;

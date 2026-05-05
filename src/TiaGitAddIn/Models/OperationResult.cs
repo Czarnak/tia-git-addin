@@ -9,9 +9,11 @@ namespace TiaGitAddIn.Models
         public string Detail { get; set; } = string.Empty;
 
         public static OperationResult Ok(string message = "") =>
-            new OperationResult { Success = true, Message = message };
+            new()
+            { Success = true, Message = message };
 
         public static OperationResult Fail(string message, string detail = "") =>
-            new OperationResult { Success = false, Message = message, Detail = detail };
+            new()
+            { Success = false, Message = message, Detail = detail };
     }
 }

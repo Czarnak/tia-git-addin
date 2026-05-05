@@ -8,20 +8,20 @@ namespace TiaGitAddIn.Entry
     internal static class MenuSelectionContextResolver
     {
         private static readonly string[] MethodNames =
-        {
+        [
             "GetSelection",
             "GetSelectedObjects",
             "GetSelectedItems"
-        };
+        ];
 
         private static readonly string[] PropertyNames =
-        {
+        [
             "Selection",
             "SelectedObjects",
             "SelectedItems",
             "Items",
             "Context"
-        };
+        ];
 
         public static object? Resolve(object provider)
         {

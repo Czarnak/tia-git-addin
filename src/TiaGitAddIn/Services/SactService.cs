@@ -9,25 +9,14 @@ using TiaGitAddIn.Models.Sact;
 
 namespace TiaGitAddIn.Services
 {
-    public sealed class SactService : ISactService
+    public sealed class SactService(ISactPathResolver pathResolver, ISactProcessRunner processRunner, IAddInLogger? logger = null) : ISactService
     {
-        private readonly ISactPathResolver pathResolver;
-        private readonly ISactProcessRunner processRunner;
-        private readonly IAddInLogger? logger;
-
-        public SactService(ISactPathResolver pathResolver, ISactProcessRunner processRunner, IAddInLogger? logger = null)
-        {
-            this.pathResolver = pathResolver;
-            this.processRunner = processRunner;
-            this.logger = logger;
-        }
-
         public bool IsAvailable => pathResolver.ResolveSiemensInstallPath() != null && pathResolver.ResolveNodePath() != null;
 
         public async Task<SactCompareResult?> CompareAsync(string leftXmlPath, string rightXmlPath, CancellationToken ct)
         {
-            var siemensPath = pathResolver.ResolveSiemensInstallPath();
-            var nodePath = pathResolver.ResolveNodePath();
+            string? siemensPath = pathResolver.ResolveSiemensInstallPath();
+            string? nodePath = pathResolver.ResolveNodePath();
 
             if (siemensPath == null || nodePath == null)
             {
@@ -35,11 +24,12 @@ namespace TiaGitAddIn.Services
                 return null;
             }
 
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            var scriptPath = Path.Combine(baseDir, "Scripts", "CompareBlocks.js");
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string scriptPath = Path.Combine(baseDir, "Scripts", "CompareBlocks.js");
             if (!File.Exists(scriptPath))
             {
                 // Fallback for some test runners
+                logger?.Info($"SACT: Script not found, trying fallback path. Original path: {scriptPath}");
                 scriptPath = Path.Combine(Path.GetDirectoryName(typeof(SactService).Assembly.Location) ?? baseDir, "Scripts", "CompareBlocks.js");
             }
 
@@ -50,16 +40,16 @@ namespace TiaGitAddIn.Services
             }
 
             // node_modules path: <SiemensDir>\ACT-CLI\resources\app\node_modules
-            var nodeModulesPath = Path.Combine(siemensPath, "ACT-CLI", "resources", "app", "node_modules");
-            var environment = new Dictionary<string, string>
+            string nodeModulesPath = Path.Combine(siemensPath, "ACT-CLI", "resources", "app", "node_modules");
+            Dictionary<string, string> environment = new()
             {
                 { "NODE_PATH", nodeModulesPath }
             };
 
-            var arguments = $"\"{scriptPath}\" \"{leftXmlPath}\" \"{rightXmlPath}\"";
+            string arguments = $"\"{scriptPath}\" \"{leftXmlPath}\" \"{rightXmlPath}\"";
 
             logger?.Info($"SACT: Starting comparison via Node.js bridge.\n  Node: {nodePath}\n  Script: {scriptPath}\n  Left: {leftXmlPath}\n  Right: {rightXmlPath}\n  NODE_PATH: {nodeModulesPath}");
-            
+
             var result = await processRunner.RunAsync(nodePath, arguments, ct, environment).ConfigureAwait(false);
 
             if (!result.IsSuccess)
