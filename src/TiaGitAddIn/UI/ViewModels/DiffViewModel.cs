@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using TiaGitAddIn.Logging;
 using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
 using TiaGitAddIn.UI;

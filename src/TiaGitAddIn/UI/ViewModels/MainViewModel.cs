@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using TiaGitAddIn.Configuration;
+using TiaGitAddIn.Logging;
 using TiaGitAddIn.Services;
 using TiaGitAddIn.UI;
 

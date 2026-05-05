@@ -71,3 +71,6 @@ graphify-out/manifest.json
 graphify-out/cost.json
 *.log
 .dotnet-home/
+*superpowers*
+*.yaml
+*.md

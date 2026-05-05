@@ -1,0 +1,191 @@
+<UserControl x:Class="TiaGitAddIn.UI.Views.LadDiffView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:TiaGitAddIn.UI.Views"
+             xmlns:converters="clr-namespace:TiaGitAddIn.UI.Converters"
+             xmlns:viewmodels="clr-namespace:TiaGitAddIn.UI.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+        d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:CompareStateToColorConverter x:Key="CompareStateToColorConverter"/>
+        <converters:LadElementTypeToGeometryConverter x:Key="LadElementTypeToGeometryConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="LadBoolToVis"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Networks}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:LadNetworkViewModel}">
+                        <Border BorderBrush="#DDDDDD"
+                                BorderThickness="1"
+                                Margin="10"
+                                Background="{Binding DiffState, Converter={StaticResource CompareStateToColorConverter}}">
+                            <StackPanel>
+                                <Border Background="#EEEEEE"
+                                        Padding="5">
+                                    <TextBlock Text="{Binding NetworkNumber, StringFormat=Network {0}}"
+                                            FontWeight="Bold"/>
+                                </Border>
+
+                                <Canvas Width="{Binding CanvasWidth}"
+                                        Height="{Binding CanvasHeight}"
+                                        Margin="10">
+                                    <ItemsControl ItemsSource="{Binding Elements}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Canvas/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type viewmodels:LadElementViewModel}">
+                                                <Border Width="{Binding Width}"
+                                                        Height="{Binding Height}"
+                                                        BorderBrush="Black"
+                                                        BorderThickness="1"
+                                                        Background="{Binding DiffState, Converter={StaticResource CompareStateToColorConverter}}">
+                                                    <StackPanel HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Operand}"
+                                                                TextAlignment="Center"
+                                                                FontSize="10"
+                                                                TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Text="{Binding ElementType, Converter={StaticResource LadElementTypeToGeometryConverter}}"
+                                                                TextAlignment="Center"
+                                                                FontWeight="Bold"
+                                                                Margin="0,2"/>
+                                                        <TextBlock Text="{Binding DisplayName}"
+                                                                TextAlignment="Center"
+                                                                FontSize="10"
+                                                                TextTrimming="CharacterEllipsis"
+                                                                Foreground="#666666"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                        <ItemsControl.ItemContainerStyle>
+                                            <Style TargetType="ContentPresenter">
+                                                <Setter Property="Canvas.Left"
+                                                        Value="{Binding X}"/>
+                                                <Setter Property="Canvas.Top"
+                                                        Value="{Binding Y}"/>
+                                            </Style>
+                                        </ItemsControl.ItemContainerStyle>
+                                    </ItemsControl>
+
+                                    <!-- Wires layer using lines/polylines -->
+                                    <ItemsControl ItemsSource="{Binding Wires}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Canvas/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <!-- Simplified: just draw straight lines for now between cell centers. 
+                                                     In a real implementation we would route orthogonal lines.
+                                                     CellWidth=120, CellHeight=60. Origin is top-left, so +60 and +30 to center -->
+                                                <Line X1="{Binding X1}"
+                                                      Y1="{Binding Y1}"
+                                                      X2="{Binding X2}"
+                                                      Y2="{Binding Y2}"
+                                                      Stroke="Black"
+                                                        StrokeThickness="1"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                        <ItemsControl.ItemContainerStyle>
+                                            <Style TargetType="ContentPresenter">
+                                                <!-- Offset by half cell width/height to start lines at centers of elements -->
+                                                <Setter Property="Canvas.Left"
+                                                        Value="60"/>
+                                                <Setter Property="Canvas.Top"
+                                                        Value="30"/>
+                                            </Style>
+                                        </ItemsControl.ItemContainerStyle>
+                                    </ItemsControl>
+                                </Canvas>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Loading Overlay -->
+        <Border Grid.Row="0"
+                Background="#80FFFFFF"
+                Visibility="{Binding IsBusy, Converter={StaticResource LadBoolToVis}}">
+            <TextBlock Text="{Binding BusyMessage}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    FontWeight="Bold"/>
+        </Border>
+
+        <!-- SACT Not Available Banner -->
+        <Border Grid.Row="0"
+                Background="#FFF3CD"
+                BorderBrush="#FFEEBA"
+                BorderThickness="1"
+                Margin="10"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility"
+                            Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSactAvailable}"
+                                Value="False">
+                            <Setter Property="Visibility"
+                                    Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <TextBlock Text="SACT not installed — install SIMATIC Automation Compare Tool for visual LAD diff."
+                    Padding="10"
+                    Foreground="#856404"/>
+        </Border>
+
+        <!-- Error Bar -->
+        <Border Grid.Row="1"
+                Background="#FFF3CD"
+                BorderBrush="#FFEEBA"
+                BorderThickness="1"
+                Margin="0,5,0,0"
+                Padding="5">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility"
+                            Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding LadDiffError}"
+                                Value="">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding LadDiffError}"
+                                Value="{x:Null}">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <TextBlock Text="{Binding LadDiffError}"
+                    Foreground="#856404"
+                    TextWrapping="Wrap"/>
+        </Border>
+    </Grid>
+</UserControl>
