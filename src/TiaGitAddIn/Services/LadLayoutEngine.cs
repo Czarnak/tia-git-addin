@@ -68,7 +68,19 @@ namespace TiaGitAddIn.Services
                 }
             }
 
-            var startElement = componentsByUId.Values.FirstOrDefault(c => c.name == "BranchWireData" && c.isStartElement == true);
+            // Find start element (Powerrail)
+            var startElement = componentsByUId.Values.FirstOrDefault(c => 
+                (c.name != null && (c.name.IndexOf("BranchWire", StringComparison.OrdinalIgnoreCase) >= 0 || c.name.IndexOf("Powerrail", StringComparison.OrdinalIgnoreCase) >= 0)) ||
+                (c.DisplayName != null && c.DisplayName.IndexOf("Powerrail", StringComparison.OrdinalIgnoreCase) >= 0) ||
+                c.isStartElement == true);
+
+            if (startElement == null)
+            {
+                // Last ditch effort: find anything that looks like a powerrail or has the flag
+                startElement = componentsByUId.Values.FirstOrDefault(c => c.isStartElement == true)
+                             ?? componentsByUId.Values.FirstOrDefault(c => c.name != null && c.name.IndexOf("Wire", StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+
             if (startElement == null)
             {
                 return layout;
@@ -167,19 +179,35 @@ namespace TiaGitAddIn.Services
 
         private static LadElementType MapElementType(SactComponentData component)
         {
+            string name = component.name?.ToLowerInvariant() ?? "";
+            string displayName = component.DisplayName?.ToLowerInvariant() ?? "";
+
+            if (name == "branchwiredata" || name == "powerrail" || displayName == "powerrail") 
+                return LadElementType.Powerrail;
+
+            if (name.Contains("contact") || displayName.Contains("contact")) 
+                return component.negated == true ? LadElementType.NegatedContact : LadElementType.Contact;
+
+            if (name.Contains("coil") || displayName.Contains("coil")) 
+                return component.negated == true ? LadElementType.NegatedCoil : LadElementType.Coil;
+
             switch (component.name)
             {
-                case "BranchWireData": return LadElementType.Powerrail;
-                case "LadContactData": return component.negated == true ? LadElementType.NegatedContact : LadElementType.Contact;
                 case "LadTemplatedContactData":
                     if (component.TemplateType == "P") return LadElementType.PEdgeContact;
                     if (component.TemplateType == "N") return LadElementType.NEdgeContact;
                     return LadElementType.TemplatedContact;
-                case "LadCoilData": return component.negated == true ? LadElementType.NegatedCoil : LadElementType.Coil;
                 case "LadComparatorContactData": return LadElementType.ComparatorBox;
-                case "LadOrWireData": return LadElementType.OrBranch;
+                case "LadOrWireData": 
+                case "OrBranch":
+                    return LadElementType.OrBranch;
                 case "LadTemplatedCoilData": return LadElementType.TemplatedCoil;
-                default: return LadElementType.Contact; // Fallback
+                default: 
+                    // Special names that often appear as DisplayName
+                    if (displayName == "move" || displayName == "add" || displayName == "sub" || displayName == "mul" || displayName == "div")
+                        return LadElementType.ComparatorBox;
+                    
+                    return LadElementType.Contact; // Fallback
             }
         }
     }

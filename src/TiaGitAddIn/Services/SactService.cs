@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -74,6 +75,13 @@ namespace TiaGitAddIn.Services
                 return null;
             }
 
+            try
+            {
+                string firstLine = File.ReadLines(scriptPath).FirstOrDefault() ?? "";
+                logger?.Info($"SACT: Bridge script version check: {firstLine}");
+            }
+            catch { }
+
             // node_modules path: <SiemensDir>\ACT-CLI\resources\app\node_modules
             string nodeModulesPath = Path.Combine(siemensPath, "ACT-CLI", "resources", "app", "node_modules");
             Dictionary<string, string> environment = new()
@@ -114,6 +122,9 @@ namespace TiaGitAddIn.Services
                 }
                 else
                 {
+                    // Enrich with right XML data as a fallback for missing names/structure
+                    SactJsonParser.EnrichWithXmlData(parsedResult, rightXmlPath);
+
                     int networkCount = parsedResult.Content?.Networks?.Count ?? 0;
                     logger?.Info($"SACT: Successfully parsed JSON. Networks found: {networkCount}");
                 }

@@ -78,6 +78,86 @@ namespace TiaGitAddIn.Services
             }
         }
 
+        public static void EnrichWithXmlData(SactCompareResult result, string xmlPath)
+        {
+            if (result.Content?.Networks == null || !System.IO.File.Exists(xmlPath))
+                return;
+
+            try
+            {
+                string xml = System.IO.File.ReadAllText(xmlPath);
+                var xmlInfo = ScrapeXmlInfo(xml);
+
+                foreach (var network in result.Content.Networks.Values)
+                {
+                    if (network.Body == null) continue;
+
+                    foreach (var kvp in network.Body)
+                    {
+                        var component = kvp.Value;
+                        if (xmlInfo.TryGetValue(component.uId, out var info))
+                        {
+                            if (string.IsNullOrEmpty(component.name))
+                                component.name = info.Name;
+
+                            if (info.IsPowerrail)
+                            {
+                                component.isStartElement = true;
+                                if (string.IsNullOrEmpty(component.name))
+                                    component.name = "BranchWireData";
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Best effort enrichment
+            }
+        }
+
+        private class XmlElementInfo
+        {
+            public string Name { get; set; } = string.Empty;
+            public bool IsPowerrail { get; set; }
+        }
+
+        private static Dictionary<string, XmlElementInfo> ScrapeXmlInfo(string xml)
+        {
+            var info = new Dictionary<string, XmlElementInfo>();
+
+            // Regex for <Part Name="..." UId="...">
+            var partRegex = new System.Text.RegularExpressions.Regex(@"<Part\s+Name=""([^""]+)""\s+UId=""(\d+)""");
+            foreach (System.Text.RegularExpressions.Match m in partRegex.Matches(xml))
+            {
+                info[m.Groups[2].Value] = new XmlElementInfo { Name = MapSimaticPartToSactName(m.Groups[1].Value) };
+            }
+
+            // Regex for <Wire UId="...">...<Powerrail/>...</Wire>
+            var wireRegex = new System.Text.RegularExpressions.Regex(@"<Wire\s+UId=""(\d+)"">([\s\S]*?)<\/Wire>");
+            foreach (System.Text.RegularExpressions.Match m in wireRegex.Matches(xml))
+            {
+                if (m.Groups[2].Value.Contains("<Powerrail/>"))
+                {
+                    info[m.Groups[1].Value] = new XmlElementInfo { Name = "BranchWireData", IsPowerrail = true };
+                }
+            }
+
+            return info;
+        }
+
+        private static string MapSimaticPartToSactName(string simaticName)
+        {
+            switch (simaticName)
+            {
+                case "Contact": return "LadContactData";
+                case "Coil": return "LadCoilData";
+                case "Or": return "LadOrWireData";
+                case "Box": return "LadBoxData";
+                default: return simaticName;
+            }
+        }
+
         private static Dictionary<string, object> JObjectToDictionary(JObject jobj)
         {
             Dictionary<string, object> dict = new();
@@ -137,26 +217,17 @@ namespace TiaGitAddIn.Services
         {
             SactComponentData comp = new();
 
-            if (dict.TryGetValue("name", out object? nameObj) && nameObj is string nameStr)
-                comp.name = nameStr;
-            if (dict.TryGetValue("uId", out object? uidObj) && uidObj is string uidStr)
-                comp.uId = uidStr;
-
-            if (dict.TryGetValue("isStartElement", out object? startObj) && startObj is bool startBool)
-                comp.isStartElement = startBool;
-            if (dict.TryGetValue("negated", out object? negatedObj) && negatedObj is bool negatedBool)
-                comp.negated = negatedBool;
-
-            if (dict.TryGetValue("DisplayName", out object? displayObj) && displayObj is string displayStr)
-                comp.DisplayName = displayStr;
-            if (dict.TryGetValue("TemplateType", out object? typeObj) && typeObj is string typeStr)
-                comp.TemplateType = typeStr;
+            comp.name = GetString(dict, "name");
+            comp.uId = GetString(dict, "uId");
+            comp.isStartElement = GetBool(dict, "isStartElement");
+            comp.negated = GetBool(dict, "negated");
+            comp.DisplayName = GetString(dict, "DisplayName");
+            comp.TemplateType = GetString(dict, "TemplateType");
 
             if (dict.TryGetValue("TopOperandConnector", out object? topObj) && topObj is Dictionary<string, object> topDict)
             {
                 comp.TopOperandConnector = new SactOperandConnector();
-                if (topDict.TryGetValue("DisplayName", out object? topDisp) && topDisp is string topDispStr)
-                    comp.TopOperandConnector.DisplayName = topDispStr;
+                comp.TopOperandConnector.DisplayName = GetString(topDict, "DisplayName");
             }
 
             if (dict.TryGetValue("outputConnectors", out object? outObj) && outObj is System.Collections.IEnumerable outEnum)
@@ -181,11 +252,28 @@ namespace TiaGitAddIn.Services
         private static SactConnectorData ParseConnector(Dictionary<string, object> dict)
         {
             SactConnectorData conn = new();
-            if (dict.TryGetValue("uId", out object? uidObj) && uidObj is string uidStr)
-                conn.uId = uidStr;
-            if (dict.TryGetValue("PartnerUId", out object? partnerObj) && partnerObj is string partnerStr)
-                conn.PartnerUId = partnerStr;
+            conn.uId = GetString(dict, "uId");
+            conn.PartnerUId = GetString(dict, "PartnerUId");
             return conn;
+        }
+
+        private static string GetString(Dictionary<string, object> dict, string key)
+        {
+            if (dict.TryGetValue(key, out object? val))
+            {
+                return val?.ToString() ?? string.Empty;
+            }
+            return string.Empty;
+        }
+
+        private static bool? GetBool(Dictionary<string, object> dict, string key)
+        {
+            if (dict.TryGetValue(key, out object? val))
+            {
+                if (val is bool b) return b;
+                if (val is long l) return l != 0;
+            }
+            return null;
         }
 
         private static CompareState GetState(Dictionary<string, object> dict)
