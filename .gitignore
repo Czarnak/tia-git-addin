@@ -73,5 +73,5 @@ graphify-out/cost.json
 .dotnet-home/
 *superpowers*
 *.yaml
-*.md
+
 SACT_res/

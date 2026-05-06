@@ -48,6 +48,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TiaGitAddIn.Core\TiaGitAddIn.Core.csproj" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(EnableDiffViewerPackages)' == 'true'">
     <PackageReference Include="DiffPlex" Version="1.7.2" />
   </ItemGroup>

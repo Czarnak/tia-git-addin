@@ -18,5 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TiaGitAddIn\TiaGitAddIn.csproj" />
+    <ProjectReference Include="..\TiaGitAddIn.Core\TiaGitAddIn.Core.csproj" />
   </ItemGroup>
 </Project>

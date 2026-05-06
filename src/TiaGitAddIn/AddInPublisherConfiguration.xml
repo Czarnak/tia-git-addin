@@ -15,9 +15,13 @@
     </AssemblyInfo>
   </FeatureAssembly>
   <AdditionalAssemblies>
-  <AssemblyInfo>
-    <Assembly>Newtonsoft.Json.dll</Assembly>
-  </AssemblyInfo>
+    <AssemblyInfo>
+      <Assembly>TiaGitAddIn.Core.dll</Assembly>
+      <Pdb>TiaGitAddIn.Core.pdb</Pdb>
+    </AssemblyInfo>
+    <AssemblyInfo>
+      <Assembly>Newtonsoft.Json.dll</Assembly>
+    </AssemblyInfo>
   </AdditionalAssemblies>
   <RequiredPermissions>
     <TIAPermissions>
