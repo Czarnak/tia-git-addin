@@ -61,7 +61,7 @@ namespace TiaGitAddIn.Services.SimaticMl
                     networkResult.Number.Right = displayNum;
                     networkResult.Number.Left = displayNum;
 
-                    var body = MapNetworkBody(cu.Network);
+                    var body = WithComponentState(MapNetworkBody(cu.Network), fileState);
                     networkResult.Body = body;
                     if (fileState == CompareState.MissingOnLeft) networkResult.RightBody = body;
                     else if (fileState == CompareState.MissingOnRight) networkResult.LeftBody = body;
@@ -73,6 +73,43 @@ namespace TiaGitAddIn.Services.SimaticMl
             result.Content = content;
 
             return result;
+        }
+
+        private static Dictionary<string, SactComponentData> WithComponentState(
+            Dictionary<string, SactComponentData> componentsByUid,
+            CompareState state)
+        {
+            if (state == CompareState.Equal)
+            {
+                return componentsByUid;
+            }
+
+            return componentsByUid.ToDictionary(
+                kvp => kvp.Key,
+                kvp => CopyComponentWithState(kvp.Value, state));
+        }
+
+        private static SactComponentData CopyComponentWithState(SactComponentData component, CompareState state)
+        {
+            return new SactComponentData
+            {
+                name = component.name,
+                uId = component.uId,
+                State = state,
+                isStartElement = component.isStartElement,
+                negated = component.negated,
+                DisplayName = component.DisplayName,
+                TemplateType = component.TemplateType,
+                TopOperandConnector = component.TopOperandConnector == null
+                    ? null
+                    : new SactOperandConnector { DisplayName = component.TopOperandConnector.DisplayName },
+                outputConnectors = component.outputConnectors
+                    .Select(c => new SactConnectorData { uId = c.uId, PartnerUId = c.PartnerUId })
+                    .ToList(),
+                inputConnectors = component.inputConnectors
+                    .Select(c => new SactConnectorData { uId = c.uId, PartnerUId = c.PartnerUId })
+                    .ToList()
+            };
         }
 
         private static SactInterfaceResult MapInterface(BlockDefinition block)

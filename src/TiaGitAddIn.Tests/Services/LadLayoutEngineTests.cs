@@ -119,9 +119,11 @@ namespace TiaGitAddIn.Tests.Services
 
             var layout = LadLayoutEngine.LayoutBody(network.Body, network.State);
 
-            Assert.Equal(4, layout.Elements.Count);
+            Assert.Equal(3, layout.Elements.Count);
             Assert.Equal(3, layout.ColumnCount); // pr (0), or (1), contacts (2)
             Assert.Equal(2, layout.RowCount); // two branches
+            Assert.DoesNotContain(layout.Elements, e => e.ElementType == LadElementType.OrBranch);
+            Assert.All(layout.Wires, w => Assert.True(w.FromColumn == w.ToColumn || w.FromRow == w.ToRow));
             
             var c1Element = layout.Elements.First(e => e.UId == "c1");
             var c2Element = layout.Elements.First(e => e.UId == "c2");
@@ -129,6 +131,56 @@ namespace TiaGitAddIn.Tests.Services
             Assert.Equal(2, c1Element.Column);
             Assert.Equal(2, c2Element.Column);
             Assert.NotEqual(c1Element.Row, c2Element.Row);
+        }
+
+        [Fact]
+        public void LayoutAll_NetworkNumbers_AreSequentialFromOne()
+        {
+            var result = new SactCompareResult
+            {
+                Content = new SactContentResult
+                {
+                    Networks = new Dictionary<string, SactNetworkResult>
+                    {
+                        { "3", new SactNetworkResult { State = CompareState.Equal, Number = new SactNumberPair { Left = 10, Right = 10 } } },
+                        { "8", new SactNetworkResult { State = CompareState.Equal, Number = new SactNumberPair { Left = 20, Right = 20 } } }
+                    }
+                }
+            };
+
+            var layouts = LadLayoutEngine.LayoutAll(result);
+
+            Assert.Equal(new[] { 1, 2 }, layouts.Select(l => l.NetworkNumber).ToArray());
+        }
+
+        [Fact]
+        public void Layout_ChangedNetworkWithEqualElements_DoesNotPaintEveryElement()
+        {
+            var body = new Dictionary<string, SactComponentData>
+            {
+                {
+                    "pr", new SactComponentData
+                    {
+                        uId = "pr",
+                        name = "BranchWireData",
+                        isStartElement = true,
+                        outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "out", PartnerUId = "contact_in" } }
+                    }
+                },
+                {
+                    "contact", new SactComponentData
+                    {
+                        uId = "contact",
+                        name = "LadContactData",
+                        State = CompareState.Equal,
+                        inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "contact_in" } }
+                    }
+                }
+            };
+
+            var layout = LadLayoutEngine.LayoutBody(body, CompareState.Changed);
+
+            Assert.All(layout.Elements, e => Assert.Equal(CompareState.Equal, e.DiffState));
         }
 
         [Fact]

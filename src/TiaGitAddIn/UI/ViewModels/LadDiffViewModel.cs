@@ -160,14 +160,15 @@ namespace TiaGitAddIn.UI.ViewModels
 
         private void CleanupTempFile(string? path)
         {
-            if (!string.IsNullOrEmpty(path) && File.Exists(path))
+            string tempPath = path ?? string.Empty;
+            if (tempPath.Length > 0)
             {
                 // Only cleanup if it's actually a temp file (working tree diff uses actual file for rightTempPath)
-                if (path.StartsWith(Path.GetTempPath(), StringComparison.OrdinalIgnoreCase))
+                if (File.Exists(tempPath) && tempPath.StartsWith(Path.GetTempPath(), StringComparison.OrdinalIgnoreCase))
                 {
                     try
                     {
-                        File.Delete(path);
+                        File.Delete(tempPath);
                     }
                     catch
                     {

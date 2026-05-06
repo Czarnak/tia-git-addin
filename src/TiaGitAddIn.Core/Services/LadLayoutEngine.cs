@@ -21,6 +21,7 @@ namespace TiaGitAddIn.Services
                 .OrderBy(k => int.TryParse(k.Key, out int i) ? i : int.MaxValue)
                 .ToList();
 
+            int displayNumber = 1;
             foreach (var kvp in sortedNetworks)
             {
                 var network = kvp.Value;
@@ -28,7 +29,7 @@ namespace TiaGitAddIn.Services
                 {
                     var pair = new LadNetworkPairLayout
                     {
-                        NetworkNumber = network.Number.Right > 0 ? network.Number.Right : network.Number.Left,
+                        NetworkNumber = displayNumber,
                         DiffState = network.State,
                         Title = network.Title
                     };
@@ -53,6 +54,7 @@ namespace TiaGitAddIn.Services
                     }
 
                     pairs.Add(pair);
+                    displayNumber++;
                 }
             }
 
@@ -132,17 +134,19 @@ namespace TiaGitAddIn.Services
                 maxCol = Math.Max(maxCol, col);
                 maxRow = Math.Max(maxRow, row);
 
-                layout.Elements.Add(new LadElementLayout
+                if (!IsRoutingOnlyElement(current))
                 {
-                    Column = col,
-                    Row = row,
-                    ElementType = MapElementType(current),
-                    DisplayName = current.DisplayName ?? string.Empty,
-                    Operand = current.TopOperandConnector?.DisplayName ?? string.Empty,
-                    UId = current.uId,
-                    // Assume component state follows network state since there is no individual diff state in SACT models
-                    DiffState = state
-                });
+                    layout.Elements.Add(new LadElementLayout
+                    {
+                        Column = col,
+                        Row = row,
+                        ElementType = MapElementType(current),
+                        DisplayName = current.DisplayName ?? string.Empty,
+                        Operand = current.TopOperandConnector?.DisplayName ?? string.Empty,
+                        UId = current.uId,
+                        DiffState = current.State
+                    });
+                }
 
                 bool isBranchingElement = current.name == "LadOrWireData" || 
                                           current.name == "OrBranch" || 
@@ -154,21 +158,15 @@ namespace TiaGitAddIn.Services
                     int branchRow = row;
                     foreach (var output in current.outputConnectors)
                     {
-                        if (string.IsNullOrEmpty(output.PartnerUId) || !componentOwnerByConnectorId.TryGetValue(output.PartnerUId, out string partnerCompId))
+                        string partnerUId = output.PartnerUId ?? string.Empty;
+                        if (partnerUId.Length == 0 || !componentOwnerByConnectorId.TryGetValue(partnerUId, out string partnerCompId))
                         {
                             continue;
                         }
 
                         if (componentsByUId.TryGetValue(partnerCompId, out var nextComp))
                         {
-                            layout.Wires.Add(new LadWireSegment
-                            {
-                                FromColumn = col,
-                                FromRow = row,
-                                ToColumn = col + 1,
-                                ToRow = branchRow,
-                                IsOrBranch = branchRow != row
-                            });
+                            AddOrthogonalWire(layout, col, row, col + 1, branchRow);
 
                             queue.Enqueue((nextComp, col + 1, branchRow));
                             branchRow++;
@@ -179,21 +177,15 @@ namespace TiaGitAddIn.Services
                 {
                     foreach (var output in current.outputConnectors)
                     {
-                        if (string.IsNullOrEmpty(output.PartnerUId) || !componentOwnerByConnectorId.TryGetValue(output.PartnerUId, out string partnerCompId))
+                        string partnerUId = output.PartnerUId ?? string.Empty;
+                        if (partnerUId.Length == 0 || !componentOwnerByConnectorId.TryGetValue(partnerUId, out string partnerCompId))
                         {
                             continue;
                         }
 
                         if (componentsByUId.TryGetValue(partnerCompId, out var nextComp))
                         {
-                            layout.Wires.Add(new LadWireSegment
-                            {
-                                FromColumn = col,
-                                FromRow = row,
-                                ToColumn = col + 1,
-                                ToRow = row,
-                                IsOrBranch = false
-                            });
+                            AddOrthogonalWire(layout, col, row, col + 1, row);
 
                             queue.Enqueue((nextComp, col + 1, row));
                         }
@@ -205,6 +197,35 @@ namespace TiaGitAddIn.Services
             layout.RowCount = maxRow + 1;
 
             return layout;
+        }
+
+        private static void AddOrthogonalWire(LadNetworkLayout layout, int fromColumn, int fromRow, int toColumn, int toRow)
+        {
+            if (fromRow != toRow)
+            {
+                layout.Wires.Add(new LadWireSegment
+                {
+                    FromColumn = fromColumn,
+                    FromRow = fromRow,
+                    ToColumn = fromColumn,
+                    ToRow = toRow,
+                    IsOrBranch = true
+                });
+            }
+
+            layout.Wires.Add(new LadWireSegment
+            {
+                FromColumn = fromColumn,
+                FromRow = toRow,
+                ToColumn = toColumn,
+                ToRow = toRow,
+                IsOrBranch = fromRow != toRow
+            });
+        }
+
+        private static bool IsRoutingOnlyElement(SactComponentData component)
+        {
+            return component.name == "LadOrWireData" || component.name == "OrBranch";
         }
 
         private static LadElementType MapElementType(SactComponentData component)

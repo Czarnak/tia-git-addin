@@ -18,14 +18,12 @@
         <DataTemplate DataType="{x:Type viewmodels:LadElementViewModel}">
             <Grid Width="{Binding Width}"
                   Height="{Binding Height}">
-                <!-- Background highlight for diff state -->
                 <Border Background="{Binding DiffState, Converter={StaticResource CompareStateToColorConverter}}"
-                        Opacity="0.3"
-                        CornerRadius="2"/>
-
-                <!-- Element Graphic -->
-                <ContentControl VerticalAlignment="Center"
-                                HorizontalAlignment="Center">
+                        Padding="6"
+                        CornerRadius="3"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                <ContentControl>
                     <ContentControl.Style>
                         <Style TargetType="ContentControl">
                             <!-- Default: Box -->
@@ -37,7 +35,11 @@
                                                 Background="White"
                                                 MinWidth="80"
                                                 MinHeight="50">
-                                            <StackPanel>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
                                                 <Border Background="#E0E0E0"
                                                         Padding="2">
                                                     <TextBlock Text="{Binding DisplayName}"
@@ -45,12 +47,34 @@
                                                                FontSize="10"
                                                                HorizontalAlignment="Center"/>
                                                 </Border>
-                                                <TextBlock Text="{Binding Operand}"
-                                                           FontSize="9"
-                                                           Margin="4"
-                                                           TextAlignment="Center"
-                                                           TextWrapping="Wrap"/>
-                                            </StackPanel>
+                                                <Grid Grid.Row="1"
+                                                      Margin="4,2,4,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Grid.Column="0">
+                                                        <TextBlock Text="EN"
+                                                                   FontSize="9"/>
+                                                        <TextBlock Text="IN"
+                                                                   FontSize="9"/>
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding Operand}"
+                                                               FontSize="9"
+                                                               Margin="4,0"
+                                                               TextAlignment="Center"
+                                                               TextWrapping="Wrap"/>
+                                                    <StackPanel Grid.Column="2">
+                                                        <TextBlock Text="ENO"
+                                                                   FontSize="9"
+                                                                   Foreground="DimGray"/>
+                                                        <TextBlock Text="OUT"
+                                                                   FontSize="9"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
                                         </Border>
                                     </ControlTemplate>
                                 </Setter.Value>
@@ -219,6 +243,7 @@
                         </Style>
                     </ContentControl.Style>
                 </ContentControl>
+                </Border>
             </Grid>
         </DataTemplate>
 
@@ -229,23 +254,6 @@
                     Height="{Binding CanvasHeight}"
                     Margin="10"
                     Background="Transparent">
-
-                <!-- Elements layer -->
-                <ItemsControl ItemsSource="{Binding Elements}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Left"
-                                    Value="{Binding X}"/>
-                            <Setter Property="Canvas.Top"
-                                    Value="{Binding Y}"/>
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-                </ItemsControl>
 
                 <!-- Wires layer -->
                 <ItemsControl ItemsSource="{Binding Wires}">
@@ -271,6 +279,23 @@
                                     Value="75"/>
                             <Setter Property="Canvas.Top"
                                     Value="50"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+
+                <!-- Elements layer -->
+                <ItemsControl ItemsSource="{Binding Elements}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left"
+                                    Value="{Binding X}"/>
+                            <Setter Property="Canvas.Top"
+                                    Value="{Binding Y}"/>
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
@@ -329,7 +354,7 @@
 
                                         <!-- Left side (Old) -->
                                         <Border Grid.Column="0"
-                                                Background="{Binding Left.DiffState, Converter={StaticResource CompareStateToColorConverter}}">
+                                                Background="Transparent">
                                             <ContentControl Content="{Binding Left}"
                                                             ContentTemplate="{StaticResource NetworkTemplate}"/>
                                         </Border>
@@ -341,7 +366,7 @@
 
                                         <!-- Right side (New) -->
                                         <Border Grid.Column="2"
-                                                Background="{Binding Right.DiffState, Converter={StaticResource CompareStateToColorConverter}}">
+                                                Background="Transparent">
                                             <ContentControl Content="{Binding Right}"
                                                             ContentTemplate="{StaticResource NetworkTemplate}"/>
                                         </Border>

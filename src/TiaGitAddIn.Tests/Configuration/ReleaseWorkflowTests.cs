@@ -12,8 +12,8 @@ namespace TiaGitAddIn.Tests.Configuration
             const string packagePath = "src/TiaGitAddIn/bin/Release/net48/TiaGitAddIn.addin";
 
             Assert.Contains("tags:", workflow);
-            Assert.Contains("'v*'", workflow);
-            Assert.Contains("runs-on: [self-hosted, Windows]", workflow);
+            Assert.Contains("\"v*\"", workflow);
+            Assert.Contains("runs-on: [ self-hosted, Windows ]", workflow);
             Assert.Contains("dotnet build TiaGitAddIn.sln", workflow);
             Assert.Equal(3, CountOccurrences(workflow, packagePath));
             Assert.Contains("actions/upload-artifact", workflow);

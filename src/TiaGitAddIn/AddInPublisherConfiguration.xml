@@ -2,11 +2,11 @@
 <PackageConfiguration xmlns="http://www.siemens.com/automation/Openness/AddIn/Publisher/V21">
   <Author>SciTeeX</Author>
   <Description>Git version control integration for TIA Portal V21</Description>
-  <AddInVersion>1.0.0</AddInVersion>
+  <AddInVersion>1.2.0</AddInVersion>
   <Product>
     <Name>TIA Git Add-In</Name>
     <Id>TiaGitAddIn</Id>
-    <Version>1.0.0</Version>
+    <Version>1.2.0</Version>
   </Product>
   <FeatureAssembly>
     <AssemblyInfo>

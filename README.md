@@ -14,10 +14,12 @@ The add-in targets `.NET Framework 4.8` and packages as a native TIA Portal V21 
 
 ### Visual LAD Diff
 
-- **Side-by-Side View**: Compare "OLD" (parent) and "NEW" (commit/working tree) versions horizontally.
-- **Graphic Rendering**: Simplified geometric representation of Ladder Logic (Contacts, Coils, Boxes, Powerrails).
-- **Branching Layout**: Custom layout engine that correctly handles multiple rungs and complex branching from the Powerrail.
-- **Color Coding**: Semantic highlighting of changes (Yellow: Changed, Green: Added, Red: Removed).
+- **Side-by-Side View**: Compare "OLD" (parent) and "NEW" (commit/working tree) LAD networks horizontally.
+- **Single-Commit State Detection**: Commit diff mode compares the selected commit against its parent, so the view reflects the state introduced by that commit.
+- **Graphic Rendering**: Simplified geometric representation of Ladder Logic, including contacts, coils, boxes, powerrails, and orthogonal wires.
+- **Branching Layout**: Custom layout engine handles multiple rungs and branch routing while hiding SimaticML-only routing helper nodes from the visual view.
+- **Element-Level Highlighting**: Only the affected LAD components are colored, not the whole network. Yellow means changed or rewired, green means added on the new side, and red means removed from the old side.
+- **Topology-Aware Changes**: Components are marked changed when their wiring moves, even if the underlying SimaticML part/call definition stays the same.
 
 ### Git Integration
 

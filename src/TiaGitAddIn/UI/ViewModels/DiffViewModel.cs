@@ -26,6 +26,7 @@ namespace TiaGitAddIn.UI.ViewModels
         private string busyMessage = string.Empty;
         private bool isBusy;
         private bool showVisualDiff;
+        private string? currentDiffCommitHash;
         private CancellationTokenSource? cts;
 
         public DiffViewModel(
@@ -126,6 +127,7 @@ namespace TiaGitAddIn.UI.ViewModels
             try
             {
                 var result = await gitService.GetCommitDiffAsync(commitHash, ct).ConfigureAwait(false);
+                currentDiffCommitHash = commitHash;
                 ApplyDiffResult(result, $"Commit {commitHash.Substring(0, Math.Min(7, commitHash.Length))}");
             }
             catch (OperationCanceledException)
@@ -153,6 +155,7 @@ namespace TiaGitAddIn.UI.ViewModels
             try
             {
                 var result = await gitService.GetWorkingTreeDiffAsync(ct).ConfigureAwait(false);
+                currentDiffCommitHash = null;
                 ApplyDiffResult(result, "Working tree");
             }
             catch (OperationCanceledException)
@@ -210,13 +213,7 @@ namespace TiaGitAddIn.UI.ViewModels
                 return;
             }
 
-            // Always try to load if it's a TIA artifact
-            // We use the last loaded commit hash or null for working tree
-            string? currentCommit = lastOperationMessage.StartsWith("Commit")
-                ? lastOperationMessage.Split(' ')[1]
-                : null;
-
-            await LadDiff.LoadLadDiffAsync(currentCommit, entry.FilePath, CancellationToken.None).ConfigureAwait(false);
+            await LadDiff.LoadLadDiffAsync(currentDiffCommitHash, entry.FilePath, CancellationToken.None).ConfigureAwait(false);
 
             // Auto-switch to visual if successfully loaded and it's a LAD/FBD block
             if (LadDiff.IsLadDiffLoaded)
