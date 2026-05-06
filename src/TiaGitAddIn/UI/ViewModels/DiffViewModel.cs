@@ -41,7 +41,6 @@ namespace TiaGitAddIn.UI.ViewModels
             this.sactService = sactService ?? throw new ArgumentNullException(nameof(sactService));
             this.logger = logger;
             LadDiff = new LadDiffViewModel(gitFileExtractor, sactService, logger ?? new NullLogger(), uiDispatcher);
-            LoadWorkingTreeCommand = new AsyncCommand(() => LoadWorkingTreeDiffAsync(), () => !IsBusy);
             CancelCommand = new RelayCommand(_ => cts?.Cancel(), _ => IsBusy);
             ToggleVisualCommand = new RelayCommand(_ => ShowVisualDiff = !ShowVisualDiff, _ => SelectedEntry?.IsTiaArtifact ?? false);
         }
@@ -109,14 +108,11 @@ namespace TiaGitAddIn.UI.ViewModels
                 {
                     InvokeOnUI(() =>
                     {
-                        ((AsyncCommand)LoadWorkingTreeCommand).RaiseCanExecuteChanged();
                         ((RelayCommand)CancelCommand).RaiseCanExecuteChanged();
                     });
                 }
             }
         }
-
-        public ICommand LoadWorkingTreeCommand { get; }
         public ICommand CancelCommand { get; }
 
         public async Task LoadCommitDiffAsync(string commitHash)
@@ -216,12 +212,12 @@ namespace TiaGitAddIn.UI.ViewModels
 
             // Always try to load if it's a TIA artifact
             // We use the last loaded commit hash or null for working tree
-            string? currentCommit = lastOperationMessage.StartsWith("Commit") 
-                ? lastOperationMessage.Split(' ')[1] 
+            string? currentCommit = lastOperationMessage.StartsWith("Commit")
+                ? lastOperationMessage.Split(' ')[1]
                 : null;
 
             await LadDiff.LoadLadDiffAsync(currentCommit, entry.FilePath, CancellationToken.None).ConfigureAwait(false);
-            
+
             // Auto-switch to visual if successfully loaded and it's a LAD/FBD block
             if (LadDiff.IsLadDiffLoaded)
             {

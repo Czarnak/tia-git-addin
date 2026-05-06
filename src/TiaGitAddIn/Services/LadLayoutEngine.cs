@@ -8,13 +8,13 @@ namespace TiaGitAddIn.Services
 {
     public static class LadLayoutEngine
     {
-        public static List<LadNetworkLayout> LayoutAll(SactCompareResult compareResult)
+        public static List<LadNetworkPairLayout> LayoutAll(SactCompareResult compareResult)
         {
-            List<LadNetworkLayout> layouts = new();
+            List<LadNetworkPairLayout> pairs = new();
 
             if (compareResult.Content == null || compareResult.Content.Networks == null)
             {
-                return layouts;
+                return pairs;
             }
 
             List<KeyValuePair<string, SactNetworkResult>> sortedNetworks = compareResult.Content.Networks
@@ -26,29 +26,54 @@ namespace TiaGitAddIn.Services
                 var network = kvp.Value;
                 if (network != null)
                 {
-                    var layout = Layout(network);
-                    layout.NetworkNumber = network.Number.Right > 0 ? network.Number.Right : network.Number.Left;
-                    layouts.Add(layout);
+                    var pair = new LadNetworkPairLayout
+                    {
+                        NetworkNumber = network.Number.Right > 0 ? network.Number.Right : network.Number.Left,
+                        DiffState = network.State,
+                        Title = network.Title
+                    };
+
+                    if (network.LeftBody != null && network.LeftBody.Count > 0)
+                    {
+                        pair.Left = LayoutBody(network.LeftBody, network.State);
+                        pair.Left.NetworkNumber = pair.NetworkNumber;
+                    }
+
+                    if (network.RightBody != null && network.RightBody.Count > 0)
+                    {
+                        pair.Right = LayoutBody(network.RightBody, network.State);
+                        pair.Right.NetworkNumber = pair.NetworkNumber;
+                    }
+
+                    // Fallback to Body if both side bodies are empty (legacy or merged result)
+                    if (pair.Left == null && pair.Right == null && network.Body != null && network.Body.Count > 0)
+                    {
+                        pair.Right = LayoutBody(network.Body, network.State);
+                        pair.Right.NetworkNumber = pair.NetworkNumber;
+                    }
+
+                    pairs.Add(pair);
                 }
             }
 
-            return layouts;
+            return pairs;
         }
 
-        public static LadNetworkLayout Layout(SactNetworkResult network)
+        public static LadNetworkLayout LayoutBody(Dictionary<string, SactComponentData> componentsByUId, CompareState state)
         {
             LadNetworkLayout layout = new()
             {
-                DiffState = network.State
+                DiffState = state
             };
 
-            if (network.Body == null || network.Body.Count == 0)
+            if (componentsByUId == null || componentsByUId.Count == 0)
             {
                 return layout;
             }
 
-            var componentsByUId = network.Body;
             Dictionary<string, string> componentOwnerByConnectorId = new();
+            // ... (rest of layout logic)
+
 
             foreach (var component in componentsByUId.Values)
             {
@@ -116,7 +141,7 @@ namespace TiaGitAddIn.Services
                     Operand = current.TopOperandConnector?.DisplayName ?? string.Empty,
                     UId = current.uId,
                     // Assume component state follows network state since there is no individual diff state in SACT models
-                    DiffState = network.State
+                    DiffState = state
                 });
 
                 if (current.name == "LadOrWireData" || current.name == "OrBranch")

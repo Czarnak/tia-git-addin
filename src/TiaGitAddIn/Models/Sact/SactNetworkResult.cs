@@ -9,5 +9,7 @@ namespace TiaGitAddIn.Models.Sact
         public string? Comment { get; set; }
         public SactNumberPair Number { get; set; } = new SactNumberPair();
         public Dictionary<string, SactComponentData> Body { get; set; } = new Dictionary<string, SactComponentData>();
+        public Dictionary<string, SactComponentData> LeftBody { get; set; } = new Dictionary<string, SactComponentData>();
+        public Dictionary<string, SactComponentData> RightBody { get; set; } = new Dictionary<string, SactComponentData>();
     }
 }

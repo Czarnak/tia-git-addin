@@ -80,12 +80,7 @@ namespace TiaGitAddIn.UI
 
                 IGitFileExtractor gitFileExtractor = new GitFileExtractor(gitProcessRunner, gitExecutablePath, configuration.RepositoryPath, logger);
 
-                ISactPathResolver sactPathResolver = new SactPathResolver(
-                    configuration.SiemensCompareToolPath,
-                    configuration.NodeExecutablePath);
-
-                ISactProcessRunner sactProcessRunner = new SactProcessRunner();
-                ISactService sactService = new SactService(sactPathResolver, sactProcessRunner, logger);
+                ISactService sactService = new SactService(logger);
 
                 return GitPanelLaunchResult.Ok(() =>
                     new MainViewModel(

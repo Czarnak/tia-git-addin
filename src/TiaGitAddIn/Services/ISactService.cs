@@ -7,6 +7,7 @@ namespace TiaGitAddIn.Services
     public interface ISactService
     {
         bool IsAvailable { get; }
-        Task<SactCompareResult?> CompareAsync(string leftXmlPath, string rightXmlPath, CancellationToken ct);
+        Task<SactCompareResult?> CompareAsync(string? leftXmlPath, string? rightXmlPath, CancellationToken ct);   
+
     }
 }

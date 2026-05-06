@@ -27,10 +27,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
 
-    <None Update="Scripts\CompareBlocks.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-
     <Reference Include="Siemens.Engineering.Base">
       <HintPath>$(TiaPortalPublicApiNet48)\Siemens.Engineering.Base.dll</HintPath>
       <Private>false</Private>

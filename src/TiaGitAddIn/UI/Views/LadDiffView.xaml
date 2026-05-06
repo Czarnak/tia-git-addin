@@ -13,6 +13,80 @@
         <converters:CompareStateToColorConverter x:Key="CompareStateToColorConverter"/>
         <converters:LadElementTypeToGeometryConverter x:Key="LadElementTypeToGeometryConverter"/>
         <converters:BoolToVisibilityConverter x:Key="LadBoolToVis"/>
+
+        <!-- Template for a single LAD network side -->
+        <ControlTemplate x:Key="NetworkTemplate" TargetType="ContentControl">
+            <Canvas Width="{Binding CanvasWidth}"
+                    Height="{Binding CanvasHeight}"
+                    Margin="10">
+                <ItemsControl ItemsSource="{Binding Elements}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewmodels:LadElementViewModel}">
+                            <Border Width="{Binding Width}"
+                                    Height="{Binding Height}"
+                                    BorderBrush="Black"
+                                    BorderThickness="1"
+                                    Background="{Binding DiffState, Converter={StaticResource CompareStateToColorConverter}}">
+                                <StackPanel HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Operand}"
+                                            TextAlignment="Center"
+                                            FontSize="10"
+                                            TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding ElementType, Converter={StaticResource LadElementTypeToGeometryConverter}}"
+                                            TextAlignment="Center"
+                                            FontWeight="Bold"
+                                            Margin="0,2"/>
+                                    <TextBlock Text="{Binding DisplayName}"
+                                            TextAlignment="Center"
+                                            FontSize="10"
+                                            TextTrimming="CharacterEllipsis"
+                                            Foreground="#666666"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left"
+                                    Value="{Binding X}"/>
+                            <Setter Property="Canvas.Top"
+                                    Value="{Binding Y}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+
+                <!-- Wires layer -->
+                <ItemsControl ItemsSource="{Binding Wires}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Line X1="{Binding X1}"
+                                    Y1="{Binding Y1}"
+                                    X2="{Binding X2}"
+                                    Y2="{Binding Y2}"
+                                    Stroke="Black"
+                                    StrokeThickness="1"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="60"/>
+                            <Setter Property="Canvas.Top" Value="30"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </Canvas>
+        </ControlTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -24,101 +98,52 @@
         <ScrollViewer Grid.Row="0"
                 HorizontalScrollBarVisibility="Auto"
                 VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Networks}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type viewmodels:LadNetworkViewModel}">
-                        <Border BorderBrush="#DDDDDD"
-                                BorderThickness="1"
-                                Margin="10"
-                                Background="{Binding DiffState, Converter={StaticResource CompareStateToColorConverter}}">
-                            <StackPanel>
-                                <Border Background="#EEEEEE"
-                                        Padding="5">
-                                    <TextBlock Text="{Binding NetworkNumber, StringFormat=Network {0}}"
-                                            FontWeight="Bold"/>
-                                </Border>
+            <StackPanel>
+                <!-- Side-by-side header -->
+                <Grid Margin="10,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="OLD (Parent)" FontWeight="Bold" Margin="5" HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="NEW (Commit)" FontWeight="Bold" Margin="5" HorizontalAlignment="Center"/>
+                </Grid>
 
-                                <Canvas Width="{Binding CanvasWidth}"
-                                        Height="{Binding CanvasHeight}"
-                                        Margin="10">
-                                    <ItemsControl ItemsSource="{Binding Elements}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <Canvas/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate DataType="{x:Type viewmodels:LadElementViewModel}">
-                                                <Border Width="{Binding Width}"
-                                                        Height="{Binding Height}"
-                                                        BorderBrush="Black"
-                                                        BorderThickness="1"
-                                                        Background="{Binding DiffState, Converter={StaticResource CompareStateToColorConverter}}">
-                                                    <StackPanel HorizontalAlignment="Center"
-                                                            VerticalAlignment="Center">
-                                                        <TextBlock Text="{Binding Operand}"
-                                                                TextAlignment="Center"
-                                                                FontSize="10"
-                                                                TextTrimming="CharacterEllipsis"/>
-                                                        <TextBlock Text="{Binding ElementType, Converter={StaticResource LadElementTypeToGeometryConverter}}"
-                                                                TextAlignment="Center"
-                                                                FontWeight="Bold"
-                                                                Margin="0,2"/>
-                                                        <TextBlock Text="{Binding DisplayName}"
-                                                                TextAlignment="Center"
-                                                                FontSize="10"
-                                                                TextTrimming="CharacterEllipsis"
-                                                                Foreground="#666666"/>
-                                                    </StackPanel>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                        <ItemsControl.ItemContainerStyle>
-                                            <Style TargetType="ContentPresenter">
-                                                <Setter Property="Canvas.Left"
-                                                        Value="{Binding X}"/>
-                                                <Setter Property="Canvas.Top"
-                                                        Value="{Binding Y}"/>
-                                            </Style>
-                                        </ItemsControl.ItemContainerStyle>
-                                    </ItemsControl>
+                <ItemsControl ItemsSource="{Binding Networks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewmodels:LadNetworkPairViewModel}">
+                            <Border BorderBrush="#DDDDDD"
+                                    BorderThickness="1"
+                                    Margin="10">
+                                <StackPanel>
+                                    <Border Background="#EEEEEE" Padding="5">
+                                        <TextBlock Text="{Binding NetworkNumber, StringFormat=Network {0}}" FontWeight="Bold"/>
+                                    </Border>
 
-                                    <!-- Wires layer using lines/polylines -->
-                                    <ItemsControl ItemsSource="{Binding Wires}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <Canvas/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <!-- Simplified: just draw straight lines for now between cell centers. 
-                                                     In a real implementation we would route orthogonal lines.
-                                                     CellWidth=120, CellHeight=60. Origin is top-left, so +60 and +30 to center -->
-                                                <Line X1="{Binding X1}"
-                                                      Y1="{Binding Y1}"
-                                                      X2="{Binding X2}"
-                                                      Y2="{Binding Y2}"
-                                                      Stroke="Black"
-                                                        StrokeThickness="1"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                        <ItemsControl.ItemContainerStyle>
-                                            <Style TargetType="ContentPresenter">
-                                                <!-- Offset by half cell width/height to start lines at centers of elements -->
-                                                <Setter Property="Canvas.Left"
-                                                        Value="60"/>
-                                                <Setter Property="Canvas.Top"
-                                                        Value="30"/>
-                                            </Style>
-                                        </ItemsControl.ItemContainerStyle>
-                                    </ItemsControl>
-                                </Canvas>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Left side (Old) -->
+                                        <Border Grid.Column="0" BorderBrush="#EEEEEE" BorderThickness="0,0,1,0"
+                                                Background="{Binding Left.DiffState, Converter={StaticResource CompareStateToColorConverter}}">
+                                            <ContentControl Content="{Binding Left}" Template="{StaticResource NetworkTemplate}"/>
+                                        </Border>
+
+                                        <!-- Right side (New) -->
+                                        <Border Grid.Column="1"
+                                                Background="{Binding Right.DiffState, Converter={StaticResource CompareStateToColorConverter}}">
+                                            <ContentControl Content="{Binding Right}" Template="{StaticResource NetworkTemplate}"/>
+                                        </Border>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </ScrollViewer>
 
         <!-- Loading Overlay -->
@@ -153,7 +178,7 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
-            <TextBlock Text="SACT not installed — install SIMATIC Automation Compare Tool for visual LAD diff."
+            <TextBlock Text="SACT component ready."
                     Padding="10"
                     Foreground="#856404"/>
         </Border>

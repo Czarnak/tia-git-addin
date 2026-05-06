@@ -44,7 +44,7 @@ namespace TiaGitAddIn.Tests.UI
             public bool IsAvailable { get; set; } = true;
             public SactCompareResult? ResultToReturn { get; set; }
 
-            public Task<SactCompareResult?> CompareAsync(string leftXmlPath, string rightXmlPath, CancellationToken ct)
+            public Task<SactCompareResult?> CompareAsync(string? leftXmlPath, string? rightXmlPath, CancellationToken ct)
             {
                 return Task.FromResult(ResultToReturn);
             }
@@ -74,8 +74,8 @@ namespace TiaGitAddIn.Tests.UI
             await viewModel.LoadLadDiffAsync("commit1", "file.xml", CancellationToken.None);
 
             Assert.True(viewModel.IsLadDiffLoaded);
-            Assert.Empty(viewModel.LadDiffError);
             Assert.Single(viewModel.Networks);
+            Assert.Equal(CompareState.Changed, viewModel.Networks[0].DiffState);
             Assert.False(viewModel.IsBusy);
         }
 
@@ -87,11 +87,12 @@ namespace TiaGitAddIn.Tests.UI
             {
                 ResultToReturn = new SactCompareResult
                 {
+                    State = CompareState.MissingOnLeft,
                     Content = new SactContentResult
                     {
                         Networks = new Dictionary<string, SactNetworkResult>
                         {
-                            { "0", new SactNetworkResult { Number = new SactNumberPair { Right = 1 } } }
+                            { "0", new SactNetworkResult { State = CompareState.MissingOnLeft, Number = new SactNumberPair { Right = 1 } } }
                         }
                     }
                 }
@@ -102,7 +103,6 @@ namespace TiaGitAddIn.Tests.UI
             await viewModel.LoadLadDiffAsync("commit1", "file.xml", CancellationToken.None);
 
             Assert.True(viewModel.IsLadDiffLoaded);
-            Assert.Contains("initial commit", viewModel.LadDiffError);
             Assert.Single(viewModel.Networks);
             Assert.Equal(CompareState.MissingOnLeft, viewModel.Networks[0].DiffState);
         }

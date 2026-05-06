@@ -48,7 +48,7 @@ namespace TiaGitAddIn.Tests.Services
                 }
             };
 
-            var layout = LadLayoutEngine.Layout(network);
+            var layout = LadLayoutEngine.LayoutBody(network.Body, network.State);
 
             Assert.Equal(3, layout.Elements.Count);
             Assert.Equal(2, layout.Wires.Count);
@@ -117,7 +117,7 @@ namespace TiaGitAddIn.Tests.Services
                 }
             };
 
-            var layout = LadLayoutEngine.Layout(network);
+            var layout = LadLayoutEngine.LayoutBody(network.Body, network.State);
 
             Assert.Equal(4, layout.Elements.Count);
             Assert.Equal(3, layout.ColumnCount); // pr (0), or (1), contacts (2)
@@ -159,7 +159,7 @@ namespace TiaGitAddIn.Tests.Services
                 }
             };
 
-            var layout = LadLayoutEngine.Layout(network);
+            var layout = LadLayoutEngine.LayoutBody(network.Body, network.State);
             var element = layout.Elements.First(e => e.UId == "c");
             Assert.Equal(LadElementType.NegatedContact, element.ElementType);
         }
@@ -167,10 +167,10 @@ namespace TiaGitAddIn.Tests.Services
         [Fact]
         public void Layout_NullOrEmptyBody_ReturnsEmptyLayout()
         {
-            var layout1 = LadLayoutEngine.Layout(new SactNetworkResult { Body = null! });
+            var layout1 = LadLayoutEngine.LayoutBody(null!, CompareState.Equal);
             Assert.Empty(layout1.Elements);
 
-            var layout2 = LadLayoutEngine.Layout(new SactNetworkResult { Body = new Dictionary<string, SactComponentData>() });
+            var layout2 = LadLayoutEngine.LayoutBody(new Dictionary<string, SactComponentData>(), CompareState.Equal);
             Assert.Empty(layout2.Elements);
         }
 

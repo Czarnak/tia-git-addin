@@ -19,11 +19,4 @@
   <ItemGroup>
     <ProjectReference Include="..\TiaGitAddIn\TiaGitAddIn.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\TiaGitAddIn\Scripts\CompareBlocks.js">
-      <Link>Scripts\CompareBlocks.js</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>

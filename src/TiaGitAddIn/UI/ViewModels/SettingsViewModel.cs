@@ -15,8 +15,6 @@ namespace TiaGitAddIn.UI.ViewModels
         private string repositoryPath = string.Empty;
         private string defaultRemote = "origin";
         private int maxLogEntries = 200;
-        private string siemensCompareToolPath = string.Empty;
-        private string nodeExecutablePath = string.Empty;
         private string validationMessage = string.Empty;
 
         public SettingsViewModel(
@@ -29,8 +27,6 @@ namespace TiaGitAddIn.UI.ViewModels
             this.repositoryRoot = repositoryRoot;
 
             BrowseGitExeCommand = new RelayCommand(_ => BrowseGitExe());
-            BrowseSiemensCompareToolCommand = new RelayCommand(_ => BrowseSiemensCompareTool());
-            BrowseNodeExeCommand = new RelayCommand(_ => BrowseNodeExe());
             SaveCommand = new RelayCommand(_ => Save(), _ => CanSave());
 
             LoadSettings();
@@ -54,18 +50,6 @@ namespace TiaGitAddIn.UI.ViewModels
             set => SetProperty(repositoryPath, value ?? string.Empty, updated => repositoryPath = updated);
         }
 
-        public string SiemensCompareToolPath
-        {
-            get => siemensCompareToolPath;
-            set => SetProperty(siemensCompareToolPath, value ?? string.Empty, updated => siemensCompareToolPath = updated);
-        }
-
-        public string NodeExecutablePath
-        {
-            get => nodeExecutablePath;
-            set => SetProperty(nodeExecutablePath, value ?? string.Empty, updated => nodeExecutablePath = updated);
-        }
-
         public string DefaultRemote
         {
             get => defaultRemote;
@@ -85,16 +69,12 @@ namespace TiaGitAddIn.UI.ViewModels
         }
 
         public ICommand BrowseGitExeCommand { get; }
-        public ICommand BrowseSiemensCompareToolCommand { get; }
-        public ICommand BrowseNodeExeCommand { get; }
         public ICommand SaveCommand { get; }
 
         private void LoadSettings()
         {
             var config = configurationService.Load(repositoryRoot);
             gitExecutablePath = config.GitExecutablePath ?? string.Empty;
-            siemensCompareToolPath = config.SiemensCompareToolPath ?? string.Empty;
-            nodeExecutablePath = config.NodeExecutablePath ?? string.Empty;
             repositoryPath = config.RepositoryPath ?? repositoryRoot;
             defaultRemote = config.DefaultRemote ?? "origin";
             maxLogEntries = config.MaxLogEntries;
@@ -108,8 +88,6 @@ namespace TiaGitAddIn.UI.ViewModels
             GitConfiguration config = new()
             {
                 GitExecutablePath = string.IsNullOrWhiteSpace(GitExecutablePath) ? null : GitExecutablePath,
-                SiemensCompareToolPath = string.IsNullOrWhiteSpace(SiemensCompareToolPath) ? null : SiemensCompareToolPath,
-                NodeExecutablePath = string.IsNullOrWhiteSpace(NodeExecutablePath) ? null : NodeExecutablePath,
                 RepositoryPath = RepositoryPath,
                 DefaultRemote = DefaultRemote,
                 MaxLogEntries = MaxLogEntries,
@@ -133,34 +111,6 @@ namespace TiaGitAddIn.UI.ViewModels
             if (dialog.ShowDialog() == true)
             {
                 GitExecutablePath = dialog.FileName;
-            }
-        }
-
-        private void BrowseSiemensCompareTool()
-        {
-            OpenFileDialog dialog = new()
-            {
-                Filter = "SIMATIC Automation Compare Tool|ACTool.exe|All Files (*.*)|*.*",
-                Title = "Select SIMATIC Automation Compare Tool"
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                SiemensCompareToolPath = System.IO.Path.GetDirectoryName(dialog.FileName) ?? dialog.FileName;
-            }
-        }
-
-        private void BrowseNodeExe()
-        {
-            OpenFileDialog dialog = new()
-            {
-                Filter = "Node Executable (node.exe)|node.exe|All Files (*.*)|*.*",
-                Title = "Select node.exe"
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                NodeExecutablePath = dialog.FileName;
             }
         }
 

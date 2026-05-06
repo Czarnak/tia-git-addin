@@ -4,12 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="900">
+             d:DesignHeight="600"
+        d:DesignWidth="900">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="5"/>
-            <RowDefinition Height="*" MinHeight="120"/>
+            <RowDefinition Height="*"
+                    MinHeight="120"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -22,7 +24,8 @@
                   VirtualizingPanel.VirtualizationMode="Recycling">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Hash" Width="75">
+                    <GridViewColumn Header="Hash"
+                            Width="75">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Hash}"
@@ -32,23 +35,32 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Author" Width="140" DisplayMemberBinding="{Binding AuthorName}"/>
-                    <GridViewColumn Header="Date" Width="150">
+                    <GridViewColumn Header="Author"
+                            Width="140"
+                            DisplayMemberBinding="{Binding AuthorName}"/>
+                    <GridViewColumn Header="Date"
+                            Width="150">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding AuthorDate, StringFormat=\{0:yyyy-MM-dd HH:mm\}}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Message" Width="450" DisplayMemberBinding="{Binding Subject}"/>
+                    <GridViewColumn Header="Message"
+                            Width="450"
+                            DisplayMemberBinding="{Binding Subject}"/>
                 </GridView>
             </ListView.View>
         </ListView>
 
-        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#DDDDDD"/>
+        <GridSplitter Grid.Row="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="#DDDDDD"/>
 
         <!-- Detail panel -->
-        <Grid Grid.Row="2" Margin="5,3,5,3">
+        <Grid Grid.Row="2"
+                Margin="5,3,5,3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="5"/>
@@ -56,7 +68,10 @@
             </Grid.ColumnDefinitions>
 
             <!-- Commit metadata + message -->
-            <Border Grid.Column="0" BorderThickness="1" BorderBrush="#CCCCCC" Padding="8">
+            <Border Grid.Column="0"
+                    BorderThickness="1"
+                    BorderBrush="#CCCCCC"
+                    Padding="8">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -69,37 +84,65 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Hash:" FontWeight="Bold"
-                               Grid.Row="0" Grid.Column="0" Margin="0,0,10,4" VerticalAlignment="Center"/>
+                    <TextBlock Text="Hash:"
+                            FontWeight="Bold"
+                               Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="0,0,10,4"
+                            VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding SelectedCommit.Hash}"
-                               Grid.Row="0" Grid.Column="1" FontFamily="Consolas"
-                               Margin="0,0,0,4" VerticalAlignment="Center"/>
+                               Grid.Row="0"
+                            Grid.Column="1"
+                            FontFamily="Consolas"
+                               Margin="0,0,0,4"
+                            VerticalAlignment="Center"/>
 
-                    <TextBlock Text="Author:" FontWeight="Bold"
-                               Grid.Row="1" Grid.Column="0" Margin="0,0,10,4" VerticalAlignment="Center"/>
+                    <TextBlock Text="Author:"
+                            FontWeight="Bold"
+                               Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0,0,10,4"
+                            VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding SelectedCommit.AuthorName}"
-                               Grid.Row="1" Grid.Column="1"
-                               Margin="0,0,0,4" VerticalAlignment="Center"/>
+                               Grid.Row="1"
+                            Grid.Column="1"
+                               Margin="0,0,0,4"
+                            VerticalAlignment="Center"/>
 
-                    <TextBlock Text="Date:" FontWeight="Bold"
-                               Grid.Row="2" Grid.Column="0" Margin="0,0,10,4" VerticalAlignment="Center"/>
+                    <TextBlock Text="Date:"
+                            FontWeight="Bold"
+                               Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="0,0,10,4"
+                            VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding SelectedCommit.AuthorDate, StringFormat=\{0:yyyy-MM-dd HH:mm:ss zzz\}}"
-                               Grid.Row="2" Grid.Column="1"
-                               Margin="0,0,0,4" VerticalAlignment="Center"/>
+                               Grid.Row="2"
+                            Grid.Column="1"
+                               Margin="0,0,0,4"
+                            VerticalAlignment="Center"/>
 
-                    <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                    <ScrollViewer Grid.Row="3"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                                  VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="Disabled"
                                   Margin="0,8,0,0">
                         <TextBlock Text="{Binding SelectedCommit.Subject}"
-                                   TextWrapping="Wrap" FontSize="13"/>
+                                   TextWrapping="Wrap"
+                                FontSize="13"/>
                     </ScrollViewer>
                 </Grid>
             </Border>
 
-            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Background="#DDDDDD"/>
+            <GridSplitter Grid.Column="1"
+                    Width="5"
+                    HorizontalAlignment="Stretch"
+                    Background="#DDDDDD"/>
 
             <!-- Changed files -->
-            <Border Grid.Column="2" BorderThickness="1" BorderBrush="#CCCCCC">
+            <Border Grid.Column="2"
+                    BorderThickness="1"
+                    BorderBrush="#CCCCCC">
                 <DockPanel>
                     <Border DockPanel.Dock="Top"
                             Background="#F5F5F5"
@@ -109,10 +152,13 @@
                                    FontWeight="Bold"
                                    Padding="8,5,8,5"/>
                     </Border>
-                    <ListBox ItemsSource="{Binding ChangedFiles}" BorderThickness="0">
+                    <ListBox ItemsSource="{Binding ChangedFiles}"
+                            BorderThickness="0">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding}" FontFamily="Consolas" FontSize="11"
+                                <TextBlock Text="{Binding}"
+                                        FontFamily="Consolas"
+                                        FontSize="11"
                                            ToolTip="{Binding}"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -122,13 +168,18 @@
         </Grid>
 
         <!-- Status bar -->
-        <StatusBar Grid.Row="3" Background="Transparent"
-                   BorderThickness="0,1,0,0" BorderBrush="#DDD">
+        <StatusBar Grid.Row="3"
+                Background="Transparent"
+                   BorderThickness="0,1,0,0"
+                BorderBrush="#DDD">
             <StatusBarItem>
-                <TextBlock Text="{Binding LastOperationMessage}" Foreground="DimGray"/>
+                <TextBlock Text="{Binding LastOperationMessage}"
+                        Foreground="DimGray"/>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
-                <Button Content="Refresh" Command="{Binding RefreshCommand}" Padding="10,2"/>
+                <Button Content="Refresh"
+                        Command="{Binding RefreshCommand}"
+                        Padding="10,2"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

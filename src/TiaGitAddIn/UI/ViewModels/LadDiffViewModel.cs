@@ -28,10 +28,10 @@ namespace TiaGitAddIn.UI.ViewModels
             _sactService = sactService;
             _logger = logger;
             _uiDispatcher = uiDispatcher;
-            Networks = new ObservableCollection<LadNetworkViewModel>();
+            Networks = new ObservableCollection<LadNetworkPairViewModel>();
         }
 
-        public ObservableCollection<LadNetworkViewModel> Networks { get; }
+        public ObservableCollection<LadNetworkPairViewModel> Networks { get; }
 
         public bool IsLadDiffLoaded
         {
@@ -92,32 +92,6 @@ namespace TiaGitAddIn.UI.ViewModels
                 rightTempPath = await _gitFileExtractor.ExtractFileAsync(commitHash, filePath, ct).ConfigureAwait(false);
                 leftTempPath = await _gitFileExtractor.ExtractParentFileAsync(commitHash, filePath, ct).ConfigureAwait(false);
 
-                if (leftTempPath == null)
-                {
-                    _logger.Info("LoadLadDiffAsync: No parent file found, generating fallback (Added) visual diff using right side.");
-                    // Entire block is new
-                    LadDiffError = "File did not exist in parent commit (initial commit or newly added file). Full block is shown as Added.";
-
-                    var fallbackResult = await _sactService.CompareAsync(rightTempPath, rightTempPath, ct).ConfigureAwait(false);
-                    if (fallbackResult != null && fallbackResult.Content != null)
-                    {
-                        var layouts = LadLayoutEngine.LayoutAll(fallbackResult);
-                        foreach (var network in layouts)
-                        {
-                            network.DiffState = CompareState.MissingOnLeft; // Overriding to Added
-                        }
-
-                        PopulateNetworks(layouts);
-                        IsLadDiffLoaded = true;
-                    }
-                    else
-                    {
-                        _logger.Info("LoadLadDiffAsync: Fallback visual diff parsing failed.");
-                        IsLadDiffLoaded = false;
-                    }
-                    return;
-                }
-
                 _logger.Info("LoadLadDiffAsync: Invoking SACT CompareAsync...");
                 SactCompareResult? sactResult = await _sactService.CompareAsync(leftTempPath, rightTempPath, ct).ConfigureAwait(true);
 
@@ -130,28 +104,11 @@ namespace TiaGitAddIn.UI.ViewModels
                 }
 
                 _logger.Info("LoadLadDiffAsync: CompareAsync succeeded. Generating layouts.");
-                var netLayouts = LadLayoutEngine.LayoutAll(sactResult);
+                var netPairs = LadLayoutEngine.LayoutAll(sactResult);
                 
-                if (netLayouts.Count == 0 && sactResult.Content?.Networks?.Count > 0)
-                {
-                    _logger.Info($"LoadLadDiffAsync: WARNING - LayoutAll returned 0 layouts despite {sactResult.Content?.Networks?.Count} networks being present in SACT result.");
-                }
-                else if (netLayouts.Count > 0)
-                {
-                    int emptyLayouts = 0;
-                    foreach (var layout in netLayouts)
-                    {
-                        if (layout.Elements.Count == 0) emptyLayouts++;
-                    }
-                    if (emptyLayouts > 0)
-                    {
-                        _logger.Info($"LoadLadDiffAsync: WARNING - {emptyLayouts} of {netLayouts.Count} networks have 0 layout elements (possibly missing BranchWireData start element).");
-                    }
-                }
-
-                PopulateNetworks(netLayouts);
+                PopulateNetworks(netPairs);
                 IsLadDiffLoaded = true;
-                _logger.Info($"LoadLadDiffAsync: Completed successfully. Generated {netLayouts.Count} networks.");
+                _logger.Info($"LoadLadDiffAsync: Completed successfully. Generated {netPairs.Count} network pairs.");
             }
             catch (Exception ex)
             {
@@ -162,20 +119,17 @@ namespace TiaGitAddIn.UI.ViewModels
             finally
             {
                 IsBusy = false;
-                // Temporarily leaving temp files on disk so they can be manually inspected
-                // CleanupTempFile(rightTempPath);
-                // CleanupTempFile(leftTempPath);
             }
         }
 
-        private void PopulateNetworks(List<Models.Lad.LadNetworkLayout> layouts)
+        private void PopulateNetworks(List<Models.Lad.LadNetworkPairLayout> layouts)
         {
             Action action = () =>
             {
                 Networks.Clear();
                 foreach (var layout in layouts)
                 {
-                    Networks.Add(new LadNetworkViewModel(layout));
+                    Networks.Add(new LadNetworkPairViewModel(layout));
                 }
             };
 
