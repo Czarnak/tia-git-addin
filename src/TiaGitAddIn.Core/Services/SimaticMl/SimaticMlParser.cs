@@ -189,6 +189,10 @@ namespace TiaGitAddIn.Services.SimaticMl
                         case "Part":
                             network.Parts.Add(ParsePart(node));
                             break;
+
+                        case "Call":
+                            network.Calls.Add(ParseCall(node));
+                            break;
                     }
                 }
             }
@@ -201,6 +205,20 @@ namespace TiaGitAddIn.Services.SimaticMl
                 {
                     network.Wires.Add(ParseWire(wireElement));
                 }
+            }
+
+            // FlgNet can directly contain Openbranch and Powerrail
+            foreach (XElement node in flgNet.Elements())
+            {
+                 switch (node.Name.LocalName)
+                 {
+                     case "Openbranch":
+                         network.Openbranches.Add(new OpenbranchDefinition { RawXml = node.ToString(SaveOptions.DisableFormatting) });
+                         break;
+                     case "Powerrail":
+                         network.Powerrail = new PowerrailDefinition { RawXml = node.ToString(SaveOptions.DisableFormatting) };
+                         break;
+                 }
             }
 
             return network;
@@ -242,8 +260,11 @@ namespace TiaGitAddIn.Services.SimaticMl
             {
                 UId = IntAttr(partElement, "UId"),
                 Name = Attr(partElement, "Name"),
+                Version = Attr(partElement, "Version"),
+                DisabledENO = BoolAttr(partElement, "DisabledENO") ?? false,
                 Attributes = partElement.Attributes()
                     .ToDictionary(a => a.Name.LocalName, a => a.Value),
+                Equation = Value(partElement, "Equation"),
                 RawXml = partElement.ToString(SaveOptions.DisableFormatting)
             };
 
@@ -265,6 +286,42 @@ namespace TiaGitAddIn.Services.SimaticMl
             return part;
         }
 
+        private static CallDefinition ParseCall(XElement callElement)
+        {
+            var call = new CallDefinition
+            {
+                UId = IntAttr(callElement, "UId"),
+                RawXml = callElement.ToString(SaveOptions.DisableFormatting)
+            };
+
+            XElement? callInfo = Child(callElement, "CallInfo");
+            if (callInfo != null)
+            {
+                call.CallInfo = new CallInfoDefinition
+                {
+                    Name = Attr(callInfo, "Name"),
+                    BlockType = Attr(callInfo, "BlockType")
+                };
+            }
+
+            foreach (XElement tv in Children(callElement, "TemplateValue"))
+            {
+                call.TemplateValues.Add(new TemplateValueDefinition
+                {
+                    Name = Attr(tv, "Name"),
+                    Type = Attr(tv, "Type"),
+                    Value = tv.Value?.Trim()
+                });
+            }
+
+            foreach (XElement at in Children(callElement, "AutomaticTyped"))
+            {
+                call.AutomaticTyped.Add(Attr(at, "Name") ?? "");
+            }
+
+            return call;
+        }
+
         private static WireDefinition ParseWire(XElement wireElement)
         {
             var wire = new WireDefinition
@@ -275,14 +332,32 @@ namespace TiaGitAddIn.Services.SimaticMl
 
             foreach (XElement connectionElement in wireElement.Elements())
             {
-                wire.Connections.Add(new ConnectionDefinition
+                ConnectionDefinition connection;
+                switch (connectionElement.Name.LocalName)
                 {
-                    Kind = connectionElement.Name.LocalName,
-                    UId = IntAttr(connectionElement, "UId"),
-                    Name = Attr(connectionElement, "Name"),
-                    Attributes = connectionElement.Attributes()
-                        .ToDictionary(a => a.Name.LocalName, a => a.Value)
-                });
+                    case "NameCon":
+                        connection = new NameConDefinition { Name = Attr(connectionElement, "Name"), UId = IntAttr(connectionElement, "UId") };
+                        break;
+                    case "IdentCon":
+                        connection = new IdentConDefinition { UId = IntAttr(connectionElement, "UId") };
+                        break;
+                    case "OpenCon":
+                        connection = new OpenConDefinition { UId = IntAttr(connectionElement, "UId") };
+                        break;
+                    case "Powerrail":
+                        connection = new PowerrailConDefinition();
+                        break;
+                    case "Openbranch":
+                        connection = new OpenbranchConDefinition();
+                        break;
+                    default:
+                        // Fallback for unknown connection types
+                        connection = new IdentConDefinition { UId = IntAttr(connectionElement, "UId") }; 
+                        break;
+                }
+
+                connection.Kind = connectionElement.Name.LocalName;
+                wire.Connections.Add(connection);
             }
 
             return wire;
@@ -336,7 +411,17 @@ namespace TiaGitAddIn.Services.SimaticMl
             {
                 if (!child.HasElements)
                 {
-                    result[child.Name.LocalName] = child.Value?.Trim();
+                    string key = child.Name.LocalName;
+                    // If it's a generic attribute type, use its 'Name' attribute as the key
+                    if (key.EndsWith("Attribute", StringComparison.Ordinal) || key == "Attribute")
+                    {
+                        string? nameAttr = Attr(child, "Name");
+                        if (!string.IsNullOrEmpty(nameAttr))
+                        {
+                            key = nameAttr!;
+                        }
+                    }
+                    result[key] = child.Value?.Trim();
                 }
             }
 

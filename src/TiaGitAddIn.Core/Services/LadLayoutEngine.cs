@@ -228,6 +228,7 @@ namespace TiaGitAddIn.Services
                     if (component.TemplateType == "N") return LadElementType.NEdgeContact;
                     return LadElementType.TemplatedContact;
                 case "LadComparatorContactData": return LadElementType.ComparatorBox;
+                case "LadBoxData": return LadElementType.Box;
                 case "LadOrWireData": 
                 case "OrBranch":
                     return LadElementType.OrBranch;
@@ -237,6 +238,8 @@ namespace TiaGitAddIn.Services
                     if (displayName == "move" || displayName == "add" || displayName == "sub" || displayName == "mul" || displayName == "div")
                         return LadElementType.ComparatorBox;
                     
+                    if (displayName.StartsWith("call")) return LadElementType.Call;
+
                     return LadElementType.Contact; // Fallback
             }
         }

@@ -10,6 +10,8 @@ namespace TiaGitAddIn.Models.Lad
         Coil,
         NegatedCoil,
         ComparatorBox,
+        Box,
+        Call,
         OrBranch,
         TemplatedContact,
         TemplatedCoil

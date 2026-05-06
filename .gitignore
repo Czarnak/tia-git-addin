@@ -75,3 +75,4 @@ graphify-out/cost.json
 *.yaml
 
 SACT_res/
+.fake

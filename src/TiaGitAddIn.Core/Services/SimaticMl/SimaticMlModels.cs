@@ -68,6 +68,9 @@ namespace TiaGitAddIn.Services.SimaticMl
 
         public List<AccessDefinition> Accesses { get; set; } = new List<AccessDefinition>();
         public List<PartDefinition> Parts { get; set; } = new List<PartDefinition>();
+        public List<CallDefinition> Calls { get; set; } = new List<CallDefinition>();
+        public List<OpenbranchDefinition> Openbranches { get; set; } = new List<OpenbranchDefinition>();
+        public PowerrailDefinition? Powerrail { get; set; }
         public List<WireDefinition> Wires { get; set; } = new List<WireDefinition>();
     }
 
@@ -89,11 +92,42 @@ namespace TiaGitAddIn.Services.SimaticMl
     {
         public int? UId { get; set; }
         public string? Name { get; set; }
+        public string? Version { get; set; }
+        public bool DisabledENO { get; set; }
 
         public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
         public List<TemplateValueDefinition> TemplateValues { get; set; } = new List<TemplateValueDefinition>();
         public List<string> AutomaticTyped { get; set; } = new List<string>();
+        
+        public string? Equation { get; set; }
 
+        public string? RawXml { get; set; }
+    }
+
+    public sealed class CallDefinition
+    {
+        public int? UId { get; set; }
+        public CallInfoDefinition? CallInfo { get; set; }
+        
+        public List<TemplateValueDefinition> TemplateValues { get; set; } = new List<TemplateValueDefinition>();
+        public List<string> AutomaticTyped { get; set; } = new List<string>();
+
+        public string? RawXml { get; set; }
+    }
+
+    public sealed class CallInfoDefinition
+    {
+        public string? Name { get; set; }
+        public string? BlockType { get; set; }
+    }
+
+    public sealed class PowerrailDefinition
+    {
+        public string? RawXml { get; set; }
+    }
+
+    public sealed class OpenbranchDefinition
+    {
         public string? RawXml { get; set; }
     }
 
@@ -111,12 +145,33 @@ namespace TiaGitAddIn.Services.SimaticMl
         public string? RawXml { get; set; }
     }
 
-    public sealed class ConnectionDefinition
+    public abstract class ConnectionDefinition
     {
         public string? Kind { get; set; }
+    }
+
+    public sealed class NameConDefinition : ConnectionDefinition
+    {
         public int? UId { get; set; }
         public string? Name { get; set; }
-        public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
+    }
+
+    public sealed class IdentConDefinition : ConnectionDefinition
+    {
+        public int? UId { get; set; }
+    }
+
+    public sealed class OpenConDefinition : ConnectionDefinition
+    {
+        public int? UId { get; set; }
+    }
+
+    public sealed class PowerrailConDefinition : ConnectionDefinition
+    {
+    }
+
+    public sealed class OpenbranchConDefinition : ConnectionDefinition
+    {
     }
 
     public sealed class MultilingualTextDefinition
