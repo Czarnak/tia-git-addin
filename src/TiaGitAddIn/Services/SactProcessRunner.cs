@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AddInProcess = Siemens.Engineering.AddIn.Utilities.Process;
+using AddInProcessStartInfo = Siemens.Engineering.AddIn.Utilities.ProcessStartInfo;
 
 namespace TiaGitAddIn.Services
 {
@@ -31,9 +32,9 @@ namespace TiaGitAddIn.Services
             CancellationToken cancellationToken,
             IDictionary<string, string>? environmentVariables)
         {
-            using (Process process = new())
+            using (AddInProcess process = new())
             {
-                process.StartInfo = new ProcessStartInfo
+                process.StartInfo = new AddInProcessStartInfo
                 {
                     FileName = fileName,
                     Arguments = arguments,
@@ -89,14 +90,11 @@ namespace TiaGitAddIn.Services
             }
         }
 
-        private static void TryKill(Process process)
+        private static void TryKill(AddInProcess process)
         {
             try
             {
-                if (!process.HasExited)
-                {
-                    process.Kill();
-                }
+                process.Kill();
             }
             catch (InvalidOperationException)
             {

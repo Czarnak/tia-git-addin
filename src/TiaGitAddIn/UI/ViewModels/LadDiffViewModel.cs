@@ -119,7 +119,7 @@ namespace TiaGitAddIn.UI.ViewModels
                 }
 
                 _logger.Info("LoadLadDiffAsync: Invoking SACT CompareAsync...");
-                var sactResult = await _sactService.CompareAsync(leftTempPath, rightTempPath, ct).ConfigureAwait(false);
+                SactCompareResult? sactResult = await _sactService.CompareAsync(leftTempPath, rightTempPath, ct).ConfigureAwait(true);
 
                 if (sactResult == null)
                 {
@@ -131,6 +131,24 @@ namespace TiaGitAddIn.UI.ViewModels
 
                 _logger.Info("LoadLadDiffAsync: CompareAsync succeeded. Generating layouts.");
                 var netLayouts = LadLayoutEngine.LayoutAll(sactResult);
+                
+                if (netLayouts.Count == 0 && sactResult.Content?.Networks?.Count > 0)
+                {
+                    _logger.Info($"LoadLadDiffAsync: WARNING - LayoutAll returned 0 layouts despite {sactResult.Content?.Networks?.Count} networks being present in SACT result.");
+                }
+                else if (netLayouts.Count > 0)
+                {
+                    int emptyLayouts = 0;
+                    foreach (var layout in netLayouts)
+                    {
+                        if (layout.Elements.Count == 0) emptyLayouts++;
+                    }
+                    if (emptyLayouts > 0)
+                    {
+                        _logger.Info($"LoadLadDiffAsync: WARNING - {emptyLayouts} of {netLayouts.Count} networks have 0 layout elements (possibly missing BranchWireData start element).");
+                    }
+                }
+
                 PopulateNetworks(netLayouts);
                 IsLadDiffLoaded = true;
                 _logger.Info($"LoadLadDiffAsync: Completed successfully. Generated {netLayouts.Count} networks.");

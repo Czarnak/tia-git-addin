@@ -16,15 +16,16 @@ namespace TiaGitAddIn.UI.ViewModels
     public sealed class DiffViewModel : ViewModelBase
     {
         private readonly IGitService gitService;
-        private readonly IGitFileExtractor gitFileExtractor;
-        private readonly ISactService sactService;
-        private readonly IAddInLogger? logger;
+        private IGitFileExtractor gitFileExtractor;
+        private ISactService sactService;
+        private IAddInLogger? logger;
         private ObservableCollection<DiffEntryViewModel> entries = new();
         private DiffEntryViewModel? selectedEntry;
         private ObservableCollection<DiffLineViewModel> displayedLines = new();
         private string lastOperationMessage = string.Empty;
         private string busyMessage = string.Empty;
         private bool isBusy;
+        private bool showVisualDiff;
         private CancellationTokenSource? cts;
 
         public DiffViewModel(
@@ -39,9 +40,19 @@ namespace TiaGitAddIn.UI.ViewModels
             this.gitFileExtractor = gitFileExtractor ?? throw new ArgumentNullException(nameof(gitFileExtractor));
             this.sactService = sactService ?? throw new ArgumentNullException(nameof(sactService));
             this.logger = logger;
+            LadDiff = new LadDiffViewModel(gitFileExtractor, sactService, logger ?? new NullLogger(), uiDispatcher);
             LoadWorkingTreeCommand = new AsyncCommand(() => LoadWorkingTreeDiffAsync(), () => !IsBusy);
             CancelCommand = new RelayCommand(_ => cts?.Cancel(), _ => IsBusy);
+            ToggleVisualCommand = new RelayCommand(_ => ShowVisualDiff = !ShowVisualDiff, _ => SelectedEntry?.IsTiaArtifact ?? false);
         }
+
+        private sealed class NullLogger : IAddInLogger
+        {
+            public void Error(string message, Exception exception) { }
+            public void Info(string message) { }
+        }
+
+        public LadDiffViewModel LadDiff { get; }
 
         public ObservableCollection<DiffEntryViewModel> Entries
         {
@@ -57,9 +68,19 @@ namespace TiaGitAddIn.UI.ViewModels
                 if (SetProperty(selectedEntry, value, updated => selectedEntry = updated))
                 {
                     BuildDisplayedLines(value);
+                    UpdateLadDiff(value);
+                    ((RelayCommand)ToggleVisualCommand).RaiseCanExecuteChanged();
                 }
             }
         }
+
+        public bool ShowVisualDiff
+        {
+            get => showVisualDiff;
+            set => SetProperty(showVisualDiff, value, updated => showVisualDiff = updated);
+        }
+
+        public ICommand ToggleVisualCommand { get; }
 
         public ObservableCollection<DiffLineViewModel> DisplayedLines
         {
@@ -183,6 +204,30 @@ namespace TiaGitAddIn.UI.ViewModels
             }
             InvokeOnUI(() => DisplayedLines = new ObservableCollection<DiffLineViewModel>(lines));
         }
+
+        private async void UpdateLadDiff(DiffEntryViewModel? entry)
+        {
+            if (entry == null || !entry.IsTiaArtifact)
+            {
+                LadDiff.Clear();
+                ShowVisualDiff = false;
+                return;
+            }
+
+            // Always try to load if it's a TIA artifact
+            // We use the last loaded commit hash or null for working tree
+            string? currentCommit = lastOperationMessage.StartsWith("Commit") 
+                ? lastOperationMessage.Split(' ')[1] 
+                : null;
+
+            await LadDiff.LoadLadDiffAsync(currentCommit, entry.FilePath, CancellationToken.None).ConfigureAwait(false);
+            
+            // Auto-switch to visual if successfully loaded and it's a LAD/FBD block
+            if (LadDiff.IsLadDiffLoaded)
+            {
+                ShowVisualDiff = true;
+            }
+        }
     }
 
     public sealed class DiffEntryViewModel
@@ -213,6 +258,7 @@ namespace TiaGitAddIn.UI.ViewModels
         private static bool DetectTiaArtifact(string path)
         {
             string ext = Path.GetExtension(path);
+            if (string.Equals(ext, ".xml", StringComparison.OrdinalIgnoreCase)) return true;
             if (!TiaXmlExtensions.Contains(ext)) return false;
             foreach (string keyword in TiaPathKeywords)
             {

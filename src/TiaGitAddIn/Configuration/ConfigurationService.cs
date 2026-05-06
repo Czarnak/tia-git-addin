@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 using TiaGitAddIn.Models;
 
 namespace TiaGitAddIn.Configuration
@@ -23,17 +23,17 @@ namespace TiaGitAddIn.Configuration
             try
             {
                 string json = File.ReadAllText(path);
-                configuration = new JavaScriptSerializer().Deserialize<GitConfiguration>(json);
+                configuration = JsonConvert.DeserializeObject<GitConfiguration>(json);
             }
             catch (IOException)
             {
                 return new GitConfiguration { RepositoryPath = repositoryRoot };
             }
-            catch (ArgumentException)
+            catch (JsonException)
             {
                 return new GitConfiguration { RepositoryPath = repositoryRoot };
             }
-            catch (InvalidOperationException)
+            catch (ArgumentException)
             {
                 return new GitConfiguration { RepositoryPath = repositoryRoot };
             }
@@ -46,7 +46,12 @@ namespace TiaGitAddIn.Configuration
             EnsureValidRepositoryRoot(repositoryRoot);
 
             string path = GetConfigurationPath(repositoryRoot);
-            string json = new JavaScriptSerializer().Serialize(configuration);
+
+            string json = JsonConvert.SerializeObject(
+                configuration,
+                Formatting.Indented
+            );
+
             File.WriteAllText(path, json);
         }
 
@@ -67,12 +72,15 @@ namespace TiaGitAddIn.Configuration
                 GitExecutablePath = string.IsNullOrWhiteSpace(configuration.GitExecutablePath)
                     ? "git"
                     : configuration.GitExecutablePath,
+
                 RepositoryPath = string.IsNullOrWhiteSpace(configuration.RepositoryPath)
                     ? repositoryRoot
                     : configuration.RepositoryPath,
+
                 DefaultRemote = string.IsNullOrWhiteSpace(configuration.DefaultRemote)
                     ? "origin"
                     : configuration.DefaultRemote,
+
                 CommitAuthorName = configuration.CommitAuthorName ?? string.Empty,
                 CommitAuthorEmail = configuration.CommitAuthorEmail ?? string.Empty
             };

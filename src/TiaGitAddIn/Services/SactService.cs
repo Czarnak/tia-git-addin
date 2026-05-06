@@ -11,7 +11,26 @@ namespace TiaGitAddIn.Services
 {
     public sealed class SactService(ISactPathResolver pathResolver, ISactProcessRunner processRunner, IAddInLogger? logger = null) : ISactService
     {
-        public bool IsAvailable => pathResolver.ResolveSiemensInstallPath() != null && pathResolver.ResolveNodePath() != null;
+        public bool IsAvailable
+        {
+            get
+            {
+                try
+                {
+                    return pathResolver.ResolveSiemensInstallPath() != null && pathResolver.ResolveNodePath() != null;
+                }
+                catch (System.Security.SecurityException ex)
+                {
+                    logger?.Info($"SACT availability check failed due to security restrictions: {ex.Message}");
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    logger?.Info($"SACT availability check failed: {ex.Message}");
+                    return false;
+                }
+            }
+        }
 
         public async Task<SactCompareResult?> CompareAsync(string leftXmlPath, string rightXmlPath, CancellationToken ct)
         {
@@ -25,12 +44,28 @@ namespace TiaGitAddIn.Services
             }
 
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            string scriptPath = Path.Combine(baseDir, "Scripts", "CompareBlocks.js");
+            string scriptPath = Path.Combine("Scripts", "CompareBlocks.js");
             if (!File.Exists(scriptPath))
             {
-                // Fallback for some test runners
+                // Fallback for some test runners and specific TIA Add-In contexts
                 logger?.Info($"SACT: Script not found, trying fallback path. Original path: {scriptPath}");
-                scriptPath = Path.Combine(Path.GetDirectoryName(typeof(SactService).Assembly.Location) ?? baseDir, "Scripts", "CompareBlocks.js");
+
+                string assemblyLoc = typeof(SactService).Assembly.Location;
+                string fallbackDir = baseDir;
+
+                try
+                {
+                    if (!string.IsNullOrEmpty(assemblyLoc))
+                    {
+                        fallbackDir = Path.GetDirectoryName(assemblyLoc) ?? baseDir;
+                    }
+                }
+                catch
+                {
+                    // Fallback to baseDir if Path.GetDirectoryName fails
+                }
+
+                scriptPath = Path.Combine(fallbackDir, "Scripts", "CompareBlocks.js");
             }
 
             if (!File.Exists(scriptPath))
@@ -46,9 +81,9 @@ namespace TiaGitAddIn.Services
                 { "NODE_PATH", nodeModulesPath }
             };
 
-            string arguments = $"\"{scriptPath}\" \"{leftXmlPath}\" \"{rightXmlPath}\"";
+            string arguments = $"\"{scriptPath}\" \"{leftXmlPath}\" \"{rightXmlPath}\" \"{nodeModulesPath}\"";
 
-            logger?.Info($"SACT: Starting comparison via Node.js bridge.\n  Node: {nodePath}\n  Script: {scriptPath}\n  Left: {leftXmlPath}\n  Right: {rightXmlPath}\n  NODE_PATH: {nodeModulesPath}");
+            logger?.Info($"SACT: Starting comparison via Node.js bridge.\n  Node: {nodePath}\n  Script: {scriptPath}\n  Left: {leftXmlPath}\n  Right: {rightXmlPath}\n  Modules: {nodeModulesPath}");
 
             var result = await processRunner.RunAsync(nodePath, arguments, ct, environment).ConfigureAwait(false);
 
@@ -68,12 +103,19 @@ namespace TiaGitAddIn.Services
                 return null;
             }
 
+            logger?.Info($"SACT JSON Output:\n{result.StandardOutput}");
+
             try
             {
                 var parsedResult = SactJsonParser.ParseCompareResult(result.StandardOutput);
                 if (parsedResult == null)
                 {
                     logger?.Info($"SACT: SactJsonParser returned null. Raw JSON length: {result.StandardOutput.Length}");
+                }
+                else
+                {
+                    int networkCount = parsedResult.Content?.Networks?.Count ?? 0;
+                    logger?.Info($"SACT: Successfully parsed JSON. Networks found: {networkCount}");
                 }
                 return parsedResult;
             }

@@ -1,17 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+
     <AssemblyName>TiaGitAddIn</AssemblyName>
     <RootNamespace>TiaGitAddIn</RootNamespace>
     <PackageId>TiaGitAddIn</PackageId>
+
+    <!-- Important for TIA Add-In runtime dependency deployment -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
     <TiaPortalVersion>21</TiaPortalVersion>
     <TiaPortalInstallRoot Condition="'$(TiaPortalInstallRoot)' == ''">C:\Program Files\Siemens\Automation\Portal V$(TiaPortalVersion)</TiaPortalInstallRoot>
     <TiaPortalPublicApiRoot>$(TiaPortalInstallRoot)\PublicAPI\V$(TiaPortalVersion)</TiaPortalPublicApiRoot>
     <TiaPortalPublicApiNet48>$(TiaPortalPublicApiRoot)\net48</TiaPortalPublicApiNet48>
     <TiaAddInPublisherExe>$(TiaPortalPublicApiRoot)\Siemens.Engineering.AddIn.Publisher.exe</TiaAddInPublisherExe>
+
     <EnableTiaAddInPackaging Condition="'$(EnableTiaAddInPackaging)' == ''">true</EnableTiaAddInPackaging>
   </PropertyGroup>
 
@@ -19,23 +26,26 @@
     <None Update="AddInPublisherConfiguration.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+
     <None Update="Scripts\CompareBlocks.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
+
     <Reference Include="Siemens.Engineering.Base">
       <HintPath>$(TiaPortalPublicApiNet48)\Siemens.Engineering.Base.dll</HintPath>
       <Private>false</Private>
     </Reference>
+
     <Reference Include="Siemens.Engineering.AddIn.Base">
       <HintPath>$(TiaPortalPublicApiNet48)\Siemens.Engineering.AddIn.Base.dll</HintPath>
       <Private>false</Private>
     </Reference>
+
     <Reference Include="Siemens.Engineering.AddIn.Permissions">
       <HintPath>$(TiaPortalPublicApiNet48)\Siemens.Engineering.AddIn.Permissions.dll</HintPath>
       <Private>false</Private>
     </Reference>
+
     <Reference Include="Siemens.Engineering.AddIn.Utilities">
       <HintPath>$(TiaPortalPublicApiNet48)\Siemens.Engineering.AddIn.Utilities.dll</HintPath>
       <Private>false</Private>
@@ -50,9 +60,23 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
-  <Target Name="PublishTiaPortalAddIn" AfterTargets="Build" Condition="'$(EnableTiaAddInPackaging)' == 'true'">
-    <Error Condition="!Exists('$(TiaAddInPublisherExe)')" Text="TIA Portal V$(TiaPortalVersion) Add-In publisher not found: $(TiaAddInPublisherExe)" />
-    <Exec Command="&quot;$(TiaAddInPublisherExe)&quot; --configuration &quot;$(TargetDir)AddInPublisherConfiguration.xml&quot; --outfile &quot;$(TargetDir)$(AssemblyName).addin&quot; --logfile &quot;$(TargetDir)Publisher.log&quot; --verbose --console --skipEngMemberCheck" />
-    <Message Importance="High" Text="TIA Add-In package created at: $(TargetDir)$(AssemblyName).addin" />
+  <Target Name="VerifyNewtonsoftJsonInOutput" BeforeTargets="PublishTiaPortalAddIn">
+    <Error
+      Condition="!Exists('$(TargetDir)Newtonsoft.Json.dll')"
+      Text="Newtonsoft.Json.dll was not copied to output directory: $(TargetDir). TIA Portal will not be able to load the add-in dependency." />
   </Target>
+
+  <Target Name="PublishTiaPortalAddIn" AfterTargets="Build" Condition="'$(EnableTiaAddInPackaging)' == 'true'">
+    <Error
+      Condition="!Exists('$(TiaAddInPublisherExe)')"
+      Text="TIA Portal V$(TiaPortalVersion) Add-In publisher not found: $(TiaAddInPublisherExe)" />
+
+    <Exec
+      Command="&quot;$(TiaAddInPublisherExe)&quot; --configuration &quot;$(TargetDir)AddInPublisherConfiguration.xml&quot; --outfile &quot;$(TargetDir)$(AssemblyName).addin&quot; --logfile &quot;$(TargetDir)Publisher.log&quot; --verbose --console --skipEngMemberCheck" />
+
+    <Message
+      Importance="High"
+      Text="TIA Add-In package created at: $(TargetDir)$(AssemblyName).addin" />
+  </Target>
+
 </Project>

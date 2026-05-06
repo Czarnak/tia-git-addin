@@ -6,13 +6,10 @@ namespace TiaGitAddIn.Tests.Services
     public class SactPathResolverTests
     {
         [Fact]
-        public void ResolveNodePath_ReturnsNode_WhenNodeIsAvailable()
+        public void ResolveNodePath_ReturnsOverride_WhenProvided()
         {
-            var resolver = new SactPathResolver();
-            var path = resolver.ResolveNodePath();
-            
-            // In this environment, node -v succeeded, so it should return "node"
-            Assert.Equal("node", path);
+            var resolver = new SactPathResolver(nodeOverride: "custom_node");
+            Assert.Equal("custom_node", resolver.ResolveNodePath());
         }
 
         [Fact]

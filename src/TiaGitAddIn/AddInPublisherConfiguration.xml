@@ -14,6 +14,11 @@
       <Pdb>TiaGitAddIn.pdb</Pdb>
     </AssemblyInfo>
   </FeatureAssembly>
+  <AdditionalAssemblies>
+  <AssemblyInfo>
+    <Assembly>Newtonsoft.Json.dll</Assembly>
+  </AssemblyInfo>
+  </AdditionalAssemblies>
   <RequiredPermissions>
     <TIAPermissions>
       <TIA.ReadWrite>
@@ -21,6 +26,9 @@
       </TIA.ReadWrite>
     </TIAPermissions>
     <SecurityPermissions>
+      <System.Security.Permissions.EnvironmentPermission>
+        <Comment>Use external tools.</Comment>
+      </System.Security.Permissions.EnvironmentPermission>
       <System.Security.Permissions.FileDialogPermission>
         <Comment>Set paths to Node and SACT.</Comment>
       </System.Security.Permissions.FileDialogPermission>
