@@ -6,57 +6,139 @@
              xmlns:local="clr-namespace:TiaGitAddIn.UI.Views"
              xmlns:converters="clr-namespace:TiaGitAddIn.UI.Converters"
              xmlns:viewmodels="clr-namespace:TiaGitAddIn.UI.ViewModels"
+             xmlns:models="clr-namespace:TiaGitAddIn.Models.Lad"
              mc:Ignorable="d"
              d:DesignHeight="450"
         d:DesignWidth="800">
     <UserControl.Resources>
         <converters:CompareStateToColorConverter x:Key="CompareStateToColorConverter"/>
-        <converters:LadElementTypeToGeometryConverter x:Key="LadElementTypeToGeometryConverter"/>
         <converters:BoolToVisibilityConverter x:Key="LadBoolToVis"/>
 
+        <!-- Shape for Ladder Elements -->
+        <DataTemplate DataType="{x:Type viewmodels:LadElementViewModel}">
+            <Grid Width="{Binding Width}" Height="{Binding Height}">
+                <!-- Background highlight for diff state -->
+                <Border Background="{Binding DiffState, Converter={StaticResource CompareStateToColorConverter}}" 
+                        Opacity="0.3" CornerRadius="2"/>
+                
+                <!-- Element Graphic -->
+                <ContentControl VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <!-- Default: Box -->
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Border BorderBrush="Black" BorderThickness="1" Background="White" MinWidth="80" MinHeight="50">
+                                            <StackPanel>
+                                                <Border Background="#E0E0E0" Padding="2">
+                                                    <TextBlock Text="{Binding DisplayName}" FontWeight="Bold" FontSize="10" HorizontalAlignment="Center"/>
+                                                </Border>
+                                                <TextBlock Text="{Binding Operand}" FontSize="9" Margin="4" TextAlignment="Center" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            
+                            <Style.Triggers>
+                                <!-- Powerrail -->
+                                <DataTrigger Binding="{Binding ElementType}" Value="{x:Static models:LadElementType.Powerrail}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Rectangle Width="4" Fill="Black" Height="80"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <!-- Contact -->
+                                <DataTrigger Binding="{Binding ElementType}" Value="{x:Static models:LadElementType.Contact}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Canvas Width="40" Height="30">
+                                                    <Line X1="0" Y1="15" X2="15" Y2="15" Stroke="Black" StrokeThickness="1"/>
+                                                    <Line X1="15" Y1="5" X2="15" Y2="25" Stroke="Black" StrokeThickness="2"/>
+                                                    <Line X1="25" Y1="5" X2="25" Y2="25" Stroke="Black" StrokeThickness="2"/>
+                                                    <Line X1="25" Y1="15" X2="40" Y2="15" Stroke="Black" StrokeThickness="1"/>
+                                                    <TextBlock Canvas.Top="-15" Canvas.Left="0" Width="40" Text="{Binding DataContext.Operand, RelativeSource={RelativeSource AncestorType=ContentControl}}" FontSize="9" TextAlignment="Center"/>
+                                                </Canvas>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <!-- Negated Contact -->
+                                <DataTrigger Binding="{Binding ElementType}" Value="{x:Static models:LadElementType.NegatedContact}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Canvas Width="40" Height="30">
+                                                    <Line X1="0" Y1="15" X2="15" Y2="15" Stroke="Black" StrokeThickness="1"/>
+                                                    <Line X1="15" Y1="5" X2="15" Y2="25" Stroke="Black" StrokeThickness="2"/>
+                                                    <Line X1="25" Y1="5" X2="25" Y2="25" Stroke="Black" StrokeThickness="2"/>
+                                                    <Line X1="25" Y1="15" X2="40" Y2="15" Stroke="Black" StrokeThickness="1"/>
+                                                    <Line X1="12" Y1="25" X2="28" Y2="5" Stroke="Black" StrokeThickness="1"/>
+                                                    <TextBlock Canvas.Top="-15" Canvas.Left="0" Width="40" Text="{Binding DataContext.Operand, RelativeSource={RelativeSource AncestorType=ContentControl}}" FontSize="9" TextAlignment="Center"/>
+                                                </Canvas>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+
+                                <!-- Coil -->
+                                <DataTrigger Binding="{Binding ElementType}" Value="{x:Static models:LadElementType.Coil}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Canvas Width="40" Height="30">
+                                                    <Line X1="0" Y1="15" X2="12" Y2="15" Stroke="Black" StrokeThickness="1"/>
+                                                    <Path Data="M 12,15 A 8,8 0 1 1 12.1,15" Stroke="Black" StrokeThickness="1" Fill="Transparent"/>
+                                                    <Line X1="28" Y1="15" X2="40" Y2="15" Stroke="Black" StrokeThickness="1"/>
+                                                    <TextBlock Canvas.Top="-15" Canvas.Left="0" Width="40" Text="{Binding DataContext.Operand, RelativeSource={RelativeSource AncestorType=ContentControl}}" FontSize="9" TextAlignment="Center"/>
+                                                </Canvas>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                
+                                <!-- Or Branch -->
+                                <DataTrigger Binding="{Binding ElementType}" Value="{x:Static models:LadElementType.OrBranch}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Ellipse Width="6" Height="6" Fill="Black" Margin="-3,-3,0,0"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </Grid>
+        </DataTemplate>
+
         <!-- Template for a single LAD network side -->
-        <ControlTemplate x:Key="NetworkTemplate" TargetType="ContentControl">
+        <DataTemplate x:Key="NetworkTemplate" DataType="{x:Type viewmodels:LadNetworkViewModel}">
             <Canvas Width="{Binding CanvasWidth}"
                     Height="{Binding CanvasHeight}"
-                    Margin="10">
+                    Margin="10"
+                    Background="Transparent">
+                
+                <!-- Elements layer -->
                 <ItemsControl ItemsSource="{Binding Elements}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <Canvas/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type viewmodels:LadElementViewModel}">
-                            <Border Width="{Binding Width}"
-                                    Height="{Binding Height}"
-                                    BorderBrush="Black"
-                                    BorderThickness="1"
-                                    Background="{Binding DiffState, Converter={StaticResource CompareStateToColorConverter}}">
-                                <StackPanel HorizontalAlignment="Center"
-                                        VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Operand}"
-                                            TextAlignment="Center"
-                                            FontSize="10"
-                                            TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Text="{Binding ElementType, Converter={StaticResource LadElementTypeToGeometryConverter}}"
-                                            TextAlignment="Center"
-                                            FontWeight="Bold"
-                                            Margin="0,2"/>
-                                    <TextBlock Text="{Binding DisplayName}"
-                                            TextAlignment="Center"
-                                            FontSize="10"
-                                            TextTrimming="CharacterEllipsis"
-                                            Foreground="#666666"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Left"
-                                    Value="{Binding X}"/>
-                            <Setter Property="Canvas.Top"
-                                    Value="{Binding Y}"/>
+                            <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding Y}"/>
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
@@ -80,13 +162,14 @@
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Left" Value="60"/>
-                            <Setter Property="Canvas.Top" Value="30"/>
+                            <!-- Center=(75, 50) -->
+                            <Setter Property="Canvas.Left" Value="75"/>
+                            <Setter Property="Canvas.Top" Value="50"/>
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
             </Canvas>
-        </ControlTemplate>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -100,7 +183,7 @@
                 VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <!-- Side-by-side header -->
-                <Grid Margin="10,0,10,0">
+                <Grid Margin="10,0,10,0" Background="#F8F8F8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -120,22 +203,26 @@
                                         <TextBlock Text="{Binding NetworkNumber, StringFormat=Network {0}}" FontWeight="Bold"/>
                                     </Border>
 
-                                    <Grid>
+                                    <Grid MinHeight="100">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="1"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
 
                                         <!-- Left side (Old) -->
-                                        <Border Grid.Column="0" BorderBrush="#EEEEEE" BorderThickness="0,0,1,0"
+                                        <Border Grid.Column="0"
                                                 Background="{Binding Left.DiffState, Converter={StaticResource CompareStateToColorConverter}}">
-                                            <ContentControl Content="{Binding Left}" Template="{StaticResource NetworkTemplate}"/>
+                                            <ContentControl Content="{Binding Left}" ContentTemplate="{StaticResource NetworkTemplate}"/>
                                         </Border>
 
+                                        <!-- Divider Line -->
+                                        <Rectangle Grid.Column="1" Fill="#DDDDDD" VerticalAlignment="Stretch"/>
+
                                         <!-- Right side (New) -->
-                                        <Border Grid.Column="1"
+                                        <Border Grid.Column="2"
                                                 Background="{Binding Right.DiffState, Converter={StaticResource CompareStateToColorConverter}}">
-                                            <ContentControl Content="{Binding Right}" Template="{StaticResource NetworkTemplate}"/>
+                                            <ContentControl Content="{Binding Right}" ContentTemplate="{StaticResource NetworkTemplate}"/>
                                         </Border>
                                     </Grid>
                                 </StackPanel>
@@ -155,32 +242,6 @@
                     VerticalAlignment="Center"
                     FontSize="16"
                     FontWeight="Bold"/>
-        </Border>
-
-        <!-- SACT Not Available Banner -->
-        <Border Grid.Row="0"
-                Background="#FFF3CD"
-                BorderBrush="#FFEEBA"
-                BorderThickness="1"
-                Margin="10"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Top">
-            <Border.Style>
-                <Style TargetType="Border">
-                    <Setter Property="Visibility"
-                            Value="Collapsed"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsSactAvailable}"
-                                Value="False">
-                            <Setter Property="Visibility"
-                                    Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <TextBlock Text="SACT component ready."
-                    Padding="10"
-                    Foreground="#856404"/>
         </Border>
 
         <!-- Error Bar -->

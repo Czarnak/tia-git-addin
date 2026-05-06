@@ -101,12 +101,12 @@ namespace TiaGitAddIn.Services
 
             if (startElement == null)
             {
-                // Last ditch effort: find anything that looks like a powerrail or has the flag
-                startElement = componentsByUId.Values.FirstOrDefault(c => c.isStartElement == true)
-                             ?? componentsByUId.Values.FirstOrDefault(c => c.name != null && c.name.IndexOf("Wire", StringComparison.OrdinalIgnoreCase) >= 0);
+                // Fallback: pick any element that has no inputs or just the first element
+                startElement = componentsByUId.Values.FirstOrDefault(c => c.inputConnectors.Count == 0)
+                             ?? componentsByUId.Values.FirstOrDefault();
             }
 
-            if (startElement == null)
+            if (startElement == null || string.IsNullOrEmpty(startElement.uId))
             {
                 return layout;
             }
@@ -123,7 +123,7 @@ namespace TiaGitAddIn.Services
             {
                 var (current, col, row) = queue.Dequeue();
 
-                if (visited.Contains(current.uId))
+                if (string.IsNullOrEmpty(current.uId) || visited.Contains(current.uId))
                 {
                     continue;
                 }
@@ -144,12 +144,17 @@ namespace TiaGitAddIn.Services
                     DiffState = state
                 });
 
-                if (current.name == "LadOrWireData" || current.name == "OrBranch")
+                bool isBranchingElement = current.name == "LadOrWireData" || 
+                                          current.name == "OrBranch" || 
+                                          current.name == "BranchWireData" || 
+                                          current.name == "Powerrail";
+
+                if (isBranchingElement)
                 {
                     int branchRow = row;
                     foreach (var output in current.outputConnectors)
                     {
-                        if (string.IsNullOrEmpty(output.PartnerUId) || !componentOwnerByConnectorId.TryGetValue(output.PartnerUId, out string? partnerCompId))
+                        if (string.IsNullOrEmpty(output.PartnerUId) || !componentOwnerByConnectorId.TryGetValue(output.PartnerUId, out string partnerCompId))
                         {
                             continue;
                         }
@@ -174,7 +179,7 @@ namespace TiaGitAddIn.Services
                 {
                     foreach (var output in current.outputConnectors)
                     {
-                        if (string.IsNullOrEmpty(output.PartnerUId) || !componentOwnerByConnectorId.TryGetValue(output.PartnerUId, out string? partnerCompId))
+                        if (string.IsNullOrEmpty(output.PartnerUId) || !componentOwnerByConnectorId.TryGetValue(output.PartnerUId, out string partnerCompId))
                         {
                             continue;
                         }

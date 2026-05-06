@@ -7,8 +7,8 @@ namespace TiaGitAddIn.UI.ViewModels
 {
     public class LadNetworkViewModel(LadNetworkLayout layout) : ViewModelBase
     {
-        private const double CellWidth = 120;
-        private const double CellHeight = 60;
+        private const double CellWidth = 150;
+        private const double CellHeight = 100;
 
         public int NetworkNumber => layout.NetworkNumber;
         public CompareState DiffState => layout.DiffState;

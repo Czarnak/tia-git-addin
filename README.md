@@ -1,93 +1,84 @@
-# tia-git-addin
+# TIA Git Add-In
 
-TIA Portal V21 Add-In for working with Git from inside TIA Portal Version Control workflows.
+TIA Portal V21 Add-In for working with Git from inside TIA Portal Version Control (VCI) workflows.
 
-The add-in targets `.NET Framework 4.8` and packages as a native TIA Portal V21 `.addin` file. Git operations use the locally configured `git.exe`; the add-in does not store credentials or implement Git protocol behavior.
+The add-in targets `.NET Framework 4.8` and packages as a native TIA Portal V21 `.addin` file. It provides a specialized Git panel integrated directly into the TIA Portal UI, focusing on the unique needs of PLC developers using VCI.
 
-## Status
+## Features & Status
 
-Implemented:
+### Native SimaticML Decoding (NEW)
 
-- TIA Portal V21 project packaging that emits `TiaGitAddIn.addin`.
-- Minimal project-tree Add-In entry point with an `Open Git Panel...` menu item.
-- Core Git models, path validation, configuration persistence, Git output parsing, process runner, repository discovery, and operation serialization.
-- WPF UI architecture (MVVM) with ViewModels and Views for Status, History, Commit, Diff, and Settings.
-- Unit coverage for both foundation and UI logic (34 tests passing).
+- **Zero Dependencies**: Completely removed dependencies on Node.js and external Siemens ACTool scripting.
+- **Native Parser**: Custom C# `XDocument`-based parser for SimaticML files.
+- **Structural Comparison**: Logic and interface are compared directly in C#, allowing for deep semantic diffing of PLC blocks.
 
-In Progress:
+### Visual LAD Diff
 
-- Full integration of the WPF Git panel with live TIA Portal project context.
-- End-to-end VCI workspace detection and resolution.
-- Hardening of fetch, pull, push, and branch management workflows.
+- **Side-by-Side View**: Compare "OLD" (parent) and "NEW" (commit/working tree) versions horizontally.
+- **Graphic Rendering**: Simplified geometric representation of Ladder Logic (Contacts, Coils, Boxes, Powerrails).
+- **Branching Layout**: Custom layout engine that correctly handles multiple rungs and complex branching from the Powerrail.
+- **Color Coding**: Semantic highlighting of changes (Yellow: Changed, Green: Added, Red: Removed).
+
+### Git Integration
+
+- **VCI-Aware**: Automatically detects Git repositories associated with TIA Portal VCI workspaces.
+- **Core Operations**: View status, history, and commit changes without leaving TIA Portal.
+- **Transparent Execution**: Uses your local `git.exe` for all operations.
 
 ## Prerequisites
 
-- TIA Portal V21 installed at `C:\Program Files\Siemens\Automation\Portal V21`.
-- .NET SDK compatible with the repo `global.json`.
-- Local Git installation available as `git` or `git.exe`.
-- SIMATIC Automation Compare Tool (SACT) for advanced visual diff features.
+- **TIA Portal V21** (required for the Add-In API and Publisher).
+- **.NET SDK** compatible with the repo `global.json`.
+- **Local Git** installation available in system PATH.
 
-## Build
+## Build & Installation
 
-Restore and build:
+### Build
 
 ```powershell
 dotnet restore TiaGitAddIn.sln
 dotnet build TiaGitAddIn.sln --no-restore
 ```
 
-Expected add-in package:
+The build process automatically packages the result into a `.addin` file using the Siemens Add-In Publisher:
+`src/TiaGitAddIn/bin/Debug/net48/TiaGitAddIn.addin`
 
-```text
-src/TiaGitAddIn/bin/Debug/net48/TiaGitAddIn.addin
-```
+### Installation
 
-The main project calls the V21 publisher directly:
+1. Copy the `TiaGitAddIn.addin` file to your TIA Portal Add-Ins folder (typically `%TIA_INSTALL_DIR%\AddIns`).
+2. Open TIA Portal V21.
+3. Enable the Add-In in the "Add-ins" task card.
+4. Right-click on a project or VCI workspace to find the "Git" menu items.
 
-```text
-C:\Program Files\Siemens\Automation\Portal V21\PublicAPI\V21\Siemens.Engineering.AddIn.Publisher.exe
-```
+## Development Roadmap
 
-## Test
+1. **Language Support**
+   - Extend the visual diff to support **FBD** (Function Block Diagram).
+   - Implement structured text diffing for **SCL** with block-aware syntax highlighting.
 
-```powershell
-dotnet test TiaGitAddIn.sln --no-build
-```
+2. **Advanced Comparison**
+   - Deep interface comparison (detecting changes in Datatypes, Retain settings, and Comments).
+   - Block metadata comparison (Attributes, Optimized Access, etc.).
+   - Multi-block comparison within a single commit.
 
-## Project Layout
+3. **UI/UX Polishing**
+   - Improved orthogonal wire routing for cleaner visual diagrams.
+   - Interactive zooming and panning in the visual diff viewer.
+   - Integration with TIA Portal's theme and system colors.
+
+4. **HMI & Configuration**
+   - Research visual diffing for HMI Screens and Tag Tables.
+   - Support for comparing Hardware Configuration artifacts.
+
+## Project Structure
 
 ```text
 src/
   TiaGitAddIn/
-    Entry/           TIA Portal Add-In menu entry points
-    Models/          Git and diff data models
-    Configuration/   Path validation and project config persistence
-    Services/        Git process execution, parsing, repository discovery
-    UI/              WPF MVVM components (ViewModels, Views, Converters)
-  TiaGitAddIn.Tests/ Unit and UI logic tests
+    Services/SimaticMl/  Native SimaticML parser and comparison engine
+    Services/            Git process execution and repository discovery
+    Models/              Core data models for Git, LAD, and Sact/SimaticML
+    UI/                  WPF MVVM (ViewModels, Views, Converters)
+    Entry/               TIA Portal Add-In entry points and menu registration
+  TiaGitAddIn.Tests/     Unit and UI logic tests
 ```
-
-## Roadmap
-
-1. **Add-In Shell & TIA Integration**
-   - Connect the WPF main dialog to live TIA Portal project events and lifecycle.
-   - Resolve active TIA project and VCI workspace paths reliably across different project types.
-   - Implement user-facing error handling and guidance for missing VCI setups.
-
-2. **Repository Management**
-   - Automate detection of existing Git repositories from the VCI workspace path.
-   - Add UI support for initializing a new Git repository for an active workspace.
-
-3. **History & Diff Enhancements**
-   - Enhance text diff viewing with better syntax highlighting or TIA-specific block metadata.
-   - Research and implement "Compare with TIA" for binary or graphical artifacts using internal TIA APIs.
-
-4. **LAD/FBD Visual Diff Viewer**
-   - Integrate with SIMATIC Automation Compare Tool (SACT) CLI to produce structured JSON diffs.
-   - Implement graphical ladder-logic rendering using WPF Canvas and a custom layout engine.
-   - Support color-coded highlights for semantic network differences (added/removed/changed).
-
-5. **Hardening & Verification**
-   - Exercise the add-in inside TIA Portal V21 with real-world VCI workspaces.
-   - Add integration and E2E coverage for the end-to-end VCI-to-Git lifecycle.
-   - Review permissions before distribution and optimize the `.addin` package size.
