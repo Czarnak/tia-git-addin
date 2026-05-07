@@ -30,8 +30,21 @@ namespace TiaGitAddIn.Tests.UI
             string xaml = File.ReadAllText(GetLadDiffViewPath());
 
             Assert.Contains("ItemsSource=\"{Binding InterfaceRows}\"", xaml);
-            Assert.Contains("ItemsSource=\"{Binding InputPins}\"", xaml);
-            Assert.Contains("ItemsSource=\"{Binding OutputPins}\"", xaml);
+            Assert.Contains("ItemsSource=\"{Binding InputPinRows}\"", xaml);
+            Assert.Contains("ItemsSource=\"{Binding OutputPinRows}\"", xaml);
+        }
+
+        [Fact]
+        public void DynamicBoxPinsRenderAsVisibleConnectorRows()
+        {
+            string xaml = File.ReadAllText(GetLadDiffViewPath());
+
+            Assert.Contains("x:Key=\"LadBoxPinTextStyle\"", xaml);
+            Assert.Contains("x:Key=\"LadInputPinRowTemplate\"", xaml);
+            Assert.Contains("x:Key=\"LadOutputPinRowTemplate\"", xaml);
+            Assert.Contains("Tag=\"PinConnectorLine\"", xaml);
+            Assert.Contains("Text=\"{Binding Operand}\"", xaml);
+            Assert.Contains("Text=\"{Binding Name}\"", xaml);
         }
 
         [Fact]

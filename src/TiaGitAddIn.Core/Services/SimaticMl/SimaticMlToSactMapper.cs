@@ -230,11 +230,15 @@ namespace TiaGitAddIn.Services.SimaticMl
                             string otherId = GetCompId(otherConn);
                             if (componentsByUid.TryGetValue(otherId, out var component))
                             {
-                                // Attach tag name to the component
-                                string tagName = access.SymbolPath ?? access.ConstantValue ?? "Access";
+                                string operand = FormatAccessDisplayName(access);
+                                if (otherConn is NameConDefinition nameCon && TryAssignParameterOperand(component, nameCon.Name, operand))
+                                {
+                                    continue;
+                                }
+
                                 component.TopOperandConnector = new SactOperandConnector
                                 {
-                                    DisplayName = tagName
+                                    DisplayName = operand
                                 };
                             }
                         }
@@ -417,9 +421,46 @@ namespace TiaGitAddIn.Services.SimaticMl
                 {
                     Name = p.Name ?? string.Empty,
                     Section = p.Section ?? string.Empty,
-                    Type = p.Type ?? string.Empty
+                    Type = p.Type ?? string.Empty,
+                    Operand = string.Empty
                 })
                 .ToList();
+        }
+
+        private static bool TryAssignParameterOperand(SactComponentData component, string? pinName, string operand)
+        {
+            if (string.IsNullOrWhiteSpace(pinName))
+            {
+                return false;
+            }
+
+            bool assigned = false;
+            foreach (var parameter in component.inputParameters.Concat(component.outputParameters))
+            {
+                if (string.Equals(parameter.Name, pinName, StringComparison.OrdinalIgnoreCase))
+                {
+                    parameter.Operand = operand;
+                    assigned = true;
+                }
+            }
+
+            return assigned;
+        }
+
+        private static string FormatAccessDisplayName(AccessDefinition access)
+        {
+            if (!string.IsNullOrWhiteSpace(access.ConstantValue))
+            {
+                return access.ConstantValue!;
+            }
+
+            string symbol = access.SymbolPath ?? "Access";
+            if (string.Equals(access.Scope, "LocalVariable", StringComparison.OrdinalIgnoreCase))
+            {
+                return "#" + symbol;
+            }
+
+            return symbol;
         }
 
         private static bool IsInputParameter(CallParameterDefinition parameter)
@@ -441,7 +482,8 @@ namespace TiaGitAddIn.Services.SimaticMl
             {
                 Name = parameter.Name,
                 Section = parameter.Section,
-                Type = parameter.Type
+                Type = parameter.Type,
+                Operand = parameter.Operand
             };
         }
 

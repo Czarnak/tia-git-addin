@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using TiaGitAddIn.Models.Lad;
 using TiaGitAddIn.Models.Sact;
 
@@ -17,5 +18,9 @@ namespace TiaGitAddIn.UI.ViewModels
         public CompareState DiffState => layout.DiffState;
         public ObservableCollection<string> InputPins { get; } = new ObservableCollection<string>(layout.InputPins);
         public ObservableCollection<string> OutputPins { get; } = new ObservableCollection<string>(layout.OutputPins);
+        public ObservableCollection<LadPinViewModel> InputPinRows { get; } = new ObservableCollection<LadPinViewModel>(
+            layout.InputPinRows.Select(pin => new LadPinViewModel(pin)));
+        public ObservableCollection<LadPinViewModel> OutputPinRows { get; } = new ObservableCollection<LadPinViewModel>(
+            layout.OutputPinRows.Select(pin => new LadPinViewModel(pin)));
     }
 }

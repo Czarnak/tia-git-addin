@@ -136,8 +136,10 @@ namespace TiaGitAddIn.Services
 
                 if (!IsRoutingOnlyElement(current))
                 {
-                    List<string> inputPins = BuildPinLabels(current.inputParameters, current.inputConnectors, "IN");
-                    List<string> outputPins = BuildPinLabels(current.outputParameters, current.outputConnectors, "OUT");
+                    List<LadPinLayout> inputPinRows = BuildPinRows(current, current.inputParameters, current.inputConnectors, "IN", true);
+                    List<LadPinLayout> outputPinRows = BuildPinRows(current, current.outputParameters, current.outputConnectors, "OUT", false);
+                    List<string> inputPins = inputPinRows.Select(pin => pin.Name).ToList();
+                    List<string> outputPins = outputPinRows.Select(pin => pin.Name).ToList();
 
                     layout.Elements.Add(new LadElementLayout
                     {
@@ -150,6 +152,8 @@ namespace TiaGitAddIn.Services
                         DiffState = current.State,
                         InputPins = inputPins,
                         OutputPins = outputPins,
+                        InputPinRows = inputPinRows,
+                        OutputPinRows = outputPinRows,
                         Width = CalculateElementWidth(current, inputPins, outputPins),
                         Height = CalculateElementHeight(current, inputPins, outputPins)
                     });
@@ -235,24 +239,49 @@ namespace TiaGitAddIn.Services
             return component.name == "LadOrWireData" || component.name == "OrBranch";
         }
 
-        private static List<string> BuildPinLabels(
+        private static List<LadPinLayout> BuildPinRows(
+            SactComponentData component,
             List<SactParameterData> parameters,
             List<SactConnectorData> connectors,
-            string fallbackName)
+            string fallbackName,
+            bool isInput)
         {
-            if (parameters.Count > 0)
+            List<LadPinLayout> rows = new();
+
+            if (IsBoxLike(component) && isInput && !parameters.Any(IsEnableParameter))
             {
-                return parameters
-                    .Select(p => string.IsNullOrWhiteSpace(p.Name) ? p.Section : p.Name)
-                    .Where(p => !string.IsNullOrWhiteSpace(p))
-                    .ToList();
+                var enConnector = connectors.FirstOrDefault(c => IsPinName(c.PinName, "en"));
+                if (enConnector != null)
+                {
+                    rows.Add(new LadPinLayout { Name = "EN" });
+                }
             }
 
-            return connectors.Count > 0
-                ? connectors
-                    .Select((connector, index) => GetConnectorPinLabel(connector, fallbackName, index))
-                    .ToList()
-                : new List<string>();
+            rows.AddRange(parameters
+                .Select(p => new LadPinLayout
+                {
+                    Name = string.IsNullOrWhiteSpace(p.Name) ? p.Section : p.Name,
+                    Operand = p.Operand
+                })
+                .Where(p => !string.IsNullOrWhiteSpace(p.Name)));
+
+            if (rows.Count == 0 && connectors.Count > 0)
+            {
+                rows.AddRange(connectors
+                    .Select((connector, index) => new LadPinLayout
+                    {
+                        Name = GetConnectorPinLabel(connector, fallbackName, index)
+                    }));
+            }
+
+            bool hasEnableConnector = component.inputConnectors.Any(c => IsPinName(c.PinName, "en"));
+            bool hasEnableOutputConnector = connectors.Any(c => IsPinName(c.PinName, "eno"));
+            if (IsBoxLike(component) && !isInput && (hasEnableConnector || hasEnableOutputConnector) && !rows.Any(p => IsPinName(p.Name, "eno")))
+            {
+                rows.Insert(0, new LadPinLayout { Name = "ENO" });
+            }
+
+            return rows;
         }
 
         private static string GetConnectorPinLabel(SactConnectorData connector, string fallbackName, int index)
@@ -265,6 +294,16 @@ namespace TiaGitAddIn.Services
             return index == 0 ? fallbackName : $"{fallbackName}{index + 1}";
         }
 
+        private static bool IsEnableParameter(SactParameterData parameter)
+        {
+            return IsPinName(parameter.Name, "en");
+        }
+
+        private static bool IsPinName(string? actual, string expected)
+        {
+            return string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase);
+        }
+
         private static double CalculateElementWidth(
             SactComponentData component,
             List<string> inputPins,
@@ -275,12 +314,20 @@ namespace TiaGitAddIn.Services
                 return 90;
             }
 
-            int longestPin = inputPins.Concat(outputPins)
+            int longestInputPin = inputPins
+                .DefaultIfEmpty(string.Empty)
+                .Max(pin => pin.Length);
+            int longestOutputPin = outputPins
                 .DefaultIfEmpty(string.Empty)
                 .Max(pin => pin.Length);
             int displayLength = component.DisplayName?.Length ?? 0;
+            int operandLength = component.TopOperandConnector?.DisplayName?.Length ?? 0;
 
-            return Math.Max(110, Math.Min(190, 90 + Math.Max(longestPin, displayLength) * 5));
+            double inputColumnWidth = CalculatePinColumnWidth(longestInputPin);
+            double outputColumnWidth = CalculatePinColumnWidth(longestOutputPin);
+            double centerWidth = Math.Max(70, Math.Max(displayLength, operandLength) * 6);
+
+            return Math.Max(360, Math.Min(480, inputColumnWidth + centerWidth + outputColumnWidth + 150));
         }
 
         private static double CalculateElementHeight(
@@ -294,7 +341,17 @@ namespace TiaGitAddIn.Services
             }
 
             int pinRows = Math.Max(inputPins.Count, outputPins.Count);
-            return Math.Max(70, 42 + Math.Max(2, pinRows) * 20);
+            return Math.Max(90, 48 + Math.Max(2, pinRows) * 24);
+        }
+
+        private static double CalculatePinColumnWidth(int longestPinLength)
+        {
+            if (longestPinLength <= 0)
+            {
+                return 56;
+            }
+
+            return Math.Min(104, Math.Max(72, longestPinLength * 7 + 16));
         }
 
         private static bool IsBoxLike(SactComponentData component)

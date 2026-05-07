@@ -266,6 +266,65 @@ namespace TiaGitAddIn.Tests.Services
         }
 
         [Fact]
+        public void Layout_CallWithManyPins_LeavesRoomForReadablePinRows()
+        {
+            var body = new Dictionary<string, SactComponentData>
+            {
+                {
+                    "pr", new SactComponentData
+                    {
+                        uId = "pr",
+                        name = "BranchWireData",
+                        isStartElement = true,
+                        outputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "out", PartnerUId = "call_in" }
+                        }
+                    }
+                },
+                {
+                    "call", new SactComponentData
+                    {
+                        uId = "call",
+                        name = "LadBoxData",
+                        DisplayName = "deviceState",
+                        inputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "call_in", PinName = "en" }
+                        },
+                        inputParameters = new List<SactParameterData>
+                        {
+                            new SactParameterData { Name = "Alarm", Section = "Input", Type = "Bool", Operand = "false" },
+                            new SactParameterData { Name = "Warning", Section = "Input", Type = "Bool", Operand = "false" },
+                            new SactParameterData { Name = "Running", Section = "Input", Type = "Bool", Operand = "#tempOut" },
+                            new SactParameterData { Name = "Reverse", Section = "Input", Type = "Bool", Operand = "false" },
+                            new SactParameterData { Name = "Service", Section = "Input", Type = "Bool", Operand = "#FI_SERVICE" },
+                            new SactParameterData { Name = "deviceIcon", Section = "InOut", Type = "Int", Operand = "#FIQ_Icon" }
+                        },
+                        outputParameters = new List<SactParameterData>
+                        {
+                            new SactParameterData { Name = "deviceIcon", Section = "InOut", Type = "Int", Operand = "#FIQ_Icon" }
+                        }
+                    }
+                }
+            };
+
+            var layout = LadLayoutEngine.LayoutBody(body, CompareState.Equal);
+            var call = layout.Elements.First(e => e.UId == "call");
+
+            Assert.Equal(7, call.InputPins.Count);
+            Assert.Equal("EN", call.InputPins[0]);
+            Assert.Contains("deviceIcon", call.InputPins);
+            Assert.Contains(call.InputPinRows, p => p.Name == "Running" && p.Operand == "#tempOut");
+            Assert.Contains(call.InputPinRows, p => p.Name == "Service" && p.Operand == "#FI_SERVICE");
+            Assert.Contains("deviceIcon", call.OutputPins);
+            Assert.Equal("ENO", call.OutputPins[0]);
+            Assert.Contains(call.OutputPinRows, p => p.Name == "deviceIcon" && p.Operand == "#FIQ_Icon");
+            Assert.True(call.Width >= 230);
+            Assert.True(call.Height >= 180);
+        }
+
+        [Fact]
         public void Layout_BoxWithNamedConnectors_UsesInputAndOutputPinNames()
         {
             var body = new Dictionary<string, SactComponentData>

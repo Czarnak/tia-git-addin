@@ -76,3 +76,4 @@ graphify-out/cost.json
 
 SACT_res/
 .fake
+*skills/

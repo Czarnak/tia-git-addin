@@ -14,6 +14,70 @@
         <converters:CompareStateToColorConverter x:Key="CompareStateToColorConverter"/>
         <converters:BoolToVisibilityConverter x:Key="LadBoolToVis"/>
 
+        <Style x:Key="LadBoxPinTextStyle"
+               TargetType="TextBlock">
+            <Setter Property="FontSize"
+                    Value="10"/>
+            <Setter Property="VerticalAlignment"
+                    Value="Center"/>
+            <Setter Property="TextTrimming"
+                    Value="CharacterEllipsis"/>
+            <Setter Property="Foreground"
+                    Value="Black"/>
+        </Style>
+
+        <DataTemplate x:Key="LadInputPinRowTemplate">
+            <Grid Height="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="72"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="76"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Operand}"
+                           Style="{StaticResource LadBoxPinTextStyle}"
+                           HorizontalAlignment="Right"
+                           TextAlignment="Right"/>
+                <Line Grid.Column="1"
+                      Tag="PinConnectorLine"
+                      X1="0"
+                      Y1="12"
+                      X2="18"
+                      Y2="12"
+                      Stroke="Black"
+                      StrokeThickness="1"/>
+                <TextBlock Grid.Column="2"
+                           Text="{Binding Name}"
+                           Style="{StaticResource LadBoxPinTextStyle}"
+                           FontWeight="SemiBold"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="LadOutputPinRowTemplate">
+            <Grid Height="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="76"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Name}"
+                           Style="{StaticResource LadBoxPinTextStyle}"
+                           HorizontalAlignment="Right"
+                           TextAlignment="Right"
+                           FontWeight="SemiBold"/>
+                <Line Grid.Column="1"
+                      Tag="PinConnectorLine"
+                      X1="0"
+                      Y1="12"
+                      X2="18"
+                      Y2="12"
+                      Stroke="Black"
+                      StrokeThickness="1"/>
+                <TextBlock Grid.Column="2"
+                           Text="{Binding Operand}"
+                           Style="{StaticResource LadBoxPinTextStyle}"/>
+            </Grid>
+        </DataTemplate>
+
         <!-- Shape for Ladder Elements -->
         <DataTemplate DataType="{x:Type viewmodels:LadElementViewModel}">
             <Grid Width="{Binding Width}"
@@ -51,40 +115,27 @@
                                                                HorizontalAlignment="Center"/>
                                                 </Border>
                                                 <Grid Grid.Row="1"
-                                                      Margin="4,4,4,5">
+                                                      Margin="6,4,6,6">
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="42"/>
+                                                        <ColumnDefinition Width="166"/>
                                                         <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="42"/>
+                                                        <ColumnDefinition Width="120"/>
                                                     </Grid.ColumnDefinitions>
                                                     <ItemsControl Grid.Column="0"
-                                                                  ItemsSource="{Binding InputPins}">
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <TextBlock Text="{Binding}"
-                                                                           FontSize="9"
-                                                                           TextTrimming="CharacterEllipsis"/>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
+                                                                  ItemsSource="{Binding InputPinRows}"
+                                                                  ItemTemplate="{StaticResource LadInputPinRowTemplate}"
+                                                                  VerticalAlignment="Center"/>
                                                     <TextBlock Grid.Column="1"
                                                                Text="{Binding Operand}"
-                                                               FontSize="9"
-                                                               Margin="4,0"
+                                                               FontSize="10"
+                                                               Margin="8,0"
                                                                TextAlignment="Center"
+                                                               VerticalAlignment="Center"
                                                                TextWrapping="Wrap"/>
                                                     <ItemsControl Grid.Column="2"
-                                                                  ItemsSource="{Binding OutputPins}">
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <TextBlock Text="{Binding}"
-                                                                           FontSize="9"
-                                                                           HorizontalAlignment="Right"
-                                                                           TextAlignment="Right"
-                                                                           TextTrimming="CharacterEllipsis"/>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
+                                                                  ItemsSource="{Binding OutputPinRows}"
+                                                                  ItemTemplate="{StaticResource LadOutputPinRowTemplate}"
+                                                                  VerticalAlignment="Center"/>
                                                 </Grid>
                                             </Grid>
                                         </Border>

@@ -14,6 +14,8 @@ namespace TiaGitAddIn.Models.Lad
         public string UId { get; set; } = string.Empty;
         public List<string> InputPins { get; set; } = new List<string>();
         public List<string> OutputPins { get; set; } = new List<string>();
+        public List<LadPinLayout> InputPinRows { get; set; } = new List<LadPinLayout>();
+        public List<LadPinLayout> OutputPinRows { get; set; } = new List<LadPinLayout>();
         public double Width { get; set; } = 90;
         public double Height { get; set; } = 60;
     }

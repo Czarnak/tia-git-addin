@@ -507,7 +507,8 @@ namespace TiaGitAddIn.Services.SimaticMl
             {
                 Name = parameter.Name,
                 Section = parameter.Section,
-                Type = parameter.Type
+                Type = parameter.Type,
+                Operand = parameter.Operand
             };
         }
 
