@@ -33,7 +33,7 @@ namespace TiaGitAddIn.Services.SimaticMl
             var block = file.Blocks.FirstOrDefault();
             if (block == null) return result;
 
-            result.Interface = MapInterface(block);
+            result.Interface = MapInterface(block, fileState);
             
             var content = new SactContentResult { State = fileState };
             for (int i = 0; i < block.CompileUnits.Count; i++)
@@ -103,16 +103,22 @@ namespace TiaGitAddIn.Services.SimaticMl
                 TopOperandConnector = component.TopOperandConnector == null
                     ? null
                     : new SactOperandConnector { DisplayName = component.TopOperandConnector.DisplayName },
+                inputParameters = component.inputParameters
+                    .Select(CopyParameter)
+                    .ToList(),
+                outputParameters = component.outputParameters
+                    .Select(CopyParameter)
+                    .ToList(),
                 outputConnectors = component.outputConnectors
-                    .Select(c => new SactConnectorData { uId = c.uId, PartnerUId = c.PartnerUId })
+                    .Select(CopyConnector)
                     .ToList(),
                 inputConnectors = component.inputConnectors
-                    .Select(c => new SactConnectorData { uId = c.uId, PartnerUId = c.PartnerUId })
+                    .Select(CopyConnector)
                     .ToList()
             };
         }
 
-        private static SactInterfaceResult MapInterface(BlockDefinition block)
+        private static SactInterfaceResult MapInterface(BlockDefinition block, CompareState state)
         {
             var sections = new Dictionary<string, object>();
             foreach (var section in block.InterfaceSections)
@@ -122,8 +128,9 @@ namespace TiaGitAddIn.Services.SimaticMl
 
             return new SactInterfaceResult
             {
-                State = CompareState.Equal,
-                Sections = sections
+                State = state,
+                Sections = sections,
+                Members = CreateInterfaceRows(block, state)
             };
         }
 
@@ -184,7 +191,9 @@ namespace TiaGitAddIn.Services.SimaticMl
                 {
                     uId = call.UId.Value.ToString(),
                     name = "LadBoxData",
-                    DisplayName = call.CallInfo?.Name ?? "Call"
+                    DisplayName = call.CallInfo?.Name ?? "Call",
+                    inputParameters = MapCallParameters(call, IsInputParameter),
+                    outputParameters = MapCallParameters(call, IsOutputParameter)
                 };
 
                 componentsByUid[comp.uId] = comp;
@@ -299,12 +308,14 @@ namespace TiaGitAddIn.Services.SimaticMl
                     sourceComp.outputConnectors.Add(new SactConnectorData
                     {
                         uId = sourcePortId,
+                        PinName = GetPinName(sourceCon),
                         PartnerUId = targetPortId
                     });
 
                     targetComp.inputConnectors.Add(new SactConnectorData
                     {
                         uId = targetPortId,
+                        PinName = GetPinName(targetCon),
                         PartnerUId = sourcePortId
                     });
                 }
@@ -320,6 +331,11 @@ namespace TiaGitAddIn.Services.SimaticMl
             if (conn is NameConDefinition nameCon) return nameCon.UId?.ToString() ?? "";
             if (conn is OpenConDefinition openCon) return openCon.UId?.ToString() ?? "";
             return "";
+        }
+
+        private static string GetPinName(ConnectionDefinition conn)
+        {
+            return conn is NameConDefinition nameCon ? nameCon.Name ?? string.Empty : string.Empty;
         }
 
         private static bool IsSourceConnection(ConnectionDefinition conn, Dictionary<string, SactComponentData> components)
@@ -347,6 +363,96 @@ namespace TiaGitAddIn.Services.SimaticMl
         private static bool IsOutputPin(string? pin)
         {
             return !string.IsNullOrWhiteSpace(pin) && OutputPins.Contains(pin!);
+        }
+
+        private static List<SactInterfaceMemberComparison> CreateInterfaceRows(BlockDefinition block, CompareState state)
+        {
+            return block.InterfaceSections
+                .SelectMany(section => FlattenMembers(section.Name, section.Members, string.Empty))
+                .Select(member => new SactInterfaceMemberComparison
+                {
+                    Section = member.Section,
+                    Name = member.Path,
+                    LeftDatatype = state == CompareState.MissingOnLeft ? string.Empty : member.Member.Datatype,
+                    RightDatatype = state == CompareState.MissingOnRight ? string.Empty : member.Member.Datatype,
+                    LeftStartValue = state == CompareState.MissingOnLeft ? string.Empty : member.Member.StartValue ?? string.Empty,
+                    RightStartValue = state == CompareState.MissingOnRight ? string.Empty : member.Member.StartValue ?? string.Empty,
+                    State = state
+                })
+                .ToList();
+        }
+
+        private static IEnumerable<(string Section, string Path, InterfaceMember Member)> FlattenMembers(
+            string section,
+            IEnumerable<InterfaceMember> members,
+            string parentPath)
+        {
+            foreach (InterfaceMember member in members)
+            {
+                string path = string.IsNullOrEmpty(parentPath)
+                    ? member.Name
+                    : parentPath + "." + member.Name;
+
+                yield return (section, path, member);
+
+                foreach (var child in FlattenMembers(section, member.Children, path))
+                {
+                    yield return child;
+                }
+            }
+        }
+
+        private static List<SactParameterData> MapCallParameters(
+            CallDefinition call,
+            Func<CallParameterDefinition, bool> predicate)
+        {
+            if (call.CallInfo == null)
+            {
+                return new List<SactParameterData>();
+            }
+
+            return call.CallInfo.Parameters
+                .Where(predicate)
+                .Select(p => new SactParameterData
+                {
+                    Name = p.Name ?? string.Empty,
+                    Section = p.Section ?? string.Empty,
+                    Type = p.Type ?? string.Empty
+                })
+                .ToList();
+        }
+
+        private static bool IsInputParameter(CallParameterDefinition parameter)
+        {
+            return string.Equals(parameter.Section, "Input", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(parameter.Section, "InOut", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsOutputParameter(CallParameterDefinition parameter)
+        {
+            return string.Equals(parameter.Section, "Output", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(parameter.Section, "Return", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(parameter.Section, "InOut", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static SactParameterData CopyParameter(SactParameterData parameter)
+        {
+            return new SactParameterData
+            {
+                Name = parameter.Name,
+                Section = parameter.Section,
+                Type = parameter.Type
+            };
+        }
+
+        private static SactConnectorData CopyConnector(SactConnectorData connector)
+        {
+            return new SactConnectorData
+            {
+                uId = connector.uId,
+                PinName = connector.PinName,
+                PartnerUId = connector.PartnerUId
+            };
         }
 
         private static string MapSimaticPartToSactName(string simaticName)

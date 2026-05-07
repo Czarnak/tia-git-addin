@@ -12,6 +12,8 @@ namespace TiaGitAddIn.Models.Sact
         public string? DisplayName { get; set; }
         public string? TemplateType { get; set; }
         public SactOperandConnector? TopOperandConnector { get; set; }
+        public List<SactParameterData> inputParameters { get; set; } = new List<SactParameterData>();
+        public List<SactParameterData> outputParameters { get; set; } = new List<SactParameterData>();
         public List<SactConnectorData> outputConnectors { get; set; } = new List<SactConnectorData>();
         public List<SactConnectorData> inputConnectors { get; set; } = new List<SactConnectorData>();
     }

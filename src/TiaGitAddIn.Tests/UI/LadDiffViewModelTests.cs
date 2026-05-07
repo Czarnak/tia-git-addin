@@ -59,6 +59,21 @@ namespace TiaGitAddIn.Tests.UI
                 ResultToReturn = new SactCompareResult
                 {
                     State = CompareState.Changed,
+                    Interface = new SactInterfaceResult
+                    {
+                        State = CompareState.Changed,
+                        Members =
+                        {
+                            new SactInterfaceMemberComparison
+                            {
+                                Section = "Input",
+                                Name = "Alarm",
+                                LeftDatatype = "Bool",
+                                RightDatatype = "Word",
+                                State = CompareState.Changed
+                            }
+                        }
+                    },
                     Content = new SactContentResult
                     {
                         Networks = new Dictionary<string, SactNetworkResult>
@@ -75,8 +90,81 @@ namespace TiaGitAddIn.Tests.UI
 
             Assert.True(viewModel.IsLadDiffLoaded);
             Assert.Single(viewModel.Networks);
+            Assert.Equal(7, viewModel.InterfaceRows.Count);
+            Assert.Equal("Input", viewModel.InterfaceRows[0].DisplayName);
+            Assert.Equal("Alarm", viewModel.InterfaceRows[1].DisplayName);
             Assert.Equal(CompareState.Changed, viewModel.Networks[0].DiffState);
             Assert.False(viewModel.IsBusy);
+        }
+
+        [Fact]
+        public async Task LoadLadDiffAsync_InterfaceRows_KeepTiaSectionOrderWithEmptySections()
+        {
+            var extractor = new FakeGitFileExtractor();
+            var sactService = new FakeSactService
+            {
+                ResultToReturn = new SactCompareResult
+                {
+                    State = CompareState.Equal,
+                    Right = "deviceState",
+                    Interface = new SactInterfaceResult
+                    {
+                        State = CompareState.Equal,
+                        Members =
+                        {
+                            new SactInterfaceMemberComparison
+                            {
+                                Section = "Input",
+                                Name = "Alarm",
+                                RightDatatype = "Bool",
+                                State = CompareState.Equal
+                            },
+                            new SactInterfaceMemberComparison
+                            {
+                                Section = "Input",
+                                Name = "Warning",
+                                RightDatatype = "Bool",
+                                State = CompareState.Equal
+                            },
+                            new SactInterfaceMemberComparison
+                            {
+                                Section = "Input",
+                                Name = "Running",
+                                RightDatatype = "Bool",
+                                State = CompareState.Equal
+                            },
+                            new SactInterfaceMemberComparison
+                            {
+                                Section = "InOut",
+                                Name = "deviceIcon",
+                                RightDatatype = "Int",
+                                State = CompareState.Equal
+                            },
+                            new SactInterfaceMemberComparison
+                            {
+                                Section = "Return",
+                                Name = "Ret_Val",
+                                RightDatatype = "Void",
+                                State = CompareState.Equal
+                            }
+                        }
+                    },
+                    Content = new SactContentResult()
+                }
+            };
+            var viewModel = new LadDiffViewModel(extractor, sactService, new TiaGitAddIn.Logging.FileLogger(), ImmediateUiDispatcher.Instance);
+
+            await viewModel.LoadLadDiffAsync("commit1", "file.xml", CancellationToken.None);
+
+            Assert.Equal("deviceState", viewModel.InterfaceTitle);
+            Assert.Equal(
+                new[] { "Input", "Output", "InOut", "Temp", "Constant", "Return" },
+                viewModel.InterfaceRows.Where(r => r.IsSectionHeader).Select(r => r.DisplayName).ToArray());
+            Assert.Equal("Alarm", viewModel.InterfaceRows[1].DisplayName);
+            Assert.Equal("Warning", viewModel.InterfaceRows[2].DisplayName);
+            Assert.Equal("Running", viewModel.InterfaceRows[3].DisplayName);
+            Assert.Equal("deviceIcon", viewModel.InterfaceRows[6].DisplayName);
+            Assert.Equal("Ret_Val", viewModel.InterfaceRows[10].DisplayName);
         }
 
         [Fact]
@@ -147,10 +235,12 @@ namespace TiaGitAddIn.Tests.UI
             // Force some state
             viewModel.LadDiffError = "Some error";
             viewModel.IsLadDiffLoaded = true;
+            viewModel.InterfaceRows.Add(LadInterfaceRowViewModel.CreateMember(1, new SactInterfaceMemberComparison { Name = "Alarm" }));
 
             viewModel.Clear();
 
             Assert.Empty(viewModel.Networks);
+            Assert.Empty(viewModel.InterfaceRows);
             Assert.False(viewModel.IsLadDiffLoaded);
             Assert.Empty(viewModel.LadDiffError);
         }

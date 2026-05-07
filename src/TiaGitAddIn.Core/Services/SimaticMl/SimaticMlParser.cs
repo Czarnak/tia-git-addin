@@ -110,7 +110,7 @@ namespace TiaGitAddIn.Services.SimaticMl
                 Informative = BoolAttr(memberElement, "Informative"),
                 StartValue = Value(memberElement, "StartValue"),
                 RawAttributes = memberElement.Attributes()
-                    .ToDictionary(a => a.Name.LocalName, a => a.Value)
+                    .ToDictionary(a => a.Name.LocalName, a => (string?)a.Value)
             };
 
             XElement? attributeList = Child(memberElement, "AttributeList");
@@ -302,6 +302,16 @@ namespace TiaGitAddIn.Services.SimaticMl
                     Name = Attr(callInfo, "Name"),
                     BlockType = Attr(callInfo, "BlockType")
                 };
+
+                foreach (XElement parameter in Children(callInfo, "Parameter"))
+                {
+                    call.CallInfo.Parameters.Add(new CallParameterDefinition
+                    {
+                        Name = Attr(parameter, "Name"),
+                        Section = Attr(parameter, "Section"),
+                        Type = Attr(parameter, "Type")
+                    });
+                }
             }
 
             foreach (XElement tv in Children(callElement, "TemplateValue"))

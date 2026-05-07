@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TiaGitAddIn.Models.Sact;
@@ -21,6 +22,16 @@ namespace TiaGitAddIn.UI.ViewModels
         private string _ladDiffError = string.Empty;
         private bool _isBusy;
         private string _busyMessage = string.Empty;
+        private string _interfaceTitle = string.Empty;
+        private static readonly string[] InterfaceSectionOrder =
+        {
+            "Input",
+            "Output",
+            "InOut",
+            "Temp",
+            "Constant",
+            "Return"
+        };
 
         public LadDiffViewModel(IGitFileExtractor gitFileExtractor, ISactService sactService, IAddInLogger logger, IUiDispatcher? uiDispatcher)
         {
@@ -29,9 +40,11 @@ namespace TiaGitAddIn.UI.ViewModels
             _logger = logger;
             _uiDispatcher = uiDispatcher;
             Networks = new ObservableCollection<LadNetworkPairViewModel>();
+            InterfaceRows = new ObservableCollection<LadInterfaceRowViewModel>();
         }
 
         public ObservableCollection<LadNetworkPairViewModel> Networks { get; }
+        public ObservableCollection<LadInterfaceRowViewModel> InterfaceRows { get; }
 
         public bool IsLadDiffLoaded
         {
@@ -59,6 +72,12 @@ namespace TiaGitAddIn.UI.ViewModels
             set => SetProperty(ref _busyMessage, value);
         }
 
+        public string InterfaceTitle
+        {
+            get => _interfaceTitle;
+            set => SetProperty(ref _interfaceTitle, value);
+        }
+
         public async Task LoadLadDiffAsync(string? commitHash, string filePath, CancellationToken ct)
         {
             _logger.Info($"LoadLadDiffAsync started for {filePath} at commit {commitHash ?? "WORKING_TREE"}");
@@ -77,11 +96,16 @@ namespace TiaGitAddIn.UI.ViewModels
 
             if (_uiDispatcher != null)
             {
-                _uiDispatcher.Invoke(() => Networks.Clear());
+                _uiDispatcher.Invoke(() =>
+                {
+                    Networks.Clear();
+                    InterfaceRows.Clear();
+                });
             }
             else
             {
                 Networks.Clear();
+                InterfaceRows.Clear();
             }
 
             string rightTempPath = string.Empty;
@@ -106,6 +130,8 @@ namespace TiaGitAddIn.UI.ViewModels
                 _logger.Info("LoadLadDiffAsync: CompareAsync succeeded. Generating layouts.");
                 var netPairs = LadLayoutEngine.LayoutAll(sactResult);
                 
+                InterfaceTitle = GetInterfaceTitle(sactResult);
+                PopulateInterfaceRows(sactResult.Interface?.Members);
                 PopulateNetworks(netPairs);
                 IsLadDiffLoaded = true;
                 _logger.Info($"LoadLadDiffAsync: Completed successfully. Generated {netPairs.Count} network pairs.");
@@ -143,18 +169,50 @@ namespace TiaGitAddIn.UI.ViewModels
             }
         }
 
+        private void PopulateInterfaceRows(List<SactInterfaceMemberComparison>? rows)
+        {
+            Action action = () =>
+            {
+                InterfaceRows.Clear();
+                if (rows == null)
+                {
+                    return;
+                }
+
+                foreach (var row in CreateInterfaceRows(rows))
+                {
+                    InterfaceRows.Add(row);
+                }
+            };
+
+            if (_uiDispatcher != null)
+            {
+                _uiDispatcher.Invoke(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
         public void Clear()
         {
             IsLadDiffLoaded = false;
             LadDiffError = string.Empty;
+            InterfaceTitle = string.Empty;
 
             if (_uiDispatcher != null)
             {
-                _uiDispatcher.Invoke(() => Networks.Clear());
+                _uiDispatcher.Invoke(() =>
+                {
+                    Networks.Clear();
+                    InterfaceRows.Clear();
+                });
             }
             else
             {
                 Networks.Clear();
+                InterfaceRows.Clear();
             }
         }
 
@@ -176,6 +234,50 @@ namespace TiaGitAddIn.UI.ViewModels
                     }
                 }
             }
+        }
+
+        private static List<LadInterfaceRowViewModel> CreateInterfaceRows(List<SactInterfaceMemberComparison> rows)
+        {
+            var orderedRows = new List<LadInterfaceRowViewModel>();
+            var rowsBySection = rows
+                .GroupBy(r => r.Section)
+                .ToDictionary(g => g.Key, g => g.ToList(), StringComparer.OrdinalIgnoreCase);
+            var sectionNames = InterfaceSectionOrder
+                .Concat(rows.Select(r => r.Section).Where(s => !InterfaceSectionOrder.Contains(s, StringComparer.OrdinalIgnoreCase)))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            int rowNumber = 1;
+            foreach (string section in sectionNames)
+            {
+                orderedRows.Add(LadInterfaceRowViewModel.CreateSection(rowNumber++, section));
+                if (!rowsBySection.TryGetValue(section, out var sectionRows))
+                {
+                    continue;
+                }
+
+                foreach (SactInterfaceMemberComparison member in sectionRows)
+                {
+                    orderedRows.Add(LadInterfaceRowViewModel.CreateMember(rowNumber++, member));
+                }
+            }
+
+            return orderedRows;
+        }
+
+        private static string GetInterfaceTitle(SactCompareResult result)
+        {
+            if (!string.IsNullOrWhiteSpace(result.Right))
+            {
+                return result.Right;
+            }
+
+            if (!string.IsNullOrWhiteSpace(result.Left))
+            {
+                return result.Left;
+            }
+
+            return "Block interface";
         }
     }
 }

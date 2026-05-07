@@ -24,6 +24,40 @@ namespace TiaGitAddIn.Tests.UI
             Assert.DoesNotContain("Opacity=\"0.3\"", xaml);
         }
 
+        [Fact]
+        public void ViewRendersInterfaceRowsAndDynamicBoxPins()
+        {
+            string xaml = File.ReadAllText(GetLadDiffViewPath());
+
+            Assert.Contains("ItemsSource=\"{Binding InterfaceRows}\"", xaml);
+            Assert.Contains("ItemsSource=\"{Binding InputPins}\"", xaml);
+            Assert.Contains("ItemsSource=\"{Binding OutputPins}\"", xaml);
+        }
+
+        [Fact]
+        public void InterfaceTableUsesTiaPortalColumnsAndSectionRows()
+        {
+            string xaml = File.ReadAllText(GetLadDiffViewPath());
+
+            Assert.Contains("Text=\"{Binding InterfaceTitle}\"", xaml);
+            Assert.Contains("Text=\"Name\"", xaml);
+            Assert.Contains("Text=\"Data type\"", xaml);
+            Assert.Contains("Text=\"Default value\"", xaml);
+            Assert.Contains("Text=\"Comment\"", xaml);
+            Assert.Contains("IsSectionHeader", xaml);
+        }
+
+        [Fact]
+        public void BoxTemplateBindsContentControlSizeSoRightPinsAreVisible()
+        {
+            string xaml = File.ReadAllText(GetLadDiffViewPath());
+
+            Assert.Contains("Width=\"{Binding Width}\"", xaml);
+            Assert.Contains("Height=\"{Binding Height}\"", xaml);
+            Assert.Contains("HorizontalContentAlignment=\"Stretch\"", xaml);
+            Assert.Contains("HorizontalAlignment=\"Right\"", xaml);
+        }
+
         private static string GetLadDiffViewPath()
         {
             string root = Directory.GetCurrentDirectory();

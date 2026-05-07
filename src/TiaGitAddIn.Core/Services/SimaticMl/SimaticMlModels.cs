@@ -119,6 +119,14 @@ namespace TiaGitAddIn.Services.SimaticMl
     {
         public string? Name { get; set; }
         public string? BlockType { get; set; }
+        public List<CallParameterDefinition> Parameters { get; set; } = new List<CallParameterDefinition>();
+    }
+
+    public sealed class CallParameterDefinition
+    {
+        public string? Name { get; set; }
+        public string? Section { get; set; }
+        public string? Type { get; set; }
     }
 
     public sealed class PowerrailDefinition

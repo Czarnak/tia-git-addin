@@ -217,6 +217,98 @@ namespace TiaGitAddIn.Tests.Services
         }
 
         [Fact]
+        public void Layout_CallWithParameters_ExposesPinsAndGrowsBoxHeight()
+        {
+            var body = new Dictionary<string, SactComponentData>
+            {
+                {
+                    "pr", new SactComponentData
+                    {
+                        uId = "pr",
+                        name = "BranchWireData",
+                        isStartElement = true,
+                        outputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "out", PartnerUId = "call_in" }
+                        }
+                    }
+                },
+                {
+                    "call", new SactComponentData
+                    {
+                        uId = "call",
+                        name = "LadBoxData",
+                        DisplayName = "SCALE_R",
+                        inputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "call_in" }
+                        },
+                        inputParameters = new List<SactParameterData>
+                        {
+                            new SactParameterData { Name = "X_REAL", Section = "Input", Type = "Real" },
+                            new SactParameterData { Name = "I_LO", Section = "Input", Type = "Real" },
+                            new SactParameterData { Name = "I_HI", Section = "Input", Type = "Real" }
+                        },
+                        outputParameters = new List<SactParameterData>
+                        {
+                            new SactParameterData { Name = "Ret_Val", Section = "Return", Type = "Real" }
+                        }
+                    }
+                }
+            };
+
+            var layout = LadLayoutEngine.LayoutBody(body, CompareState.Equal);
+            var call = layout.Elements.First(e => e.UId == "call");
+
+            Assert.Equal(new[] { "X_REAL", "I_LO", "I_HI" }, call.InputPins);
+            Assert.Equal(new[] { "Ret_Val" }, call.OutputPins);
+            Assert.True(call.Height > 90);
+        }
+
+        [Fact]
+        public void Layout_BoxWithNamedConnectors_UsesInputAndOutputPinNames()
+        {
+            var body = new Dictionary<string, SactComponentData>
+            {
+                {
+                    "pr", new SactComponentData
+                    {
+                        uId = "pr",
+                        name = "BranchWireData",
+                        isStartElement = true,
+                        outputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "out", PartnerUId = "box_in1" }
+                        }
+                    }
+                },
+                {
+                    "box", new SactComponentData
+                    {
+                        uId = "box",
+                        name = "LadBoxData",
+                        DisplayName = "Add",
+                        inputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "box_in1", PinName = "in1" },
+                            new SactConnectorData { uId = "box_in2", PinName = "in2" }
+                        },
+                        outputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "box_out", PinName = "out" }
+                        }
+                    }
+                }
+            };
+
+            var layout = LadLayoutEngine.LayoutBody(body, CompareState.Equal);
+            var box = layout.Elements.First(e => e.UId == "box");
+
+            Assert.Equal(new[] { "IN1", "IN2" }, box.InputPins);
+            Assert.Equal(new[] { "OUT" }, box.OutputPins);
+        }
+
+        [Fact]
         public void Layout_NullOrEmptyBody_ReturnsEmptyLayout()
         {
             var layout1 = LadLayoutEngine.LayoutBody(null!, CompareState.Equal);

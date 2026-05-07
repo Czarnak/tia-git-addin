@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TiaGitAddIn.Models.Sact;
 
 namespace TiaGitAddIn.Models.Lad
@@ -11,5 +12,9 @@ namespace TiaGitAddIn.Models.Lad
         public string Operand { get; set; } = string.Empty;
         public CompareState DiffState { get; set; }
         public string UId { get; set; } = string.Empty;
+        public List<string> InputPins { get; set; } = new List<string>();
+        public List<string> OutputPins { get; set; } = new List<string>();
+        public double Width { get; set; } = 90;
+        public double Height { get; set; } = 60;
     }
 }

@@ -7,6 +7,16 @@ namespace TiaGitAddIn.Services.SimaticMl
 {
     public static class SimaticMlComparer
     {
+        private static readonly string[] InterfaceSectionOrder =
+        {
+            "Input",
+            "Output",
+            "InOut",
+            "Temp",
+            "Constant",
+            "Return"
+        };
+
         public static SactCompareResult Compare(SimaticMlFile? left, SimaticMlFile? right)
         {
             if (left == null && right == null) return new SactCompareResult { State = CompareState.Equal };
@@ -36,14 +46,18 @@ namespace TiaGitAddIn.Services.SimaticMl
             if (leftBlock == null)
             {
                 result.State = CompareState.MissingOnLeft;
-                result.Content = SimaticMlToSactMapper.Map(right, CompareState.MissingOnLeft).Content;
+                var mapped = SimaticMlToSactMapper.Map(right, CompareState.MissingOnLeft);
+                result.Interface = mapped.Interface;
+                result.Content = mapped.Content;
                 return result;
             }
 
             if (rightBlock == null)
             {
                 result.State = CompareState.MissingOnRight;
-                result.Content = SimaticMlToSactMapper.Map(left, CompareState.MissingOnRight).Content;
+                var mapped = SimaticMlToSactMapper.Map(left, CompareState.MissingOnRight);
+                result.Interface = mapped.Interface;
+                result.Content = mapped.Content;
                 return result;
             }
 
@@ -64,11 +78,33 @@ namespace TiaGitAddIn.Services.SimaticMl
 
         private static SactInterfaceResult CompareInterfaces(BlockDefinition left, BlockDefinition right)
         {
-            // Simplified: just map right and check if it differs from left
-            // For now we map right side and set state to Equal (UI doesn't highlight interface diffs much yet)
             var result = SimaticMlToSactMapper.Map(new SimaticMlFile { Blocks = { right } }).Interface!;
-            
-            // TODO: Deep compare interface members
+            var leftMembers = FlattenMembers(left);
+            var rightMembers = FlattenMembers(right);
+
+            var keys = CreateOrderedInterfaceKeys(left, right, leftMembers, rightMembers);
+
+            var rows = new List<SactInterfaceMemberComparison>();
+            foreach (string key in keys)
+            {
+                bool hasLeft = leftMembers.TryGetValue(key, out InterfaceMember? leftMember);
+                bool hasRight = rightMembers.TryGetValue(key, out InterfaceMember? rightMember);
+                string[] parts = key.Split(new[] { '|' }, 2);
+
+                rows.Add(new SactInterfaceMemberComparison
+                {
+                    Section = parts[0],
+                    Name = parts.Length > 1 ? parts[1] : string.Empty,
+                    LeftDatatype = leftMember?.Datatype ?? string.Empty,
+                    RightDatatype = rightMember?.Datatype ?? string.Empty,
+                    LeftStartValue = leftMember?.StartValue ?? string.Empty,
+                    RightStartValue = rightMember?.StartValue ?? string.Empty,
+                    State = GetInterfaceMemberState(hasLeft, hasRight, leftMember, rightMember)
+                });
+            }
+
+            result.Members = rows;
+            result.State = rows.Any(r => r.State != CompareState.Equal) ? CompareState.Changed : CompareState.Equal;
             return result;
         }
 
@@ -324,12 +360,164 @@ namespace TiaGitAddIn.Services.SimaticMl
                 TopOperandConnector = component.TopOperandConnector == null
                     ? null
                     : new SactOperandConnector { DisplayName = component.TopOperandConnector.DisplayName },
+                inputParameters = component.inputParameters
+                    .Select(CopyParameter)
+                    .ToList(),
+                outputParameters = component.outputParameters
+                    .Select(CopyParameter)
+                    .ToList(),
                 outputConnectors = component.outputConnectors
-                    .Select(c => new SactConnectorData { uId = c.uId, PartnerUId = c.PartnerUId })
+                    .Select(CopyConnector)
                     .ToList(),
                 inputConnectors = component.inputConnectors
-                    .Select(c => new SactConnectorData { uId = c.uId, PartnerUId = c.PartnerUId })
+                    .Select(CopyConnector)
                     .ToList()
+            };
+        }
+
+        private static Dictionary<string, InterfaceMember> FlattenMembers(BlockDefinition block)
+        {
+            var result = new Dictionary<string, InterfaceMember>(StringComparer.Ordinal);
+            foreach (InterfaceSection section in block.InterfaceSections)
+            {
+                AddMembers(result, section.Name, section.Members, string.Empty);
+            }
+
+            return result;
+        }
+
+        private static List<string> CreateOrderedInterfaceKeys(
+            BlockDefinition left,
+            BlockDefinition right,
+            Dictionary<string, InterfaceMember> leftMembers,
+            Dictionary<string, InterfaceMember> rightMembers)
+        {
+            var keys = new List<string>();
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+            var sectionNames = InterfaceSectionOrder
+                .Concat(right.InterfaceSections.Select(s => s.Name))
+                .Concat(left.InterfaceSections.Select(s => s.Name))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            foreach (string sectionName in sectionNames)
+            {
+                AddInterfaceKeysForSection(keys, seen, right, sectionName);
+                AddInterfaceKeysForSection(keys, seen, left, sectionName);
+            }
+
+            foreach (string key in leftMembers.Keys.Concat(rightMembers.Keys).OrderBy(k => k, StringComparer.Ordinal))
+            {
+                if (seen.Add(key))
+                {
+                    keys.Add(key);
+                }
+            }
+
+            return keys;
+        }
+
+        private static void AddInterfaceKeysForSection(
+            List<string> keys,
+            HashSet<string> seen,
+            BlockDefinition block,
+            string sectionName)
+        {
+            foreach (InterfaceSection section in block.InterfaceSections
+                .Where(s => string.Equals(s.Name, sectionName, StringComparison.OrdinalIgnoreCase)))
+            {
+                AddInterfaceKeys(keys, seen, section.Name, section.Members, string.Empty);
+            }
+        }
+
+        private static void AddInterfaceKeys(
+            List<string> keys,
+            HashSet<string> seen,
+            string section,
+            IEnumerable<InterfaceMember> members,
+            string parentPath)
+        {
+            foreach (InterfaceMember member in members)
+            {
+                string path = string.IsNullOrEmpty(parentPath)
+                    ? member.Name
+                    : parentPath + "." + member.Name;
+                string key = section + "|" + path;
+                if (seen.Add(key))
+                {
+                    keys.Add(key);
+                }
+
+                AddInterfaceKeys(keys, seen, section, member.Children, path);
+            }
+        }
+
+        private static void AddMembers(
+            Dictionary<string, InterfaceMember> result,
+            string section,
+            IEnumerable<InterfaceMember> members,
+            string parentPath)
+        {
+            foreach (InterfaceMember member in members)
+            {
+                string path = string.IsNullOrEmpty(parentPath)
+                    ? member.Name
+                    : parentPath + "." + member.Name;
+
+                result[section + "|" + path] = member;
+                AddMembers(result, section, member.Children, path);
+            }
+        }
+
+        private static CompareState GetInterfaceMemberState(
+            bool hasLeft,
+            bool hasRight,
+            InterfaceMember? left,
+            InterfaceMember? right)
+        {
+            if (hasLeft && !hasRight)
+            {
+                return CompareState.MissingOnRight;
+            }
+
+            if (!hasLeft && hasRight)
+            {
+                return CompareState.MissingOnLeft;
+            }
+
+            return InterfaceMembersAreEqual(left, right) ? CompareState.Equal : CompareState.Changed;
+        }
+
+        private static bool InterfaceMembersAreEqual(InterfaceMember? left, InterfaceMember? right)
+        {
+            if (left == null || right == null)
+            {
+                return left == right;
+            }
+
+            return string.Equals(left.Datatype, right.Datatype, StringComparison.Ordinal) &&
+                   string.Equals(left.StartValue, right.StartValue, StringComparison.Ordinal) &&
+                   string.Equals(left.Accessibility, right.Accessibility, StringComparison.Ordinal) &&
+                   string.Equals(left.Remanence, right.Remanence, StringComparison.Ordinal);
+        }
+
+        private static SactParameterData CopyParameter(SactParameterData parameter)
+        {
+            return new SactParameterData
+            {
+                Name = parameter.Name,
+                Section = parameter.Section,
+                Type = parameter.Type
+            };
+        }
+
+        private static SactConnectorData CopyConnector(SactConnectorData connector)
+        {
+            return new SactConnectorData
+            {
+                uId = connector.uId,
+                PinName = connector.PinName,
+                PartnerUId = connector.PartnerUId
             };
         }
     }

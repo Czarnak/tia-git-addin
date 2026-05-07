@@ -71,9 +71,112 @@ namespace TiaGitAddIn.Tests.Services
             Assert.Equal(CompareState.Changed, network.RightBody["3"].State);
         }
 
+        [Fact]
+        public void Compare_InterfaceMembersChangedAddedAndRemoved_ProducesTableRows()
+        {
+            var left = CreateFileWithInterface(
+                new InterfaceSection
+                {
+                    Name = "Input",
+                    Members =
+                    {
+                        new InterfaceMember { Name = "Alarm", Datatype = "Bool" },
+                        new InterfaceMember { Name = "Mode", Datatype = "Int" }
+                    }
+                });
+            var right = CreateFileWithInterface(
+                new InterfaceSection
+                {
+                    Name = "Input",
+                    Members =
+                    {
+                        new InterfaceMember { Name = "Alarm", Datatype = "Word" },
+                        new InterfaceMember { Name = "Reset", Datatype = "Bool" }
+                    }
+                });
+
+            var result = SimaticMlComparer.Compare(left, right);
+
+            Assert.Equal(CompareState.Changed, result.Interface!.State);
+            Assert.Contains(result.Interface.Members, r =>
+                r.Section == "Input" &&
+                r.Name == "Alarm" &&
+                r.LeftDatatype == "Bool" &&
+                r.RightDatatype == "Word" &&
+                r.State == CompareState.Changed);
+            Assert.Contains(result.Interface.Members, r =>
+                r.Section == "Input" &&
+                r.Name == "Mode" &&
+                r.LeftDatatype == "Int" &&
+                r.RightDatatype == string.Empty &&
+                r.State == CompareState.MissingOnRight);
+            Assert.Contains(result.Interface.Members, r =>
+                r.Section == "Input" &&
+                r.Name == "Reset" &&
+                r.LeftDatatype == string.Empty &&
+                r.RightDatatype == "Bool" &&
+                r.State == CompareState.MissingOnLeft);
+        }
+
+        [Fact]
+        public void Compare_InterfaceMembers_KeepRightDeclarationOrderWithinTiaSections()
+        {
+            var left = CreateFileWithInterface(
+                new InterfaceSection
+                {
+                    Name = "Input",
+                    Members =
+                    {
+                        new InterfaceMember { Name = "Alarm", Datatype = "Bool" },
+                        new InterfaceMember { Name = "Warning", Datatype = "Bool" },
+                        new InterfaceMember { Name = "Running", Datatype = "Bool" }
+                    }
+                });
+            var right = CreateFileWithInterface(
+                new InterfaceSection
+                {
+                    Name = "Input",
+                    Members =
+                    {
+                        new InterfaceMember { Name = "Alarm", Datatype = "Bool" },
+                        new InterfaceMember { Name = "Warning", Datatype = "Bool" },
+                        new InterfaceMember { Name = "Running", Datatype = "Bool" }
+                    }
+                },
+                new InterfaceSection
+                {
+                    Name = "InOut",
+                    Members =
+                    {
+                        new InterfaceMember { Name = "deviceIcon", Datatype = "Int" }
+                    }
+                });
+
+            var result = SimaticMlComparer.Compare(left, right);
+
+            Assert.Equal(
+                new[] { "Alarm", "Warning", "Running", "deviceIcon" },
+                result.Interface!.Members.ConvertAll(r => r.Name).ToArray());
+        }
+
         private static SimaticMlFile CreateFile(params PartDefinition[] parts)
         {
             return CreateFile(parts, new WireDefinition[0]);
+        }
+
+        private static SimaticMlFile CreateFileWithInterface(params InterfaceSection[] sections)
+        {
+            return new SimaticMlFile
+            {
+                Blocks =
+                {
+                    new BlockDefinition
+                    {
+                        Name = "Block",
+                        InterfaceSections = new List<InterfaceSection>(sections)
+                    }
+                }
+            };
         }
 
         private static SimaticMlFile CreateFile(PartDefinition[] parts, params WireDefinition[] wires)

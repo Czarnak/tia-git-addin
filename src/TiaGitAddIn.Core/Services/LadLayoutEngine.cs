@@ -136,6 +136,9 @@ namespace TiaGitAddIn.Services
 
                 if (!IsRoutingOnlyElement(current))
                 {
+                    List<string> inputPins = BuildPinLabels(current.inputParameters, current.inputConnectors, "IN");
+                    List<string> outputPins = BuildPinLabels(current.outputParameters, current.outputConnectors, "OUT");
+
                     layout.Elements.Add(new LadElementLayout
                     {
                         Column = col,
@@ -144,7 +147,11 @@ namespace TiaGitAddIn.Services
                         DisplayName = current.DisplayName ?? string.Empty,
                         Operand = current.TopOperandConnector?.DisplayName ?? string.Empty,
                         UId = current.uId,
-                        DiffState = current.State
+                        DiffState = current.State,
+                        InputPins = inputPins,
+                        OutputPins = outputPins,
+                        Width = CalculateElementWidth(current, inputPins, outputPins),
+                        Height = CalculateElementHeight(current, inputPins, outputPins)
                     });
                 }
 
@@ -226,6 +233,77 @@ namespace TiaGitAddIn.Services
         private static bool IsRoutingOnlyElement(SactComponentData component)
         {
             return component.name == "LadOrWireData" || component.name == "OrBranch";
+        }
+
+        private static List<string> BuildPinLabels(
+            List<SactParameterData> parameters,
+            List<SactConnectorData> connectors,
+            string fallbackName)
+        {
+            if (parameters.Count > 0)
+            {
+                return parameters
+                    .Select(p => string.IsNullOrWhiteSpace(p.Name) ? p.Section : p.Name)
+                    .Where(p => !string.IsNullOrWhiteSpace(p))
+                    .ToList();
+            }
+
+            return connectors.Count > 0
+                ? connectors
+                    .Select((connector, index) => GetConnectorPinLabel(connector, fallbackName, index))
+                    .ToList()
+                : new List<string>();
+        }
+
+        private static string GetConnectorPinLabel(SactConnectorData connector, string fallbackName, int index)
+        {
+            if (!string.IsNullOrWhiteSpace(connector.PinName))
+            {
+                return connector.PinName.ToUpperInvariant();
+            }
+
+            return index == 0 ? fallbackName : $"{fallbackName}{index + 1}";
+        }
+
+        private static double CalculateElementWidth(
+            SactComponentData component,
+            List<string> inputPins,
+            List<string> outputPins)
+        {
+            if (!IsBoxLike(component))
+            {
+                return 90;
+            }
+
+            int longestPin = inputPins.Concat(outputPins)
+                .DefaultIfEmpty(string.Empty)
+                .Max(pin => pin.Length);
+            int displayLength = component.DisplayName?.Length ?? 0;
+
+            return Math.Max(110, Math.Min(190, 90 + Math.Max(longestPin, displayLength) * 5));
+        }
+
+        private static double CalculateElementHeight(
+            SactComponentData component,
+            List<string> inputPins,
+            List<string> outputPins)
+        {
+            if (!IsBoxLike(component))
+            {
+                return 60;
+            }
+
+            int pinRows = Math.Max(inputPins.Count, outputPins.Count);
+            return Math.Max(70, 42 + Math.Max(2, pinRows) * 20);
+        }
+
+        private static bool IsBoxLike(SactComponentData component)
+        {
+            string name = component.name ?? string.Empty;
+            string displayName = component.DisplayName ?? string.Empty;
+
+            return name.IndexOf("Box", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   displayName.StartsWith("Call", StringComparison.OrdinalIgnoreCase);
         }
 
         private static LadElementType MapElementType(SactComponentData component)
