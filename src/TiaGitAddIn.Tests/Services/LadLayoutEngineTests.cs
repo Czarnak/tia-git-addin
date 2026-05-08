@@ -368,6 +368,46 @@ namespace TiaGitAddIn.Tests.Services
         }
 
         [Fact]
+        public void Layout_ElementMetadata_ExposesCommentAndEquation()
+        {
+            var body = new Dictionary<string, SactComponentData>
+            {
+                {
+                    "pr", new SactComponentData
+                    {
+                        uId = "pr",
+                        name = "BranchWireData",
+                        isStartElement = true,
+                        outputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "out", PartnerUId = "box_in" }
+                        }
+                    }
+                },
+                {
+                    "box", new SactComponentData
+                    {
+                        uId = "box",
+                        name = "LadBoxData",
+                        DisplayName = "Calculate",
+                        Equation = "#out := #in + 1",
+                        Comment = "Normalize value",
+                        inputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "box_in", PinName = "in" }
+                        }
+                    }
+                }
+            };
+
+            var layout = LadLayoutEngine.LayoutBody(body, CompareState.Equal);
+            var box = layout.Elements.First(e => e.UId == "box");
+
+            Assert.Equal("#out := #in + 1", box.Equation);
+            Assert.Equal("Normalize value", box.Comment);
+        }
+
+        [Fact]
         public void Layout_NullOrEmptyBody_ReturnsEmptyLayout()
         {
             var layout1 = LadLayoutEngine.LayoutBody(null!, CompareState.Equal);

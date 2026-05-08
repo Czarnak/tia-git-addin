@@ -240,10 +240,12 @@ namespace TiaGitAddIn.Services.SimaticMl
 
             if (symbol != null)
             {
-                access.SymbolComponents = Descendants(symbol, "Component")
-                    .Select(c => Attr(c, "Name"))
-                    .Where(v => !string.IsNullOrWhiteSpace(v))
-                    .Cast<string>()
+                access.Components = Descendants(symbol, "Component")
+                    .Select(ParseAccessComponent)
+                    .Where(c => !string.IsNullOrWhiteSpace(c.Name))
+                    .ToList();
+                access.SymbolComponents = access.Components
+                    .Select(c => c.Name)
                     .ToList();
 
                 access.SymbolPath = access.SymbolComponents.Count > 0
@@ -252,6 +254,19 @@ namespace TiaGitAddIn.Services.SimaticMl
             }
 
             return access;
+        }
+
+        private static AccessComponentDefinition ParseAccessComponent(XElement componentElement)
+        {
+            return new AccessComponentDefinition
+            {
+                Name = Attr(componentElement, "Name") ?? string.Empty,
+                AccessModifier = Attr(componentElement, "AccessModifier"),
+                SliceAccessModifier = Attr(componentElement, "SliceAccessModifier"),
+                SimpleAccessModifier = Attr(componentElement, "SimpleAccessModifier"),
+                RawAttributes = componentElement.Attributes()
+                    .ToDictionary(a => a.Name.LocalName, a => (string?)a.Value)
+            };
         }
 
         private static PartDefinition ParsePart(XElement partElement)
@@ -283,6 +298,25 @@ namespace TiaGitAddIn.Services.SimaticMl
                 part.AutomaticTyped.Add(Attr(at, "Name") ?? "");
             }
 
+            foreach (XElement negated in Children(partElement, "Negated"))
+            {
+                AddNamedPin(part.Negated, negated);
+            }
+
+            foreach (XElement invisible in Children(partElement, "Invisible"))
+            {
+                AddNamedPin(part.Invisible, invisible);
+            }
+
+            XElement? comment = Child(partElement, "Comment");
+            if (comment != null)
+            {
+                part.CommentRawXml = comment.ToString(SaveOptions.DisableFormatting);
+                part.CommentText = ReadTextContent(comment);
+            }
+
+            part.Instance = ParseInstance(Child(partElement, "Instance"));
+
             return part;
         }
 
@@ -300,7 +334,8 @@ namespace TiaGitAddIn.Services.SimaticMl
                 call.CallInfo = new CallInfoDefinition
                 {
                     Name = Attr(callInfo, "Name"),
-                    BlockType = Attr(callInfo, "BlockType")
+                    BlockType = Attr(callInfo, "BlockType"),
+                    Instance = Attr(callInfo, "Instance")
                 };
 
                 foreach (XElement parameter in Children(callInfo, "Parameter"))
@@ -309,7 +344,9 @@ namespace TiaGitAddIn.Services.SimaticMl
                     {
                         Name = Attr(parameter, "Name"),
                         Section = Attr(parameter, "Section"),
-                        Type = Attr(parameter, "Type")
+                        Type = Attr(parameter, "Type"),
+                        TemplateReference = Attr(parameter, "TemplateReference"),
+                        Informative = BoolAttr(parameter, "Informative")
                     });
                 }
             }
@@ -329,7 +366,54 @@ namespace TiaGitAddIn.Services.SimaticMl
                 call.AutomaticTyped.Add(Attr(at, "Name") ?? "");
             }
 
+            XElement? comment = Child(callElement, "Comment");
+            if (comment != null)
+            {
+                call.CommentRawXml = comment.ToString(SaveOptions.DisableFormatting);
+                call.CommentText = ReadTextContent(comment);
+            }
+
+            call.Instance = ParseInstance(Child(callElement, "Instance"));
+
             return call;
+        }
+
+        private static void AddNamedPin(List<string> target, XElement pinElement)
+        {
+            string? name = Attr(pinElement, "Name");
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                target.Add(name!);
+            }
+        }
+
+        private static InstanceDefinition? ParseInstance(XElement? instanceElement)
+        {
+            if (instanceElement == null)
+            {
+                return null;
+            }
+
+            return new InstanceDefinition
+            {
+                Name = Attr(instanceElement, "Name"),
+                Scope = Attr(instanceElement, "Scope"),
+                UId = IntAttr(instanceElement, "UId"),
+                RawXml = instanceElement.ToString(SaveOptions.DisableFormatting)
+            };
+        }
+
+        private static string? ReadTextContent(XElement element)
+        {
+            string text = string.Join(
+                " ",
+                element
+                    .DescendantNodes()
+                    .OfType<XText>()
+                    .Select(t => t.Value.Trim())
+                    .Where(v => !string.IsNullOrWhiteSpace(v)));
+
+            return string.IsNullOrWhiteSpace(text) ? null : text;
         }
 
         private static WireDefinition ParseWire(XElement wireElement)

@@ -1,8 +1,10 @@
 # TIA Git Add-In
 
-TIA Portal V21 Add-In for working with Git from inside TIA Portal Version Control (VCI) workflows.
+TIA Portal V21 Add-In for working with Git from inside TIA Portal Version Control (VCI) workflows (finally).
 
 The add-in targets `.NET Framework 4.8` and packages as a native TIA Portal V21 `.addin` file. It provides a specialized Git panel integrated directly into the TIA Portal UI, focusing on the unique needs of PLC developers using VCI.
+
+![overview](docs/overview.png)
 
 ## Features & Status
 
@@ -35,7 +37,7 @@ The add-in targets `.NET Framework 4.8` and packages as a native TIA Portal V21 
 
 ## Build & Installation
 
-### Build
+### Build (only for locally built Add-In)
 
 ```powershell
 dotnet restore TiaGitAddIn.sln
@@ -50,7 +52,7 @@ The build process automatically packages the result into a `.addin` file using t
 1. Copy the `TiaGitAddIn.addin` file to your TIA Portal Add-Ins folder (typically `%TIA_INSTALL_DIR%\AddIns`).
 2. Open TIA Portal V21.
 3. Enable the Add-In in the "Add-ins" task card.
-4. Right-click on a project or VCI workspace to find the "Git" menu items.
+4. Right-click on a VCI workspace item to find the "Git" menu items.
 
 ## Development Roadmap
 
@@ -77,10 +79,14 @@ The build process automatically packages the result into a `.addin` file using t
 ```text
 src/
   TiaGitAddIn/
-    Services/SimaticMl/  Native SimaticML parser and comparison engine
-    Services/            Git process execution and repository discovery
-    Models/              Core data models for Git, LAD, and Sact/SimaticML
-    UI/                  WPF MVVM (ViewModels, Views, Converters)
     Entry/               TIA Portal Add-In entry points and menu registration
+    UI/                  WPF MVVM (ViewModels, Views, Converters)
+    Services/            UI-specific services and add-in implementations
+  TiaGitAddIn.Core/
+    Models/              Core data models for Git, LAD, and Sact/SimaticML
+    Services/            Git process execution and repository discovery
+    Services/SimaticMl/  Native SimaticML parser and comparison engine
+    Configuration/       Configuration management
+    Logging/             Add-in logging abstractions
   TiaGitAddIn.Tests/     Unit and UI logic tests
 ```

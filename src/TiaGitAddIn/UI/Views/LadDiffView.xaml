@@ -125,13 +125,63 @@
                                                                   ItemsSource="{Binding InputPinRows}"
                                                                   ItemTemplate="{StaticResource LadInputPinRowTemplate}"
                                                                   VerticalAlignment="Center"/>
-                                                    <TextBlock Grid.Column="1"
-                                                               Text="{Binding Operand}"
-                                                               FontSize="10"
-                                                               Margin="8,0"
-                                                               TextAlignment="Center"
-                                                               VerticalAlignment="Center"
-                                                               TextWrapping="Wrap"/>
+                                                    <StackPanel Grid.Column="1"
+                                                                Margin="8,0"
+                                                                VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Operand}"
+                                                                   FontSize="10"
+                                                                   TextAlignment="Center"
+                                                                   TextWrapping="Wrap"/>
+                                                        <TextBlock Text="{Binding Equation}"
+                                                                   FontSize="10"
+                                                                   TextAlignment="Center"
+                                                                   TextWrapping="Wrap"
+                                                                   Margin="0,4,0,0">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Visibility"
+                                                                            Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Equation}"
+                                                                                     Value="">
+                                                                            <Setter Property="Visibility"
+                                                                                    Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Equation}"
+                                                                                     Value="{x:Null}">
+                                                                            <Setter Property="Visibility"
+                                                                                    Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding Comment}"
+                                                                   FontSize="9"
+                                                                   Foreground="#555555"
+                                                                   TextAlignment="Center"
+                                                                   TextWrapping="Wrap"
+                                                                   Margin="0,4,0,0">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Visibility"
+                                                                            Value="Visible"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Comment}"
+                                                                                     Value="">
+                                                                            <Setter Property="Visibility"
+                                                                                    Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Comment}"
+                                                                                     Value="{x:Null}">
+                                                                            <Setter Property="Visibility"
+                                                                                    Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </StackPanel>
                                                     <ItemsControl Grid.Column="2"
                                                                   ItemsSource="{Binding OutputPinRows}"
                                                                   ItemTemplate="{StaticResource LadOutputPinRowTemplate}"
@@ -598,8 +648,56 @@
                                 <StackPanel>
                                     <Border Background="#EEEEEE"
                                             Padding="5">
-                                        <TextBlock Text="{Binding NetworkNumber, StringFormat=Network {0}}"
-                                                   FontWeight="Bold"/>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding NetworkNumber, StringFormat=Network {0}}"
+                                                       FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding Title}"
+                                                       FontSize="11"
+                                                       Margin="0,2,0,0">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility"
+                                                                Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Title}"
+                                                                         Value="">
+                                                                <Setter Property="Visibility"
+                                                                        Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Title}"
+                                                                         Value="{x:Null}">
+                                                                <Setter Property="Visibility"
+                                                                        Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Comment}"
+                                                       FontSize="10"
+                                                       Foreground="#555555"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0,2,0,0">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility"
+                                                                Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Comment}"
+                                                                         Value="">
+                                                                <Setter Property="Visibility"
+                                                                        Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Comment}"
+                                                                         Value="{x:Null}">
+                                                                <Setter Property="Visibility"
+                                                                        Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </StackPanel>
                                     </Border>
 
                                     <Grid MinHeight="100">

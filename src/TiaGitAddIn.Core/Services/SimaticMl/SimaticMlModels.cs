@@ -81,11 +81,21 @@ namespace TiaGitAddIn.Services.SimaticMl
 
         public string? SymbolPath { get; set; }
         public List<string> SymbolComponents { get; set; } = new List<string>();
+        public List<AccessComponentDefinition> Components { get; set; } = new List<AccessComponentDefinition>();
 
         public string? ConstantType { get; set; }
         public string? ConstantValue { get; set; }
 
         public string? RawXml { get; set; }
+    }
+
+    public sealed class AccessComponentDefinition
+    {
+        public string Name { get; set; } = string.Empty;
+        public string? AccessModifier { get; set; }
+        public string? SliceAccessModifier { get; set; }
+        public string? SimpleAccessModifier { get; set; }
+        public Dictionary<string, string?> RawAttributes { get; set; } = new Dictionary<string, string?>();
     }
 
     public sealed class PartDefinition
@@ -98,8 +108,13 @@ namespace TiaGitAddIn.Services.SimaticMl
         public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
         public List<TemplateValueDefinition> TemplateValues { get; set; } = new List<TemplateValueDefinition>();
         public List<string> AutomaticTyped { get; set; } = new List<string>();
+        public List<string> Negated { get; set; } = new List<string>();
+        public List<string> Invisible { get; set; } = new List<string>();
         
         public string? Equation { get; set; }
+        public string? CommentRawXml { get; set; }
+        public string? CommentText { get; set; }
+        public InstanceDefinition? Instance { get; set; }
 
         public string? RawXml { get; set; }
     }
@@ -111,7 +126,18 @@ namespace TiaGitAddIn.Services.SimaticMl
         
         public List<TemplateValueDefinition> TemplateValues { get; set; } = new List<TemplateValueDefinition>();
         public List<string> AutomaticTyped { get; set; } = new List<string>();
+        public string? CommentRawXml { get; set; }
+        public string? CommentText { get; set; }
+        public InstanceDefinition? Instance { get; set; }
 
+        public string? RawXml { get; set; }
+    }
+
+    public sealed class InstanceDefinition
+    {
+        public string? Name { get; set; }
+        public string? Scope { get; set; }
+        public int? UId { get; set; }
         public string? RawXml { get; set; }
     }
 
@@ -119,6 +145,7 @@ namespace TiaGitAddIn.Services.SimaticMl
     {
         public string? Name { get; set; }
         public string? BlockType { get; set; }
+        public string? Instance { get; set; }
         public List<CallParameterDefinition> Parameters { get; set; } = new List<CallParameterDefinition>();
     }
 
@@ -127,6 +154,8 @@ namespace TiaGitAddIn.Services.SimaticMl
         public string? Name { get; set; }
         public string? Section { get; set; }
         public string? Type { get; set; }
+        public string? TemplateReference { get; set; }
+        public bool? Informative { get; set; }
     }
 
     public sealed class PowerrailDefinition

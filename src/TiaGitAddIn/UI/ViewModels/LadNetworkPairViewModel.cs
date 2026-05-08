@@ -10,6 +10,7 @@ namespace TiaGitAddIn.UI.ViewModels
             NetworkNumber = pair.NetworkNumber;
             DiffState = pair.DiffState;
             Title = pair.Title;
+            Comment = pair.Comment;
 
             if (pair.Left != null)
             {
@@ -25,6 +26,7 @@ namespace TiaGitAddIn.UI.ViewModels
         public int NetworkNumber { get; }
         public CompareState DiffState { get; }
         public string? Title { get; }
+        public string? Comment { get; }
         public LadNetworkViewModel? Left { get; }
         public LadNetworkViewModel? Right { get; }
 

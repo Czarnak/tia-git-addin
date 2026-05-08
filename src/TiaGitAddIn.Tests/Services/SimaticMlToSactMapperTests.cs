@@ -43,6 +43,163 @@ namespace TiaGitAddIn.Tests.Services
             }
         }
 
+        [Fact]
+        public void Map_RichLadPartMetadata_BuildsRenderableSemantics()
+        {
+            var network = new NetworkSourceDefinition
+            {
+                Accesses =
+                {
+                    new AccessDefinition
+                    {
+                        UId = 10,
+                        Scope = "LocalVariable",
+                        SymbolComponents = { "startSignal" },
+                        SymbolPath = "startSignal"
+                    }
+                },
+                Parts =
+                {
+                    new PartDefinition
+                    {
+                        UId = 20,
+                        Name = "Contact",
+                        CommentText = "Start condition",
+                        Negated = { "in" },
+                        Invisible = { "eno" },
+                        RawXml = "<Part UId=\"20\" Name=\"Contact\"><Negated Name=\"in\" /><Invisible Name=\"eno\" /></Part>"
+                    },
+                    new PartDefinition
+                    {
+                        UId = 30,
+                        Name = "SCoil",
+                        RawXml = "<Part UId=\"30\" Name=\"SCoil\" />"
+                    }
+                },
+                Wires =
+                {
+                    new WireDefinition
+                    {
+                        UId = 1,
+                        Connections =
+                        {
+                            new PowerrailConDefinition(),
+                            new NameConDefinition { UId = 20, Name = "in" }
+                        }
+                    },
+                    new WireDefinition
+                    {
+                        UId = 2,
+                        Connections =
+                        {
+                            new IdentConDefinition { UId = 10 },
+                            new NameConDefinition { UId = 20, Name = "operand" }
+                        }
+                    },
+                    new WireDefinition
+                    {
+                        UId = 3,
+                        Connections =
+                        {
+                            new NameConDefinition { UId = 20, Name = "out" },
+                            new NameConDefinition { UId = 30, Name = "in" },
+                            new OpenConDefinition { UId = 40 }
+                        }
+                    }
+                }
+            };
+
+            var body = SimaticMlToSactMapper.MapNetworkBody(network);
+
+            Assert.True(body["Powerrail"].isStartElement);
+            Assert.True(body["20"].negated);
+            Assert.Equal("#startSignal", body["20"].TopOperandConnector!.DisplayName);
+            Assert.Equal("Start condition", body["20"].Comment);
+            Assert.DoesNotContain(body["20"].outputConnectors, c => c.PinName == "eno");
+            Assert.Equal("SCoil", body["30"].DisplayName);
+            Assert.Equal("LadTemplatedCoilData", body["30"].name);
+            Assert.Contains(body["20"].outputConnectors, c => c.PartnerUId != null);
+            Assert.Contains(body.Keys, key => key.StartsWith("OpenCon_", System.StringComparison.Ordinal));
+        }
+
+        [Fact]
+        public void Map_BoxPartIdentConnections_AttachesLiteralConstantsToNamedPins()
+        {
+            var network = new NetworkSourceDefinition
+            {
+                Accesses =
+                {
+                    new AccessDefinition
+                    {
+                        UId = 30,
+                        Scope = "LocalVariable",
+                        SymbolComponents = { "deviceIcon" },
+                        SymbolPath = "deviceIcon"
+                    },
+                    new AccessDefinition
+                    {
+                        UId = 31,
+                        Scope = "LiteralConstant",
+                        ConstantValue = "10"
+                    }
+                },
+                Parts =
+                {
+                    new PartDefinition
+                    {
+                        UId = 47,
+                        Name = "Add",
+                        TemplateValues =
+                        {
+                            new TemplateValueDefinition
+                            {
+                                Name = "Card",
+                                Type = "Cardinality",
+                                Value = "2"
+                            }
+                        }
+                    }
+                },
+                Wires =
+                {
+                    new WireDefinition
+                    {
+                        UId = 65,
+                        Connections =
+                        {
+                            new IdentConDefinition { UId = 30 },
+                            new NameConDefinition { UId = 47, Name = "in1" }
+                        }
+                    },
+                    new WireDefinition
+                    {
+                        UId = 66,
+                        Connections =
+                        {
+                            new IdentConDefinition { UId = 31 },
+                            new NameConDefinition { UId = 47, Name = "in2" }
+                        }
+                    },
+                    new WireDefinition
+                    {
+                        UId = 68,
+                        Connections =
+                        {
+                            new NameConDefinition { UId = 47, Name = "out" },
+                            new IdentConDefinition { UId = 30 }
+                        }
+                    }
+                }
+            };
+
+            var add = SimaticMlToSactMapper.MapNetworkBody(network)["47"];
+
+            Assert.Null(add.TopOperandConnector);
+            Assert.Contains(add.inputParameters, p => p.Name == "IN1" && p.Operand == "#deviceIcon");
+            Assert.Contains(add.inputParameters, p => p.Name == "IN2" && p.Operand == "10");
+            Assert.Contains(add.outputParameters, p => p.Name == "OUT" && p.Operand == "#deviceIcon");
+        }
+
         private static string CreateSimaticMlWithCallParameterOperands()
         {
             return @"<?xml version=""1.0"" encoding=""utf-8""?>

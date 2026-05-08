@@ -10,6 +10,8 @@ namespace TiaGitAddIn.Models.Lad
         public LadElementType ElementType { get; set; }
         public string DisplayName { get; set; } = string.Empty;
         public string Operand { get; set; } = string.Empty;
+        public string Comment { get; set; } = string.Empty;
+        public string Equation { get; set; } = string.Empty;
         public CompareState DiffState { get; set; }
         public string UId { get; set; } = string.Empty;
         public List<string> InputPins { get; set; } = new List<string>();

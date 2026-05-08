@@ -7,22 +7,6 @@ namespace TiaGitAddIn.Services.SimaticMl
 {
     public static class SimaticMlToSactMapper
     {
-        private static readonly HashSet<string> InputPins = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "en", "in", "in1", "in2", "in3", "in4",
-            "operand",
-            "i", "i0", "i1",
-            "src", "src1", "src2",
-            "input"
-        };
-
-        private static readonly HashSet<string> OutputPins = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "eno", "out", "out1", "out2", "q",
-            "ret_val",
-            "output"
-        };
-
         public static SactCompareResult Map(SimaticMlFile file, CompareState fileState = CompareState.Equal)
         {
             var result = new SactCompareResult
@@ -100,6 +84,11 @@ namespace TiaGitAddIn.Services.SimaticMl
                 negated = component.negated,
                 DisplayName = component.DisplayName,
                 TemplateType = component.TemplateType,
+                Comment = component.Comment,
+                Equation = component.Equation,
+                DisabledENO = component.DisabledENO,
+                InvisiblePins = new List<string>(component.InvisiblePins),
+                NegatedPins = new List<string>(component.NegatedPins),
                 TopOperandConnector = component.TopOperandConnector == null
                     ? null
                     : new SactOperandConnector { DisplayName = component.TopOperandConnector.DisplayName },
@@ -158,215 +147,7 @@ namespace TiaGitAddIn.Services.SimaticMl
 
         public static Dictionary<string, SactComponentData> MapNetworkBody(NetworkSourceDefinition network)
         {
-            var componentsByUid = new Dictionary<string, SactComponentData>();
-            
-            // 1. Create components for Parts
-            foreach (var part in network.Parts)
-            {
-                if (!part.UId.HasValue) continue;
-
-                var comp = new SactComponentData
-                {
-                    uId = part.UId.Value.ToString(),
-                    name = MapSimaticPartToSactName(part.Name ?? ""),
-                    DisplayName = part.Name,
-                    negated = false 
-                };
-
-                var templateValue = part.TemplateValues.FirstOrDefault();
-                if (templateValue != null)
-                {
-                    comp.TemplateType = templateValue.Value;
-                }
-
-                componentsByUid[comp.uId] = comp;
-            }
-
-            // 1b. Create components for Calls
-            foreach (var call in network.Calls)
-            {
-                if (!call.UId.HasValue) continue;
-
-                var comp = new SactComponentData
-                {
-                    uId = call.UId.Value.ToString(),
-                    name = "LadBoxData",
-                    DisplayName = call.CallInfo?.Name ?? "Call",
-                    inputParameters = MapCallParameters(call, IsInputParameter),
-                    outputParameters = MapCallParameters(call, IsOutputParameter)
-                };
-
-                componentsByUid[comp.uId] = comp;
-            }
-
-            // 2. Create components for Accesses (Tags/Operands)
-            var accessesByUid = new Dictionary<string, AccessDefinition>();
-            foreach (var access in network.Accesses)
-            {
-                if (!access.UId.HasValue) continue;
-                accessesByUid[access.UId.Value.ToString()] = access;
-            }
-
-            // 3. Handle IdentCon connections (linking Accesses to Parts)
-            foreach (var wire in network.Wires)
-            {
-                // Find if this wire connects a Part/Call and an Access (IdentCon)
-                var identCons = wire.Connections.OfType<IdentConDefinition>().ToList();
-                if (identCons.Count == 0) continue;
-
-                // A wire with IdentCon usually connects a specific Part and an Access
-                // Example: Wire connects Part (UId=1) and Access (UId=2) via IdentCon
-                foreach (var idCon in identCons)
-                {
-                    if (!idCon.UId.HasValue) continue;
-                    string targetId = idCon.UId.Value.ToString();
-
-                    // If target is an Access, find what else this wire connects to
-                    if (accessesByUid.TryGetValue(targetId, out var access))
-                    {
-                        // Look for other connections in the same wire that are NOT this Access
-                        foreach (var otherConn in wire.Connections.Where(c => c != idCon))
-                        {
-                            string otherId = GetCompId(otherConn);
-                            if (componentsByUid.TryGetValue(otherId, out var component))
-                            {
-                                string operand = FormatAccessDisplayName(access);
-                                if (otherConn is NameConDefinition nameCon && TryAssignParameterOperand(component, nameCon.Name, operand))
-                                {
-                                    continue;
-                                }
-
-                                component.TopOperandConnector = new SactOperandConnector
-                                {
-                                    DisplayName = operand
-                                };
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 4. Process Logic Wires (Powerrail, logic flow)
-            bool hasPowerrail = network.Powerrail != null || network.Wires.Any(w => w.Connections.Any(c => c is PowerrailConDefinition));
-            if (hasPowerrail)
-            {
-                var pr = new SactComponentData
-                {
-                    uId = "Powerrail",
-                    name = "BranchWireData",
-                    DisplayName = "Powerrail",
-                    isStartElement = true
-                };
-                componentsByUid[pr.uId] = pr;
-            }
-
-            // Add virtual Openbranches and OpenCons
-            foreach (var wire in network.Wires)
-            {
-                foreach (var conn in wire.Connections)
-                {
-                    string id = GetCompId(conn);
-                    if (string.IsNullOrEmpty(id) || componentsByUid.ContainsKey(id)) continue;
-
-                    if (conn is OpenConDefinition)
-                    {
-                        componentsByUid[id] = new SactComponentData
-                        {
-                            uId = id,
-                            name = "LadOrWireData",
-                            DisplayName = "OpenCon"
-                        };
-                    }
-                }
-            }
-
-            foreach (var wire in network.Wires)
-            {
-                // Skip wires used for IdentCon (operands) in logic flow processing
-                if (wire.Connections.Any(c => c is IdentConDefinition)) continue;
-
-                var connections = wire.Connections.ToList();
-                if (connections.Count < 2) continue;
-
-                var sourceCon = connections.FirstOrDefault(c => IsSourceConnection(c, componentsByUid));
-                var targetCons = connections.Where(c => c != sourceCon).ToList();
-
-                if (sourceCon == null)
-                {
-                    sourceCon = connections[0];
-                    targetCons = connections.Skip(1).ToList();
-                }
-
-                string sourceCompId = GetCompId(sourceCon);
-                if (!componentsByUid.TryGetValue(sourceCompId, out var sourceComp)) continue;
-
-                foreach (var targetCon in targetCons)
-                {
-                    string targetCompId = GetCompId(targetCon);
-                    if (!componentsByUid.TryGetValue(targetCompId, out var targetComp)) continue;
-
-                    string wireId = wire.UId?.ToString() ?? Guid.NewGuid().ToString();
-                    string sourcePortId = $"{wireId}_src_{sourceCompId}";
-                    string targetPortId = $"{wireId}_tgt_{targetCompId}";
-
-                    sourceComp.outputConnectors.Add(new SactConnectorData
-                    {
-                        uId = sourcePortId,
-                        PinName = GetPinName(sourceCon),
-                        PartnerUId = targetPortId
-                    });
-
-                    targetComp.inputConnectors.Add(new SactConnectorData
-                    {
-                        uId = targetPortId,
-                        PinName = GetPinName(targetCon),
-                        PartnerUId = sourcePortId
-                    });
-                }
-            }
-
-            return componentsByUid;
-        }
-
-        private static string GetCompId(ConnectionDefinition conn)
-        {
-            if (conn is PowerrailConDefinition) return "Powerrail";
-            if (conn is IdentConDefinition idCon) return idCon.UId?.ToString() ?? "";
-            if (conn is NameConDefinition nameCon) return nameCon.UId?.ToString() ?? "";
-            if (conn is OpenConDefinition openCon) return openCon.UId?.ToString() ?? "";
-            return "";
-        }
-
-        private static string GetPinName(ConnectionDefinition conn)
-        {
-            return conn is NameConDefinition nameCon ? nameCon.Name ?? string.Empty : string.Empty;
-        }
-
-        private static bool IsSourceConnection(ConnectionDefinition conn, Dictionary<string, SactComponentData> components)
-        {
-            if (conn is PowerrailConDefinition) return true;
-
-            int? uId = null;
-            if (conn is IdentConDefinition idCon) uId = idCon.UId;
-            else if (conn is NameConDefinition nCon) uId = nCon.UId;
-            else if (conn is OpenConDefinition oCon) uId = oCon.UId;
-
-            if (!uId.HasValue) return false;
-
-            string id = uId.Value.ToString();
-            if (components.TryGetValue(id, out var comp))
-            {
-                if (conn is NameConDefinition nameCon && IsOutputPin(nameCon.Name)) return true;
-                
-                if (comp.name == "LadLiteralData" || comp.name == "LadOperandData") return true;
-            }
-
-            return false;
-        }
-
-        private static bool IsOutputPin(string? pin)
-        {
-            return !string.IsNullOrWhiteSpace(pin) && OutputPins.Contains(pin!);
+            return LadVisualGraphBuilder.Build(network);
         }
 
         private static List<SactInterfaceMemberComparison> CreateInterfaceRows(BlockDefinition block, CompareState state)
@@ -406,76 +187,6 @@ namespace TiaGitAddIn.Services.SimaticMl
             }
         }
 
-        private static List<SactParameterData> MapCallParameters(
-            CallDefinition call,
-            Func<CallParameterDefinition, bool> predicate)
-        {
-            if (call.CallInfo == null)
-            {
-                return new List<SactParameterData>();
-            }
-
-            return call.CallInfo.Parameters
-                .Where(predicate)
-                .Select(p => new SactParameterData
-                {
-                    Name = p.Name ?? string.Empty,
-                    Section = p.Section ?? string.Empty,
-                    Type = p.Type ?? string.Empty,
-                    Operand = string.Empty
-                })
-                .ToList();
-        }
-
-        private static bool TryAssignParameterOperand(SactComponentData component, string? pinName, string operand)
-        {
-            if (string.IsNullOrWhiteSpace(pinName))
-            {
-                return false;
-            }
-
-            bool assigned = false;
-            foreach (var parameter in component.inputParameters.Concat(component.outputParameters))
-            {
-                if (string.Equals(parameter.Name, pinName, StringComparison.OrdinalIgnoreCase))
-                {
-                    parameter.Operand = operand;
-                    assigned = true;
-                }
-            }
-
-            return assigned;
-        }
-
-        private static string FormatAccessDisplayName(AccessDefinition access)
-        {
-            if (!string.IsNullOrWhiteSpace(access.ConstantValue))
-            {
-                return access.ConstantValue!;
-            }
-
-            string symbol = access.SymbolPath ?? "Access";
-            if (string.Equals(access.Scope, "LocalVariable", StringComparison.OrdinalIgnoreCase))
-            {
-                return "#" + symbol;
-            }
-
-            return symbol;
-        }
-
-        private static bool IsInputParameter(CallParameterDefinition parameter)
-        {
-            return string.Equals(parameter.Section, "Input", StringComparison.OrdinalIgnoreCase) ||
-                   string.Equals(parameter.Section, "InOut", StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static bool IsOutputParameter(CallParameterDefinition parameter)
-        {
-            return string.Equals(parameter.Section, "Output", StringComparison.OrdinalIgnoreCase) ||
-                   string.Equals(parameter.Section, "Return", StringComparison.OrdinalIgnoreCase) ||
-                   string.Equals(parameter.Section, "InOut", StringComparison.OrdinalIgnoreCase);
-        }
-
         private static SactParameterData CopyParameter(SactParameterData parameter)
         {
             return new SactParameterData
@@ -483,7 +194,8 @@ namespace TiaGitAddIn.Services.SimaticMl
                 Name = parameter.Name,
                 Section = parameter.Section,
                 Type = parameter.Type,
-                Operand = parameter.Operand
+                Operand = parameter.Operand,
+                IsVisible = parameter.IsVisible
             };
         }
 
@@ -497,16 +209,5 @@ namespace TiaGitAddIn.Services.SimaticMl
             };
         }
 
-        private static string MapSimaticPartToSactName(string simaticName)
-        {
-            switch (simaticName)
-            {
-                case "Contact": return "LadContactData";
-                case "Coil": return "LadCoilData";
-                case "Or": return "LadOrWireData";
-                case "Box": return "LadBoxData";
-                default: return simaticName;
-            }
-        }
     }
 }

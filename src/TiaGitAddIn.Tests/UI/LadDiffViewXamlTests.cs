@@ -48,6 +48,15 @@ namespace TiaGitAddIn.Tests.UI
         }
 
         [Fact]
+        public void ElementTemplateRendersInstructionCommentAndEquation()
+        {
+            string xaml = File.ReadAllText(GetLadDiffViewPath());
+
+            Assert.Contains("Text=\"{Binding Comment}\"", xaml);
+            Assert.Contains("Text=\"{Binding Equation}\"", xaml);
+        }
+
+        [Fact]
         public void InterfaceTableUsesTiaPortalColumnsAndSectionRows()
         {
             string xaml = File.ReadAllText(GetLadDiffViewPath());

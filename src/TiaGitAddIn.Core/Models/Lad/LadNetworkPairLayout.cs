@@ -9,5 +9,6 @@ namespace TiaGitAddIn.Models.Lad
         public LadNetworkLayout? Left { get; set; }
         public LadNetworkLayout? Right { get; set; }
         public string? Title { get; set; }
+        public string? Comment { get; set; }
     }
 }

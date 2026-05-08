@@ -11,6 +11,11 @@ namespace TiaGitAddIn.Models.Sact
         public bool? negated { get; set; }
         public string? DisplayName { get; set; }
         public string? TemplateType { get; set; }
+        public string? Comment { get; set; }
+        public string? Equation { get; set; }
+        public bool DisabledENO { get; set; }
+        public List<string> InvisiblePins { get; set; } = new List<string>();
+        public List<string> NegatedPins { get; set; } = new List<string>();
         public SactOperandConnector? TopOperandConnector { get; set; }
         public List<SactParameterData> inputParameters { get; set; } = new List<SactParameterData>();
         public List<SactParameterData> outputParameters { get; set; } = new List<SactParameterData>();

@@ -31,7 +31,8 @@ namespace TiaGitAddIn.Services
                     {
                         NetworkNumber = displayNumber,
                         DiffState = network.State,
-                        Title = network.Title
+                        Title = network.Title,
+                        Comment = network.Comment
                     };
 
                     if (network.LeftBody != null && network.LeftBody.Count > 0)
@@ -148,6 +149,8 @@ namespace TiaGitAddIn.Services
                         ElementType = MapElementType(current),
                         DisplayName = current.DisplayName ?? string.Empty,
                         Operand = current.TopOperandConnector?.DisplayName ?? string.Empty,
+                        Comment = current.Comment ?? string.Empty,
+                        Equation = current.Equation ?? string.Empty,
                         UId = current.uId,
                         DiffState = current.State,
                         InputPins = inputPins,
@@ -258,6 +261,7 @@ namespace TiaGitAddIn.Services
             }
 
             rows.AddRange(parameters
+                .Where(p => p.IsVisible)
                 .Select(p => new LadPinLayout
                 {
                     Name = string.IsNullOrWhiteSpace(p.Name) ? p.Section : p.Name,
@@ -268,6 +272,7 @@ namespace TiaGitAddIn.Services
             if (rows.Count == 0 && connectors.Count > 0)
             {
                 rows.AddRange(connectors
+                    .Where(connector => !IsHiddenPin(component, connector.PinName))
                     .Select((connector, index) => new LadPinLayout
                     {
                         Name = GetConnectorPinLabel(connector, fallbackName, index)
@@ -282,6 +287,12 @@ namespace TiaGitAddIn.Services
             }
 
             return rows;
+        }
+
+        private static bool IsHiddenPin(SactComponentData component, string? pinName)
+        {
+            return !string.IsNullOrWhiteSpace(pinName) &&
+                   component.InvisiblePins.Any(pin => string.Equals(pin, pinName, StringComparison.OrdinalIgnoreCase));
         }
 
         private static string GetConnectorPinLabel(SactConnectorData connector, string fallbackName, int index)

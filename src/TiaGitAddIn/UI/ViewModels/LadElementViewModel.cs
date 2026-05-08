@@ -15,6 +15,8 @@ namespace TiaGitAddIn.UI.ViewModels
         public LadElementType ElementType => layout.ElementType;
         public string DisplayName => layout.DisplayName;
         public string Operand => layout.Operand;
+        public string Comment => layout.Comment;
+        public string Equation => layout.Equation;
         public CompareState DiffState => layout.DiffState;
         public ObservableCollection<string> InputPins { get; } = new ObservableCollection<string>(layout.InputPins);
         public ObservableCollection<string> OutputPins { get; } = new ObservableCollection<string>(layout.OutputPins);
