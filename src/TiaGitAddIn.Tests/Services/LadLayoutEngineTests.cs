@@ -134,6 +134,111 @@ namespace TiaGitAddIn.Tests.Services
         }
 
         [Fact]
+        public void Layout_MergeOfUnequalBranches_KeepsDownstreamOnMainLineAndAligned()
+        {
+            // Mirrors the SimpleDevice "OUTPUT" network:
+            //   |--[FI_START]--[/FI_SERVICE]--+--(tempOut)--(FQ_OUTPUT)
+            //   |--[FIQ_MANUAL]---------------+
+            // The two branches are of unequal length (2 hops vs 1 hop) and merge into the
+            // output coils. The coils must stay on the main line and align after the merge,
+            // not drift onto the shorter branch's row/column.
+            var body = new Dictionary<string, SactComponentData>
+            {
+                {
+                    "pr", new SactComponentData
+                    {
+                        uId = "pr",
+                        name = "BranchWireData",
+                        isStartElement = true,
+                        outputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "pr_out1", PartnerUId = "fistart_in" },
+                            new SactConnectorData { uId = "pr_out2", PartnerUId = "fiqman_in" }
+                        }
+                    }
+                },
+                {
+                    "fistart", new SactComponentData
+                    {
+                        uId = "fistart",
+                        name = "LadContactData",
+                        DisplayName = "FI_START",
+                        inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fistart_in" } },
+                        outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fistart_out", PartnerUId = "fiservice_in" } }
+                    }
+                },
+                {
+                    "fiservice", new SactComponentData
+                    {
+                        uId = "fiservice",
+                        name = "LadContactData",
+                        DisplayName = "FI_SERVICE",
+                        negated = true,
+                        inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fiservice_in" } },
+                        outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fiservice_out", PartnerUId = "coil1_in_a" } }
+                    }
+                },
+                {
+                    "fiqman", new SactComponentData
+                    {
+                        uId = "fiqman",
+                        name = "LadContactData",
+                        DisplayName = "FIQ_MANUAL",
+                        inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fiqman_in" } },
+                        outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fiqman_out", PartnerUId = "coil1_in_b" } }
+                    }
+                },
+                {
+                    "coil1", new SactComponentData
+                    {
+                        uId = "coil1",
+                        name = "LadCoilData",
+                        DisplayName = "tempOut",
+                        inputConnectors = new List<SactConnectorData>
+                        {
+                            new SactConnectorData { uId = "coil1_in_a" },
+                            new SactConnectorData { uId = "coil1_in_b" }
+                        },
+                        outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "coil1_out", PartnerUId = "coil2_in" } }
+                    }
+                },
+                {
+                    "coil2", new SactComponentData
+                    {
+                        uId = "coil2",
+                        name = "LadCoilData",
+                        DisplayName = "FQ_OUTPUT",
+                        inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "coil2_in" } }
+                    }
+                }
+            };
+
+            var layout = LadLayoutEngine.LayoutBody(body, CompareState.Equal);
+
+            var fiStart = layout.Elements.First(e => e.UId == "fistart");
+            var fiService = layout.Elements.First(e => e.UId == "fiservice");
+            var fiqMan = layout.Elements.First(e => e.UId == "fiqman");
+            var coil1 = layout.Elements.First(e => e.UId == "coil1");
+            var coil2 = layout.Elements.First(e => e.UId == "coil2");
+
+            // Coils stay on the main line (same row as the longer branch), not the FIQ branch.
+            Assert.Equal(fiStart.Row, coil1.Row);
+            Assert.Equal(fiStart.Row, coil2.Row);
+            Assert.NotEqual(fiStart.Row, fiqMan.Row);
+
+            // Columns follow the longest path, so the merge sits past the longer branch and
+            // the coils are aligned on a global grid (not pulled left by the shorter branch).
+            Assert.Equal(1, fiStart.Column);
+            Assert.Equal(2, fiService.Column);
+            Assert.Equal(1, fiqMan.Column);
+            Assert.Equal(3, coil1.Column);
+            Assert.Equal(4, coil2.Column);
+
+            // The terminal coil is the right-most element in the network.
+            Assert.Equal(coil2.Column, layout.ColumnCount - 1);
+        }
+
+        [Fact]
         public void LayoutAll_NetworkNumbers_AreSequentialFromOne()
         {
             var result = new SactCompareResult

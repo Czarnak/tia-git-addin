@@ -62,6 +62,14 @@ namespace TiaGitAddIn.Services
             return pairs;
         }
 
+        // Lays out a single network using a layered (Sugiyama-style) grid:
+        //   * Column = longest path from the power rail, so a node that merges several
+        //     branches sits one column to the right of its *latest* input. This keeps
+        //     coils/boxes aligned on a global column grid instead of drifting with the
+        //     shortest incoming branch.
+        //   * Row = a primary-branch-first traversal. The first branch out of every fork
+        //     stays on the parent's row (the "main line") and keeps that row straight
+        //     through any merge; only additional parallel branches consume extra rows.
         public static LadNetworkLayout LayoutBody(Dictionary<string, SactComponentData> componentsByUId, CompareState state)
         {
             LadNetworkLayout layout = new()
@@ -75,9 +83,6 @@ namespace TiaGitAddIn.Services
             }
 
             Dictionary<string, string> componentOwnerByConnectorId = new();
-            // ... (rest of layout logic)
-
-
             foreach (var component in componentsByUId.Values)
             {
                 foreach (var input in component.inputConnectors)
@@ -96,8 +101,62 @@ namespace TiaGitAddIn.Services
                 }
             }
 
+            var startElement = FindStartElement(componentsByUId);
+            if (startElement == null || string.IsNullOrEmpty(startElement.uId))
+            {
+                return layout;
+            }
+
+            Dictionary<string, List<string>> successors = BuildSuccessors(componentsByUId, componentOwnerByConnectorId);
+            HashSet<string> reachable = ComputeReachable(startElement.uId, successors);
+            Dictionary<string, int> columnByUId = AssignColumns(reachable, successors);
+            Dictionary<string, int> rowByUId = AssignRows(startElement.uId, reachable, successors);
+
+            int maxCol = 0;
+            int maxRow = 0;
+
+            foreach (var uId in reachable)
+            {
+                int col = columnByUId.TryGetValue(uId, out int c) ? c : 0;
+                int row = rowByUId.TryGetValue(uId, out int r) ? r : 0;
+                maxCol = Math.Max(maxCol, col);
+                maxRow = Math.Max(maxRow, row);
+
+                var current = componentsByUId[uId];
+                if (!IsRoutingOnlyElement(current))
+                {
+                    layout.Elements.Add(BuildElement(current, col, row));
+                }
+            }
+
+            foreach (var uId in reachable)
+            {
+                int col = columnByUId.TryGetValue(uId, out int c) ? c : 0;
+                int row = rowByUId.TryGetValue(uId, out int r) ? r : 0;
+
+                foreach (var succId in successors[uId])
+                {
+                    if (!reachable.Contains(succId))
+                    {
+                        continue;
+                    }
+
+                    int toCol = columnByUId.TryGetValue(succId, out int tc) ? tc : 0;
+                    int toRow = rowByUId.TryGetValue(succId, out int tr) ? tr : 0;
+                    AddOrthogonalWire(layout, col, row, toCol, toRow);
+                }
+            }
+
+            layout.ColumnCount = maxCol + 1;
+            layout.RowCount = maxRow + 1;
+
+            return layout;
+        }
+
+        private static SactComponentData? FindStartElement(Dictionary<string, SactComponentData> componentsByUId)
+        {
             // Find start element (Powerrail)
-            var startElement = componentsByUId.Values.FirstOrDefault(c => 
+            var startElement = componentsByUId.Values.FirstOrDefault(c =>
                 (c.name != null && (c.name.IndexOf("BranchWire", StringComparison.OrdinalIgnoreCase) >= 0 || c.name.IndexOf("Powerrail", StringComparison.OrdinalIgnoreCase) >= 0)) ||
                 (c.DisplayName != null && c.DisplayName.IndexOf("Powerrail", StringComparison.OrdinalIgnoreCase) >= 0) ||
                 c.isStartElement == true);
@@ -109,114 +168,220 @@ namespace TiaGitAddIn.Services
                              ?? componentsByUId.Values.FirstOrDefault();
             }
 
-            if (startElement == null || string.IsNullOrEmpty(startElement.uId))
+            return startElement;
+        }
+
+        // component uId -> ordered, de-duplicated successor component uIds (top-to-bottom
+        // visual order is preserved from the output-connector order).
+        private static Dictionary<string, List<string>> BuildSuccessors(
+            Dictionary<string, SactComponentData> componentsByUId,
+            Dictionary<string, string> componentOwnerByConnectorId)
+        {
+            var successors = new Dictionary<string, List<string>>();
+
+            foreach (var component in componentsByUId.Values)
             {
-                return layout;
+                var ordered = new List<string>();
+                var seen = new HashSet<string>();
+
+                foreach (var output in component.outputConnectors)
+                {
+                    string partnerUId = output.PartnerUId ?? string.Empty;
+                    if (partnerUId.Length == 0 ||
+                        !componentOwnerByConnectorId.TryGetValue(partnerUId, out string partnerCompId))
+                    {
+                        continue;
+                    }
+
+                    if (partnerCompId == component.uId || !componentsByUId.ContainsKey(partnerCompId))
+                    {
+                        continue;
+                    }
+
+                    if (seen.Add(partnerCompId))
+                    {
+                        ordered.Add(partnerCompId);
+                    }
+                }
+
+                successors[component.uId] = ordered;
             }
 
-            HashSet<string> visited = new();
-            Queue<(SactComponentData component, int col, int row)> queue = new();
+            return successors;
+        }
 
-            queue.Enqueue((startElement, 0, 0));
+        private static HashSet<string> ComputeReachable(string startUId, Dictionary<string, List<string>> successors)
+        {
+            var reachable = new HashSet<string>();
+            var stack = new Stack<string>();
+            stack.Push(startUId);
 
-            int maxCol = 0;
-            int maxRow = 0;
-
-            while (queue.Count > 0)
+            while (stack.Count > 0)
             {
-                var (current, col, row) = queue.Dequeue();
-
-                if (string.IsNullOrEmpty(current.uId) || visited.Contains(current.uId))
+                string current = stack.Pop();
+                if (!reachable.Add(current))
                 {
                     continue;
                 }
-                visited.Add(current.uId);
 
-                maxCol = Math.Max(maxCol, col);
-                maxRow = Math.Max(maxRow, row);
-
-                if (!IsRoutingOnlyElement(current))
+                if (successors.TryGetValue(current, out var next))
                 {
-                    List<LadPinLayout> inputPinRows = BuildPinRows(current, current.inputParameters, current.inputConnectors, "IN", true);
-                    List<LadPinLayout> outputPinRows = BuildPinRows(current, current.outputParameters, current.outputConnectors, "OUT", false);
-                    List<string> inputPins = inputPinRows.Select(pin => pin.Name).ToList();
-                    List<string> outputPins = outputPinRows.Select(pin => pin.Name).ToList();
-
-                    layout.Elements.Add(new LadElementLayout
+                    foreach (var succId in next)
                     {
-                        Column = col,
-                        Row = row,
-                        ElementType = MapElementType(current),
-                        DisplayName = current.DisplayName ?? string.Empty,
-                        Operand = current.TopOperandConnector?.DisplayName ?? string.Empty,
-                        Comment = current.Comment ?? string.Empty,
-                        Equation = current.Equation ?? string.Empty,
-                        UId = current.uId,
-                        DiffState = current.State,
-                        InputPins = inputPins,
-                        OutputPins = outputPins,
-                        InputPinRows = inputPinRows,
-                        OutputPinRows = outputPinRows,
-                        Width = CalculateElementWidth(current, inputPins, outputPins),
-                        Height = CalculateElementHeight(current, inputPins, outputPins)
-                    });
-                }
-
-                bool isBranchingElement = current.name == "LadOrWireData" || 
-                                          current.name == "OrBranch" || 
-                                          current.name == "BranchWireData" || 
-                                          current.name == "Powerrail";
-
-                if (isBranchingElement)
-                {
-                    int branchRow = row;
-                    foreach (var output in current.outputConnectors)
-                    {
-                        string partnerUId = output.PartnerUId ?? string.Empty;
-                        if (partnerUId.Length == 0 || !componentOwnerByConnectorId.TryGetValue(partnerUId, out string partnerCompId))
-                        {
-                            continue;
-                        }
-
-                        if (componentsByUId.TryGetValue(partnerCompId, out var nextComp))
-                        {
-                            AddOrthogonalWire(layout, col, row, col + 1, branchRow);
-
-                            queue.Enqueue((nextComp, col + 1, branchRow));
-                            branchRow++;
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var output in current.outputConnectors)
-                    {
-                        string partnerUId = output.PartnerUId ?? string.Empty;
-                        if (partnerUId.Length == 0 || !componentOwnerByConnectorId.TryGetValue(partnerUId, out string partnerCompId))
-                        {
-                            continue;
-                        }
-
-                        if (componentsByUId.TryGetValue(partnerCompId, out var nextComp))
-                        {
-                            AddOrthogonalWire(layout, col, row, col + 1, row);
-
-                            queue.Enqueue((nextComp, col + 1, row));
-                        }
+                        stack.Push(succId);
                     }
                 }
             }
 
-            layout.ColumnCount = maxCol + 1;
-            layout.RowCount = maxRow + 1;
+            return reachable;
+        }
 
-            return layout;
+        // Column = longest path from a source. Computed with memoized recursion over the
+        // predecessor edges; a tentative value guards against (degenerate) cycles.
+        private static Dictionary<string, int> AssignColumns(
+            HashSet<string> reachable,
+            Dictionary<string, List<string>> successors)
+        {
+            var predecessors = new Dictionary<string, List<string>>();
+            foreach (var node in reachable)
+            {
+                predecessors[node] = new List<string>();
+            }
+
+            foreach (var u in reachable)
+            {
+                foreach (var v in successors[u])
+                {
+                    if (reachable.Contains(v))
+                    {
+                        predecessors[v].Add(u);
+                    }
+                }
+            }
+
+            var column = new Dictionary<string, int>();
+
+            int ColumnOf(string node)
+            {
+                if (column.TryGetValue(node, out int existing))
+                {
+                    return existing;
+                }
+
+                column[node] = 0; // tentative value breaks cycles
+                int best = 0;
+                foreach (var predecessor in predecessors[node])
+                {
+                    int candidate = ColumnOf(predecessor) + 1;
+                    if (candidate > best)
+                    {
+                        best = candidate;
+                    }
+                }
+
+                column[node] = best;
+                return best;
+            }
+
+            foreach (var node in reachable)
+            {
+                ColumnOf(node);
+            }
+
+            return column;
+        }
+
+        // Row = primary-branch-first DFS. The first unvisited successor of every node
+        // inherits the node's row (the main line). Each additional branch gets a fresh
+        // row. A merge node keeps the row assigned by the first branch that reaches it,
+        // so the main line runs straight through the merge.
+        private static Dictionary<string, int> AssignRows(
+            string startUId,
+            HashSet<string> reachable,
+            Dictionary<string, List<string>> successors)
+        {
+            var rowByUId = new Dictionary<string, int>();
+            int nextRow = 0;
+
+            void Visit(string nodeId, int preferredRow)
+            {
+                if (rowByUId.ContainsKey(nodeId))
+                {
+                    return;
+                }
+
+                rowByUId[nodeId] = preferredRow;
+
+                bool first = true;
+                foreach (var succId in successors[nodeId])
+                {
+                    if (!reachable.Contains(succId) || rowByUId.ContainsKey(succId))
+                    {
+                        continue;
+                    }
+
+                    if (first)
+                    {
+                        Visit(succId, preferredRow);
+                        first = false;
+                    }
+                    else
+                    {
+                        nextRow++;
+                        Visit(succId, nextRow);
+                    }
+                }
+            }
+
+            Visit(startUId, 0);
+            return rowByUId;
+        }
+
+        private static LadElementLayout BuildElement(SactComponentData current, int col, int row)
+        {
+            List<LadPinLayout> inputPinRows = BuildPinRows(current, current.inputParameters, current.inputConnectors, "IN", true);
+            List<LadPinLayout> outputPinRows = BuildPinRows(current, current.outputParameters, current.outputConnectors, "OUT", false);
+            List<string> inputPins = inputPinRows.Select(pin => pin.Name).ToList();
+            List<string> outputPins = outputPinRows.Select(pin => pin.Name).ToList();
+
+            return new LadElementLayout
+            {
+                Column = col,
+                Row = row,
+                ElementType = MapElementType(current),
+                DisplayName = current.DisplayName ?? string.Empty,
+                Operand = current.TopOperandConnector?.DisplayName ?? string.Empty,
+                Comment = current.Comment ?? string.Empty,
+                Equation = current.Equation ?? string.Empty,
+                UId = current.uId,
+                DiffState = current.State,
+                InputPins = inputPins,
+                OutputPins = outputPins,
+                InputPinRows = inputPinRows,
+                OutputPinRows = outputPinRows,
+                Width = CalculateElementWidth(current, inputPins, outputPins),
+                Height = CalculateElementHeight(current, inputPins, outputPins)
+            };
         }
 
         private static void AddOrthogonalWire(LadNetworkLayout layout, int fromColumn, int fromRow, int toColumn, int toRow)
         {
-            if (fromRow != toRow)
+            if (fromRow == toRow)
             {
+                layout.Wires.Add(new LadWireSegment
+                {
+                    FromColumn = fromColumn,
+                    FromRow = fromRow,
+                    ToColumn = toColumn,
+                    ToRow = toRow,
+                    IsOrBranch = false
+                });
+                return;
+            }
+
+            if (toRow > fromRow)
+            {
+                // Branch opening downwards: drop at the source column, then run along the target row.
                 layout.Wires.Add(new LadWireSegment
                 {
                     FromColumn = fromColumn,
@@ -225,16 +390,35 @@ namespace TiaGitAddIn.Services
                     ToRow = toRow,
                     IsOrBranch = true
                 });
+                layout.Wires.Add(new LadWireSegment
+                {
+                    FromColumn = fromColumn,
+                    FromRow = toRow,
+                    ToColumn = toColumn,
+                    ToRow = toRow,
+                    IsOrBranch = true
+                });
             }
-
-            layout.Wires.Add(new LadWireSegment
+            else
             {
-                FromColumn = fromColumn,
-                FromRow = toRow,
-                ToColumn = toColumn,
-                ToRow = toRow,
-                IsOrBranch = fromRow != toRow
-            });
+                // Branch closing upwards (merge): run along the source row, then rise at the target column.
+                layout.Wires.Add(new LadWireSegment
+                {
+                    FromColumn = fromColumn,
+                    FromRow = fromRow,
+                    ToColumn = toColumn,
+                    ToRow = fromRow,
+                    IsOrBranch = true
+                });
+                layout.Wires.Add(new LadWireSegment
+                {
+                    FromColumn = toColumn,
+                    FromRow = fromRow,
+                    ToColumn = toColumn,
+                    ToRow = toRow,
+                    IsOrBranch = true
+                });
+            }
         }
 
         private static bool IsRoutingOnlyElement(SactComponentData component)
@@ -379,13 +563,13 @@ namespace TiaGitAddIn.Services
             string name = component.name?.ToLowerInvariant() ?? "";
             string displayName = component.DisplayName?.ToLowerInvariant() ?? "";
 
-            if (name == "branchwiredata" || name == "powerrail" || displayName == "powerrail") 
+            if (name == "branchwiredata" || name == "powerrail" || displayName == "powerrail")
                 return LadElementType.Powerrail;
 
-            if (name.Contains("contact") || displayName.Contains("contact")) 
+            if (name.Contains("contact") || displayName.Contains("contact"))
                 return component.negated == true ? LadElementType.NegatedContact : LadElementType.Contact;
 
-            if (name.Contains("coil") || displayName.Contains("coil")) 
+            if (name.Contains("coil") || displayName.Contains("coil"))
                 return component.negated == true ? LadElementType.NegatedCoil : LadElementType.Coil;
 
             switch (component.name)
@@ -396,15 +580,15 @@ namespace TiaGitAddIn.Services
                     return LadElementType.TemplatedContact;
                 case "LadComparatorContactData": return LadElementType.ComparatorBox;
                 case "LadBoxData": return LadElementType.Box;
-                case "LadOrWireData": 
+                case "LadOrWireData":
                 case "OrBranch":
                     return LadElementType.OrBranch;
                 case "LadTemplatedCoilData": return LadElementType.TemplatedCoil;
-                default: 
+                default:
                     // Special names that often appear as DisplayName
                     if (displayName == "move" || displayName == "add" || displayName == "sub" || displayName == "mul" || displayName == "div")
                         return LadElementType.ComparatorBox;
-                    
+
                     if (displayName.StartsWith("call")) return LadElementType.Call;
 
                     return LadElementType.Contact; // Fallback

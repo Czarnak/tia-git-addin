@@ -146,7 +146,7 @@ Do not use customer production projects for public bug reports or fixtures. Use 
 
 ## Coding guidelines
 
-### General C#
+### General C #
 
 - Keep nullable reference types enabled and fix warnings instead of suppressing them.
 - Prefer explicit, small services over large multi-purpose classes.
@@ -332,8 +332,8 @@ git tag v1.2.0
 git push origin v1.2.0
 ```
 
-3. The release workflow builds the Add-In package and uploads `TiaGitAddIn.addin` as the release artifact.
-4. Keep the tagged commit message useful, because it is used as release-note input.
+1. The release workflow builds the Add-In package and uploads `TiaGitAddIn.addin` as the release artifact.
+2. Keep the tagged commit message useful, because it is used as release-note input.
 
 ## Reporting bugs
 
