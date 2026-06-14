@@ -64,11 +64,15 @@ nunit-*.xml
 
 .idea/
 
-.claude/
+.claude/hookify*
+.claude/settings.local.json
 priv/
 graphify-out/cache/
 graphify-out/manifest.json
 graphify-out/cost.json
+graphify-out/graph.html
+graphify-out/.graphify_python
+graphify-out/.graphify_root
 *.log
 .dotnet-home/
 *superpowers*
