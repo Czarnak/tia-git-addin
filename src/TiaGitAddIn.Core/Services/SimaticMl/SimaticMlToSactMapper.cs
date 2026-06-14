@@ -77,11 +77,11 @@ namespace TiaGitAddIn.Services.SimaticMl
         {
             return new SactComponentData
             {
-                name = component.name,
-                uId = component.uId,
+                Name = component.Name,
+                UId = component.UId,
                 State = state,
-                isStartElement = component.isStartElement,
-                negated = component.negated,
+                IsStartElement = component.IsStartElement,
+                Negated = component.Negated,
                 DisplayName = component.DisplayName,
                 TemplateType = component.TemplateType,
                 Comment = component.Comment,
@@ -92,16 +92,16 @@ namespace TiaGitAddIn.Services.SimaticMl
                 TopOperandConnector = component.TopOperandConnector == null
                     ? null
                     : new SactOperandConnector { DisplayName = component.TopOperandConnector.DisplayName },
-                inputParameters = component.inputParameters
+                InputParameters = component.InputParameters
                     .Select(CopyParameter)
                     .ToList(),
-                outputParameters = component.outputParameters
+                OutputParameters = component.OutputParameters
                     .Select(CopyParameter)
                     .ToList(),
-                outputConnectors = component.outputConnectors
+                OutputConnectors = component.OutputConnectors
                     .Select(CopyConnector)
                     .ToList(),
-                inputConnectors = component.inputConnectors
+                InputConnectors = component.InputConnectors
                     .Select(CopyConnector)
                     .ToList()
             };
@@ -203,7 +203,7 @@ namespace TiaGitAddIn.Services.SimaticMl
         {
             return new SactConnectorData
             {
-                uId = connector.uId,
+                UId = connector.UId,
                 PinName = connector.PinName,
                 PartnerUId = connector.PartnerUId
             };

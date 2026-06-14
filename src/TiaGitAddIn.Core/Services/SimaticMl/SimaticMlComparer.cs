@@ -7,16 +7,6 @@ namespace TiaGitAddIn.Services.SimaticMl
 {
     public static class SimaticMlComparer
     {
-        private static readonly string[] InterfaceSectionOrder =
-        {
-            "Input",
-            "Output",
-            "InOut",
-            "Temp",
-            "Constant",
-            "Return"
-        };
-
         public static SactCompareResult Compare(SimaticMlFile? left, SimaticMlFile? right)
         {
             if (left == null && right == null) return new SactCompareResult { State = CompareState.Equal };
@@ -247,8 +237,8 @@ namespace TiaGitAddIn.Services.SimaticMl
 
             return definitionsAreEqual &&
                    string.Equals(left.TopOperandConnector?.DisplayName, right.TopOperandConnector?.DisplayName, StringComparison.Ordinal) &&
-                   ConnectorSignature(left.inputConnectors) == ConnectorSignature(right.inputConnectors) &&
-                   ConnectorSignature(left.outputConnectors) == ConnectorSignature(right.outputConnectors);
+                   ConnectorSignature(left.InputConnectors) == ConnectorSignature(right.InputConnectors) &&
+                   ConnectorSignature(left.OutputConnectors) == ConnectorSignature(right.OutputConnectors);
         }
 
         private static bool ComponentDefinitionsAreEqual(
@@ -257,17 +247,17 @@ namespace TiaGitAddIn.Services.SimaticMl
             Dictionary<string, string> leftRawByUId,
             Dictionary<string, string> rightRawByUId)
         {
-            leftRawByUId.TryGetValue(left.uId, out string? leftRaw);
-            rightRawByUId.TryGetValue(right.uId, out string? rightRaw);
+            leftRawByUId.TryGetValue(left.UId, out string? leftRaw);
+            rightRawByUId.TryGetValue(right.UId, out string? rightRaw);
             if (leftRaw != null || rightRaw != null)
             {
                 return string.Equals(leftRaw, rightRaw, StringComparison.Ordinal);
             }
 
-            return string.Equals(left.name, right.name, StringComparison.Ordinal) &&
+            return string.Equals(left.Name, right.Name, StringComparison.Ordinal) &&
                    string.Equals(left.DisplayName, right.DisplayName, StringComparison.Ordinal) &&
                    string.Equals(left.TemplateType, right.TemplateType, StringComparison.Ordinal) &&
-                   left.negated == right.negated;
+                   left.Negated == right.Negated;
         }
 
         private static Dictionary<string, string> BuildRawComponentXmlByUId(NetworkSourceDefinition? network)
@@ -302,7 +292,7 @@ namespace TiaGitAddIn.Services.SimaticMl
             return string.Join(
                 "|",
                 connectors
-                    .Select(c => $"{GetComponentIdFromPort(c.uId)}>{GetComponentIdFromPort(c.PartnerUId)}")
+                    .Select(c => $"{GetComponentIdFromPort(c.UId)}>{GetComponentIdFromPort(c.PartnerUId)}")
                     .OrderBy(c => c, StringComparer.Ordinal));
         }
 
@@ -322,10 +312,10 @@ namespace TiaGitAddIn.Services.SimaticMl
 
         private static bool IsInfrastructureComponent(SactComponentData component)
         {
-            return component.name == "BranchWireData" ||
-                   component.name == "Powerrail" ||
-                   component.name == "LadOrWireData" ||
-                   component.name == "OrBranch";
+            return component.Name == "BranchWireData" ||
+                   component.Name == "Powerrail" ||
+                   component.Name == "LadOrWireData" ||
+                   component.Name == "OrBranch";
         }
 
         private static Dictionary<string, SactComponentData> WithStates(
@@ -350,26 +340,26 @@ namespace TiaGitAddIn.Services.SimaticMl
         {
             return new SactComponentData
             {
-                name = component.name,
-                uId = component.uId,
+                Name = component.Name,
+                UId = component.UId,
                 State = state,
-                isStartElement = component.isStartElement,
-                negated = component.negated,
+                IsStartElement = component.IsStartElement,
+                Negated = component.Negated,
                 DisplayName = component.DisplayName,
                 TemplateType = component.TemplateType,
                 TopOperandConnector = component.TopOperandConnector == null
                     ? null
                     : new SactOperandConnector { DisplayName = component.TopOperandConnector.DisplayName },
-                inputParameters = component.inputParameters
+                InputParameters = component.InputParameters
                     .Select(CopyParameter)
                     .ToList(),
-                outputParameters = component.outputParameters
+                OutputParameters = component.OutputParameters
                     .Select(CopyParameter)
                     .ToList(),
-                outputConnectors = component.outputConnectors
+                OutputConnectors = component.OutputConnectors
                     .Select(CopyConnector)
                     .ToList(),
-                inputConnectors = component.inputConnectors
+                InputConnectors = component.InputConnectors
                     .Select(CopyConnector)
                     .ToList()
             };
@@ -394,7 +384,7 @@ namespace TiaGitAddIn.Services.SimaticMl
         {
             var keys = new List<string>();
             var seen = new HashSet<string>(StringComparer.Ordinal);
-            var sectionNames = InterfaceSectionOrder
+            var sectionNames = SactInterfaceSections.Order
                 .Concat(right.InterfaceSections.Select(s => s.Name))
                 .Concat(left.InterfaceSections.Select(s => s.Name))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -516,7 +506,7 @@ namespace TiaGitAddIn.Services.SimaticMl
         {
             return new SactConnectorData
             {
-                uId = connector.uId,
+                UId = connector.UId,
                 PinName = connector.PinName,
                 PartnerUId = connector.PartnerUId
             };

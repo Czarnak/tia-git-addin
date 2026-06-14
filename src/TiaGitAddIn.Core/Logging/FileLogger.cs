@@ -5,6 +5,9 @@ namespace TiaGitAddIn.Logging
 {
     public sealed class FileLogger(string logFilePath) : IAddInLogger
     {
+        private const long MaxLogBytes = 5 * 1024 * 1024;
+        private static readonly object SyncRoot = new object();
+
         public FileLogger()
             : this(GetDefaultLogFilePath())
         {
@@ -28,22 +31,38 @@ namespace TiaGitAddIn.Logging
 
         private void Write(string level, string message)
         {
+            string entry = string.Format(
+                "{0:O} [{1}] {2}{3}",
+                DateTimeOffset.Now,
+                level,
+                message,
+                Environment.NewLine);
+
             try
             {
-                string? directory = Path.GetDirectoryName(logFilePath);
-                if (!string.IsNullOrWhiteSpace(directory))
+                // Serialize writes so concurrent loggers don't drop lines via swallowed IOExceptions.
+                lock (SyncRoot)
                 {
-                    Directory.CreateDirectory(directory);
+                    string? directory = Path.GetDirectoryName(logFilePath);
+                    if (!string.IsNullOrWhiteSpace(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    // A rotation failure must not prevent the entry from being written.
+                    try
+                    {
+                        RotateIfNeeded();
+                    }
+                    catch (IOException)
+                    {
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                    }
+
+                    File.AppendAllText(logFilePath, entry);
                 }
-
-                string entry = string.Format(
-                    "{0:O} [{1}] {2}{3}",
-                    DateTimeOffset.Now,
-                    level,
-                    message,
-                    Environment.NewLine);
-
-                File.AppendAllText(logFilePath, entry);
             }
             catch (IOException)
             {
@@ -51,6 +70,23 @@ namespace TiaGitAddIn.Logging
             catch (UnauthorizedAccessException)
             {
             }
+        }
+
+        private void RotateIfNeeded()
+        {
+            var info = new FileInfo(logFilePath);
+            if (!info.Exists || info.Length < MaxLogBytes)
+            {
+                return;
+            }
+
+            string archivePath = logFilePath + ".1";
+            if (File.Exists(archivePath))
+            {
+                File.Delete(archivePath);
+            }
+
+            File.Move(logFilePath, archivePath);
         }
     }
 }

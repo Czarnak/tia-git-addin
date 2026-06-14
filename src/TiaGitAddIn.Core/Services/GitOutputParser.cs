@@ -43,11 +43,13 @@ namespace TiaGitAddIn.Services
                     continue;
                 }
 
-                DateTimeOffset.TryParse(
+                DateTimeOffset? authorDate = DateTimeOffset.TryParse(
                     fields[2],
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.AssumeUniversal,
-                    out DateTimeOffset authorDate);
+                    out DateTimeOffset parsedDate)
+                    ? parsedDate
+                    : null;
 
                 yield return new CommitInfo
                 {
@@ -132,6 +134,8 @@ namespace TiaGitAddIn.Services
             string[] lines = SplitLines(output);
             DiffEntry? currentEntry = null;
             DiffHunk? currentHunk = null;
+            int oldLineNumber = 0;
+            int newLineNumber = 0;
 
             foreach (string line in lines)
             {
@@ -160,23 +164,40 @@ namespace TiaGitAddIn.Services
                     currentHunk = ParseHunkHeader(line);
                     List<DiffHunk> hunks = (List<DiffHunk>)currentEntry.Hunks;
                     hunks.Add(currentHunk);
+                    oldLineNumber = currentHunk.OldStart;
+                    newLineNumber = currentHunk.NewStart;
                 }
                 else if (currentHunk != null)
                 {
-                    currentHunk.Lines = ((List<DiffLine>)currentHunk.Lines);
                     List<DiffLine> hunkLines = (List<DiffLine>)currentHunk.Lines;
 
                     if (line.StartsWith("+", StringComparison.Ordinal))
                     {
-                        hunkLines.Add(new DiffLine { Type = DiffLineType.Added, Content = line.Substring(1) });
+                        hunkLines.Add(new DiffLine
+                        {
+                            Type = DiffLineType.Added,
+                            Content = line.Substring(1),
+                            NewLineNumber = newLineNumber++
+                        });
                     }
                     else if (line.StartsWith("-", StringComparison.Ordinal))
                     {
-                        hunkLines.Add(new DiffLine { Type = DiffLineType.Deleted, Content = line.Substring(1) });
+                        hunkLines.Add(new DiffLine
+                        {
+                            Type = DiffLineType.Deleted,
+                            Content = line.Substring(1),
+                            OldLineNumber = oldLineNumber++
+                        });
                     }
                     else
                     {
-                        hunkLines.Add(new DiffLine { Type = DiffLineType.Context, Content = line.Length > 0 ? line.Substring(1) : line });
+                        hunkLines.Add(new DiffLine
+                        {
+                            Type = DiffLineType.Context,
+                            Content = line.Length > 0 ? line.Substring(1) : line,
+                            OldLineNumber = oldLineNumber++,
+                            NewLineNumber = newLineNumber++
+                        });
                     }
                 }
             }

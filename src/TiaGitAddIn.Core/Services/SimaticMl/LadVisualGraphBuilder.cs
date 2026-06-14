@@ -35,10 +35,10 @@ namespace TiaGitAddIn.Services.SimaticMl
             {
                 var comp = new SactComponentData
                 {
-                    uId = part.UId!.Value.ToString(),
-                    name = MapSimaticPartToSactName(part),
+                    UId = part.UId!.Value.ToString(),
+                    Name = MapSimaticPartToSactName(part),
                     DisplayName = part.Name,
-                    negated = part.Negated.Count > 0,
+                    Negated = part.Negated.Count > 0,
                     DisabledENO = part.DisabledENO,
                     Comment = part.CommentText,
                     Equation = part.Equation,
@@ -52,22 +52,22 @@ namespace TiaGitAddIn.Services.SimaticMl
                     comp.TemplateType = templateValue.Value;
                 }
 
-                componentsByUid[comp.uId] = comp;
+                componentsByUid[comp.UId] = comp;
             }
 
             foreach (var call in network.Calls.Where(c => c.UId.HasValue))
             {
                 var comp = new SactComponentData
                 {
-                    uId = call.UId!.Value.ToString(),
-                    name = "LadBoxData",
+                    UId = call.UId!.Value.ToString(),
+                    Name = "LadBoxData",
                     DisplayName = call.CallInfo?.Name ?? "Call",
                     Comment = call.CommentText,
-                    inputParameters = MapCallParameters(call, IsInputParameter),
-                    outputParameters = MapCallParameters(call, IsOutputParameter)
+                    InputParameters = MapCallParameters(call, IsInputParameter),
+                    OutputParameters = MapCallParameters(call, IsOutputParameter)
                 };
 
-                componentsByUid[comp.uId] = comp;
+                componentsByUid[comp.UId] = comp;
             }
 
             return componentsByUid;
@@ -134,10 +134,10 @@ namespace TiaGitAddIn.Services.SimaticMl
 
             componentsByUid["Powerrail"] = new SactComponentData
             {
-                uId = "Powerrail",
-                name = "BranchWireData",
+                UId = "Powerrail",
+                Name = "BranchWireData",
                 DisplayName = "Powerrail",
-                isStartElement = true
+                IsStartElement = true
             };
         }
 
@@ -159,8 +159,8 @@ namespace TiaGitAddIn.Services.SimaticMl
                     {
                         componentsByUid[id] = new SactComponentData
                         {
-                            uId = id,
-                            name = "LadOrWireData",
+                            UId = id,
+                            Name = "LadOrWireData",
                             DisplayName = conn.Kind ?? "Open"
                         };
                     }
@@ -219,16 +219,16 @@ namespace TiaGitAddIn.Services.SimaticMl
                     string sourcePortId = $"{wireId}_src_{sourceCompId}";
                     string targetPortId = $"{wireId}_tgt_{targetCompId}";
 
-                    sourceComp.outputConnectors.Add(new SactConnectorData
+                    sourceComp.OutputConnectors.Add(new SactConnectorData
                     {
-                        uId = sourcePortId,
+                        UId = sourcePortId,
                         PinName = sourcePin,
                         PartnerUId = targetPortId
                     });
 
-                    targetComp.inputConnectors.Add(new SactConnectorData
+                    targetComp.InputConnectors.Add(new SactConnectorData
                     {
-                        uId = targetPortId,
+                        UId = targetPortId,
                         PinName = targetPin,
                         PartnerUId = sourcePortId
                     });
@@ -294,7 +294,7 @@ namespace TiaGitAddIn.Services.SimaticMl
                 return true;
             }
 
-            return comp.name == "LadLiteralData" || comp.name == "LadOperandData";
+            return comp.Name == "LadLiteralData" || comp.Name == "LadOperandData";
         }
 
         private static bool IsHiddenPin(SactComponentData component, string pinName)
@@ -333,7 +333,7 @@ namespace TiaGitAddIn.Services.SimaticMl
             }
 
             bool assigned = false;
-            foreach (var parameter in component.inputParameters.Concat(component.outputParameters))
+            foreach (var parameter in component.InputParameters.Concat(component.OutputParameters))
             {
                 if (string.Equals(parameter.Name, pinName, StringComparison.OrdinalIgnoreCase))
                 {
@@ -353,8 +353,8 @@ namespace TiaGitAddIn.Services.SimaticMl
             }
 
             var parameters = OutputPins.Contains(pinName!)
-                ? component.outputParameters
-                : component.inputParameters;
+                ? component.OutputParameters
+                : component.InputParameters;
             var existing = parameters.FirstOrDefault(p =>
                 string.Equals(p.Name, pinName, StringComparison.OrdinalIgnoreCase));
 
@@ -377,8 +377,8 @@ namespace TiaGitAddIn.Services.SimaticMl
 
         private static bool IsBoxLike(SactComponentData component)
         {
-            return component.name.IndexOf("Box", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                   component.name.IndexOf("Comparator", StringComparison.OrdinalIgnoreCase) >= 0;
+            return component.Name.IndexOf("Box", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   component.Name.IndexOf("Comparator", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private static string FormatAccessDisplayName(AccessDefinition access)

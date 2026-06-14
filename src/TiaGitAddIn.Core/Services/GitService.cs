@@ -149,6 +149,11 @@ namespace TiaGitAddIn.Services
                 return OperationResult.Fail("Branch name is required.");
             }
 
+            if (name.StartsWith("-", StringComparison.Ordinal))
+            {
+                return OperationResult.Fail("Branch name cannot start with '-'.");
+            }
+
             GitProcessResult result = await RunExclusiveAsync(
                 new[] { "branch", name },
                 ct).ConfigureAwait(false);
@@ -163,6 +168,11 @@ namespace TiaGitAddIn.Services
                 return OperationResult.Fail("Branch name is required.");
             }
 
+            if (name.StartsWith("-", StringComparison.Ordinal))
+            {
+                return OperationResult.Fail("Branch name cannot start with '-'.");
+            }
+
             GitProcessResult result = await RunExclusiveAsync(
                 new[] { "switch", name },
                 ct).ConfigureAwait(false);
@@ -175,6 +185,11 @@ namespace TiaGitAddIn.Services
             if (string.IsNullOrWhiteSpace(branchName))
             {
                 return OperationResult.Fail("Branch name is required.");
+            }
+
+            if (branchName.StartsWith("-", StringComparison.Ordinal))
+            {
+                return OperationResult.Fail("Branch name cannot start with '-'.");
             }
 
             GitProcessResult result = await RunExclusiveAsync(
@@ -213,8 +228,10 @@ namespace TiaGitAddIn.Services
 
         public async Task<DiffResult> GetCommitDiffAsync(string commitHash, CancellationToken ct = default)
         {
+            // diff-tree with --root yields the patch for any commit, including the initial
+            // (parentless) commit where "{hash}^..{hash}" would fail with "unknown revision".
             GitProcessResult result = await RunAsync(
-                new[] { "diff", $"{commitHash}^..{commitHash}" },
+                new[] { "diff-tree", "--no-commit-id", "-p", "--root", commitHash },
                 ct).ConfigureAwait(false);
 
             EnsureSuccess(result, "Unable to read commit diff.");
@@ -224,20 +241,11 @@ namespace TiaGitAddIn.Services
         public async Task<IReadOnlyList<string>> GetCommitFilesAsync(string commitHash, CancellationToken ct = default)
         {
             GitProcessResult result = await RunAsync(
-                new[] { "diff-tree", "--no-commit-id", "--name-status", "-r", commitHash },
+                new[] { "diff-tree", "--no-commit-id", "--name-status", "-r", "--root", commitHash },
                 ct).ConfigureAwait(false);
 
             EnsureSuccess(result, "Unable to read commit files.");
             return GitOutputParser.ParseDiffTree(result.StandardOutput);
-        }
-
-        public async Task<OperationResult> InitAsync(string path, CancellationToken ct = default)
-        {
-            GitProcessResult result = await RunExclusiveAsync(
-                new[] { "init" },
-                ct).ConfigureAwait(false);
-
-            return ToOperationResult(result, "Repository initialized.", "Unable to initialize repository.");
         }
 
         public async Task<IReadOnlyList<RemoteInfo>> GetRemotesAsync(CancellationToken ct = default)

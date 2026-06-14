@@ -8,7 +8,7 @@ namespace TiaGitAddIn.Models
 
         public string AuthorName { get; set; } = string.Empty;
 
-        public DateTimeOffset AuthorDate { get; set; }
+        public DateTimeOffset? AuthorDate { get; set; }
 
         public string Subject { get; set; } = string.Empty;
 

@@ -72,5 +72,43 @@ namespace TiaGitAddIn.Tests.Services
             Assert.Equal("fetch", remotes[0].Purpose);
             Assert.Equal("push", remotes[1].Purpose);
         }
+
+        [Fact]
+        public void ParseDiffAssignsLineNumbersFromHunkHeader()
+        {
+            DiffResult result = GitOutputParser.ParseDiff(
+                "diff --git a/file.txt b/file.txt\n" +
+                "--- a/file.txt\n" +
+                "+++ b/file.txt\n" +
+                "@@ -1,3 +1,4 @@\n" +
+                " context1\n" +
+                "-removed\n" +
+                "+added1\n" +
+                "+added2\n" +
+                " context2\n");
+
+            DiffEntry entry = Assert.Single(result.Entries);
+            Assert.Equal("file.txt", entry.FilePath);
+            DiffHunk hunk = Assert.Single(entry.Hunks);
+
+            // context1 -> old 1 / new 1
+            Assert.Equal(1, hunk.Lines[0].OldLineNumber);
+            Assert.Equal(1, hunk.Lines[0].NewLineNumber);
+
+            // removed -> old 2 / new (none)
+            Assert.Equal(2, hunk.Lines[1].OldLineNumber);
+            Assert.Null(hunk.Lines[1].NewLineNumber);
+
+            // added1 -> old (none) / new 2
+            Assert.Null(hunk.Lines[2].OldLineNumber);
+            Assert.Equal(2, hunk.Lines[2].NewLineNumber);
+
+            // added2 -> new 3
+            Assert.Equal(3, hunk.Lines[3].NewLineNumber);
+
+            // context2 -> old 3 / new 4
+            Assert.Equal(3, hunk.Lines[4].OldLineNumber);
+            Assert.Equal(4, hunk.Lines[4].NewLineNumber);
+        }
     }
 }

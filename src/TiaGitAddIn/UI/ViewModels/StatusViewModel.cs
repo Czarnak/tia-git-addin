@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
 using TiaGitAddIn.UI;
@@ -22,9 +21,6 @@ namespace TiaGitAddIn.UI.ViewModels
         private string trackingSummary = string.Empty;
         private string statusSummary = "Status not loaded";
         private string lastOperationMessage = string.Empty;
-        private string busyMessage = string.Empty;
-        private bool isBusy;
-        private CancellationTokenSource? cts;
 
         public StatusViewModel(IGitService gitService, IUiDispatcher? uiDispatcher = null)
             : base(uiDispatcher)
@@ -34,7 +30,7 @@ namespace TiaGitAddIn.UI.ViewModels
             StageSelectedCommand = new AsyncCommand(p => StageSelectedAsync(p), _ => !IsBusy);
             UnstageSelectedCommand = new AsyncCommand(p => UnstageSelectedAsync(p), _ => !IsBusy);
             StageAllCommand = new AsyncCommand(() => StageAllAsync(), () => !IsBusy);
-            CancelCommand = new RelayCommand(_ => cts?.Cancel(), _ => IsBusy);
+            CancelCommand = new RelayCommand(_ => RequestCancel(), _ => IsBusy);
         }
 
         public ObservableCollection<FileStatusItemViewModel> StagedEntries
@@ -85,143 +81,88 @@ namespace TiaGitAddIn.UI.ViewModels
             private set => SetProperty(lastOperationMessage, value ?? string.Empty, updated => lastOperationMessage = updated);
         }
 
-        public string BusyMessage
+        public AsyncCommand RefreshCommand { get; }
+        public AsyncCommand StageSelectedCommand { get; }
+        public AsyncCommand UnstageSelectedCommand { get; }
+        public AsyncCommand StageAllCommand { get; }
+        public RelayCommand CancelCommand { get; }
+
+        public Task RefreshAsync() =>
+            RunBusyAsync("Refreshing status…", LoadStatusCoreAsync);
+
+        // Status load without the busy/cancel shell, so a post-operation refresh can reuse the
+        // caller's RunBusyAsync scope and token instead of nesting another RunBusyAsync.
+        private async Task LoadStatusCoreAsync(CancellationToken ct)
         {
-            get => busyMessage;
-            private set => SetProperty(busyMessage, value ?? string.Empty, updated => busyMessage = updated);
+            GitStatus status = await gitService.GetStatusAsync(ct).ConfigureAwait(false);
+            InvokeOnUI(() =>
+            {
+                CurrentBranch = string.IsNullOrWhiteSpace(status.CurrentBranch) ? "(unknown)" : status.CurrentBranch;
+                TrackingSummary = BuildTrackingSummary(status);
+                StagedEntries = new ObservableCollection<FileStatusItemViewModel>(status.StagedEntries.Select(e => new FileStatusItemViewModel(e)));
+                UnstagedEntries = new ObservableCollection<FileStatusItemViewModel>(status.UnstagedEntries.Select(e => new FileStatusItemViewModel(e)));
+                UntrackedEntries = new ObservableCollection<FileStatusItemViewModel>(status.UntrackedEntries.Select(e => new FileStatusItemViewModel(e)));
+                Entries = new ObservableCollection<FileStatusItemViewModel>(status.Entries.Select(e => new FileStatusItemViewModel(e)));
+                StatusSummary = status.IsClean ? "Working tree clean" : $"{status.Entries.Count} changed files";
+            });
         }
 
-        public bool IsBusy
-        {
-            get => isBusy;
-            private set
+        public Task StageSelectedAsync(object? parameter) =>
+            ExecuteOnSelectionAsync(parameter, "Staging files…", gitService.StageAsync);
+
+        public Task UnstageSelectedAsync(object? parameter) =>
+            ExecuteOnSelectionAsync(parameter, "Unstaging files…", gitService.UnstageAsync);
+
+        public Task StageAllAsync() =>
+            RunBusyAsync("Staging all files…", async ct =>
             {
-                if (SetProperty(isBusy, value, updated => isBusy = updated))
+                OperationResult result = await gitService.StageAllAsync(ct).ConfigureAwait(false);
+                InvokeOnUI(() => LastOperationMessage = result.DisplayMessage);
+                if (result.Success)
                 {
-                    RaiseCommandStates();
+                    await LoadStatusCoreAsync(ct).ConfigureAwait(false);
                 }
-            }
-        }
+            });
 
-        public ICommand RefreshCommand { get; }
-        public ICommand StageSelectedCommand { get; }
-        public ICommand UnstageSelectedCommand { get; }
-        public ICommand StageAllCommand { get; }
-        public ICommand CancelCommand { get; }
-
-        public async Task RefreshAsync()
+        private Task ExecuteOnSelectionAsync(
+            object? parameter,
+            string message,
+            Func<IReadOnlyList<string>, CancellationToken, Task<OperationResult>> operation)
         {
-            cts?.Cancel();
-            cts = new CancellationTokenSource();
-            var ct = cts.Token;
-            IsBusy = true;
-            BusyMessage = "Refreshing status…";
-            try
+            List<string>? paths = ResolveSelectedPaths(parameter);
+            if (paths == null)
             {
-                GitStatus status = await gitService.GetStatusAsync(ct).ConfigureAwait(false);
-                InvokeOnUI(() =>
+                return Task.CompletedTask;
+            }
+
+            return RunBusyAsync(message, async ct =>
+            {
+                OperationResult result = await operation(paths, ct).ConfigureAwait(false);
+                InvokeOnUI(() => LastOperationMessage = result.DisplayMessage);
+                if (result.Success)
                 {
-                    CurrentBranch = string.IsNullOrWhiteSpace(status.CurrentBranch) ? "(unknown)" : status.CurrentBranch;
-                    TrackingSummary = BuildTrackingSummary(status);
-                    StagedEntries = new ObservableCollection<FileStatusItemViewModel>(status.StagedEntries.Select(e => new FileStatusItemViewModel(e)));
-                    UnstagedEntries = new ObservableCollection<FileStatusItemViewModel>(status.UnstagedEntries.Select(e => new FileStatusItemViewModel(e)));
-                    UntrackedEntries = new ObservableCollection<FileStatusItemViewModel>(status.UntrackedEntries.Select(e => new FileStatusItemViewModel(e)));
-                    Entries = new ObservableCollection<FileStatusItemViewModel>(status.Entries.Select(e => new FileStatusItemViewModel(e)));
-                    StatusSummary = status.IsClean ? "Working tree clean" : $"{status.Entries.Count} changed files";
-                });
-            }
-            catch (OperationCanceledException)
-            {
-                InvokeOnUI(() => LastOperationMessage = "Cancelled.");
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
+                    await LoadStatusCoreAsync(ct).ConfigureAwait(false);
+                }
+            });
         }
 
-        public async Task StageSelectedAsync(object? parameter)
+        private static List<string>? ResolveSelectedPaths(object? parameter)
         {
-            IEnumerable<FileStatusItemViewModel>? selectedItems = null;
-            if (parameter is FileStatusItemViewModel single) selectedItems = new[] { single };
-            else if (parameter is IEnumerable<FileStatusItemViewModel> multiple) selectedItems = multiple;
-            else if (parameter is System.Collections.IList list) selectedItems = list.Cast<FileStatusItemViewModel>();
+            IEnumerable<FileStatusItemViewModel>? selectedItems = parameter switch
+            {
+                FileStatusItemViewModel single => new[] { single },
+                IEnumerable<FileStatusItemViewModel> multiple => multiple,
+                System.Collections.IList list => list.Cast<FileStatusItemViewModel>(),
+                _ => null
+            };
 
-            if (selectedItems == null || !selectedItems.Any()) return;
+            if (selectedItems == null)
+            {
+                return null;
+            }
 
-            IsBusy = true;
-            BusyMessage = "Staging files…";
-            try
-            {
-                List<string> paths = selectedItems.Select(e => e.FilePath).ToList();
-                OperationResult result = await gitService.StageAsync(paths).ConfigureAwait(false);
-                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
-                if (result.Success) await RefreshAsync().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
-        }
-
-        public async Task UnstageSelectedAsync(object? parameter)
-        {
-            IEnumerable<FileStatusItemViewModel>? selectedItems = null;
-            if (parameter is FileStatusItemViewModel single) selectedItems = new[] { single };
-            else if (parameter is IEnumerable<FileStatusItemViewModel> multiple) selectedItems = multiple;
-            else if (parameter is System.Collections.IList list) selectedItems = list.Cast<FileStatusItemViewModel>();
-
-            if (selectedItems == null || !selectedItems.Any()) return;
-
-            IsBusy = true;
-            BusyMessage = "Unstaging files…";
-            try
-            {
-                List<string> paths = selectedItems.Select(e => e.FilePath).ToList();
-                OperationResult result = await gitService.UnstageAsync(paths).ConfigureAwait(false);
-                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
-                if (result.Success) await RefreshAsync().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
-        }
-
-        public async Task StageAllAsync()
-        {
-            IsBusy = true;
-            BusyMessage = "Staging all files…";
-            try
-            {
-                OperationResult result = await gitService.StageAllAsync().ConfigureAwait(false);
-                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
-                if (result.Success) await RefreshAsync().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
+            List<string> paths = selectedItems.Select(e => e.FilePath).ToList();
+            return paths.Count == 0 ? null : paths;
         }
 
         private static string BuildTrackingSummary(GitStatus status)
@@ -233,20 +174,17 @@ namespace TiaGitAddIn.UI.ViewModels
             return string.Join(", ", parts);
         }
 
-        private static string BuildOperationMessage(OperationResult result)
-        {
-            return string.IsNullOrWhiteSpace(result.Detail) ? result.Message : $"{result.Message} {result.Detail}";
-        }
+        protected override void ReportStatus(string message) => LastOperationMessage = message;
 
-        private void RaiseCommandStates()
+        protected override void OnBusyChanged()
         {
             InvokeOnUI(() =>
             {
-                ((AsyncCommand)RefreshCommand).RaiseCanExecuteChanged();
-                ((AsyncCommand)StageSelectedCommand).RaiseCanExecuteChanged();
-                ((AsyncCommand)UnstageSelectedCommand).RaiseCanExecuteChanged();
-                ((AsyncCommand)StageAllCommand).RaiseCanExecuteChanged();
-                ((RelayCommand)CancelCommand).RaiseCanExecuteChanged();
+                RefreshCommand.RaiseCanExecuteChanged();
+                StageSelectedCommand.RaiseCanExecuteChanged();
+                UnstageSelectedCommand.RaiseCanExecuteChanged();
+                StageAllCommand.RaiseCanExecuteChanged();
+                CancelCommand.RaiseCanExecuteChanged();
             });
         }
     }

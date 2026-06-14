@@ -8,6 +8,10 @@ namespace TiaGitAddIn.Models
 
         public string Detail { get; set; } = string.Empty;
 
+        /// <summary>User-facing message combining <see cref="Message"/> with <see cref="Detail"/> when present.</summary>
+        public string DisplayMessage =>
+            string.IsNullOrWhiteSpace(Detail) ? Message : $"{Message} {Detail}";
+
         public static OperationResult Ok(string message = "") =>
             new()
             { Success = true, Message = message };

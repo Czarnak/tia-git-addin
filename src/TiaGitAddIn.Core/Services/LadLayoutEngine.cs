@@ -85,32 +85,32 @@ namespace TiaGitAddIn.Services
             Dictionary<string, string> componentOwnerByConnectorId = new();
             foreach (var component in componentsByUId.Values)
             {
-                foreach (var input in component.inputConnectors)
+                foreach (var input in component.InputConnectors)
                 {
-                    if (!string.IsNullOrEmpty(input.uId))
+                    if (!string.IsNullOrEmpty(input.UId))
                     {
-                        componentOwnerByConnectorId[input.uId] = component.uId;
+                        componentOwnerByConnectorId[input.UId] = component.UId;
                     }
                 }
-                foreach (var output in component.outputConnectors)
+                foreach (var output in component.OutputConnectors)
                 {
-                    if (!string.IsNullOrEmpty(output.uId))
+                    if (!string.IsNullOrEmpty(output.UId))
                     {
-                        componentOwnerByConnectorId[output.uId] = component.uId;
+                        componentOwnerByConnectorId[output.UId] = component.UId;
                     }
                 }
             }
 
             var startElement = FindStartElement(componentsByUId);
-            if (startElement == null || string.IsNullOrEmpty(startElement.uId))
+            if (startElement == null || string.IsNullOrEmpty(startElement.UId))
             {
                 return layout;
             }
 
             Dictionary<string, List<string>> successors = BuildSuccessors(componentsByUId, componentOwnerByConnectorId);
-            HashSet<string> reachable = ComputeReachable(startElement.uId, successors);
+            HashSet<string> reachable = ComputeReachable(startElement.UId, successors);
             Dictionary<string, int> columnByUId = AssignColumns(reachable, successors);
-            Dictionary<string, int> rowByUId = AssignRows(startElement.uId, reachable, successors);
+            Dictionary<string, int> rowByUId = AssignRows(startElement.UId, reachable, successors);
 
             int maxCol = 0;
             int maxRow = 0;
@@ -157,14 +157,14 @@ namespace TiaGitAddIn.Services
         {
             // Find start element (Powerrail)
             var startElement = componentsByUId.Values.FirstOrDefault(c =>
-                (c.name != null && (c.name.IndexOf("BranchWire", StringComparison.OrdinalIgnoreCase) >= 0 || c.name.IndexOf("Powerrail", StringComparison.OrdinalIgnoreCase) >= 0)) ||
+                (c.Name != null && (c.Name.IndexOf("BranchWire", StringComparison.OrdinalIgnoreCase) >= 0 || c.Name.IndexOf("Powerrail", StringComparison.OrdinalIgnoreCase) >= 0)) ||
                 (c.DisplayName != null && c.DisplayName.IndexOf("Powerrail", StringComparison.OrdinalIgnoreCase) >= 0) ||
-                c.isStartElement == true);
+                c.IsStartElement == true);
 
             if (startElement == null)
             {
                 // Fallback: pick any element that has no inputs or just the first element
-                startElement = componentsByUId.Values.FirstOrDefault(c => c.inputConnectors.Count == 0)
+                startElement = componentsByUId.Values.FirstOrDefault(c => c.InputConnectors.Count == 0)
                              ?? componentsByUId.Values.FirstOrDefault();
             }
 
@@ -184,7 +184,7 @@ namespace TiaGitAddIn.Services
                 var ordered = new List<string>();
                 var seen = new HashSet<string>();
 
-                foreach (var output in component.outputConnectors)
+                foreach (var output in component.OutputConnectors)
                 {
                     string partnerUId = output.PartnerUId ?? string.Empty;
                     if (partnerUId.Length == 0 ||
@@ -193,7 +193,7 @@ namespace TiaGitAddIn.Services
                         continue;
                     }
 
-                    if (partnerCompId == component.uId || !componentsByUId.ContainsKey(partnerCompId))
+                    if (partnerCompId == component.UId || !componentsByUId.ContainsKey(partnerCompId))
                     {
                         continue;
                     }
@@ -204,7 +204,7 @@ namespace TiaGitAddIn.Services
                     }
                 }
 
-                successors[component.uId] = ordered;
+                successors[component.UId] = ordered;
             }
 
             return successors;
@@ -339,8 +339,8 @@ namespace TiaGitAddIn.Services
 
         private static LadElementLayout BuildElement(SactComponentData current, int col, int row)
         {
-            List<LadPinLayout> inputPinRows = BuildPinRows(current, current.inputParameters, current.inputConnectors, "IN", true);
-            List<LadPinLayout> outputPinRows = BuildPinRows(current, current.outputParameters, current.outputConnectors, "OUT", false);
+            List<LadPinLayout> inputPinRows = BuildPinRows(current, current.InputParameters, current.InputConnectors, "IN", true);
+            List<LadPinLayout> outputPinRows = BuildPinRows(current, current.OutputParameters, current.OutputConnectors, "OUT", false);
             List<string> inputPins = inputPinRows.Select(pin => pin.Name).ToList();
             List<string> outputPins = outputPinRows.Select(pin => pin.Name).ToList();
 
@@ -353,7 +353,7 @@ namespace TiaGitAddIn.Services
                 Operand = current.TopOperandConnector?.DisplayName ?? string.Empty,
                 Comment = current.Comment ?? string.Empty,
                 Equation = current.Equation ?? string.Empty,
-                UId = current.uId,
+                UId = current.UId,
                 DiffState = current.State,
                 InputPins = inputPins,
                 OutputPins = outputPins,
@@ -423,7 +423,7 @@ namespace TiaGitAddIn.Services
 
         private static bool IsRoutingOnlyElement(SactComponentData component)
         {
-            return component.name == "LadOrWireData" || component.name == "OrBranch";
+            return component.Name == "LadOrWireData" || component.Name == "OrBranch";
         }
 
         private static List<LadPinLayout> BuildPinRows(
@@ -463,7 +463,7 @@ namespace TiaGitAddIn.Services
                     }));
             }
 
-            bool hasEnableConnector = component.inputConnectors.Any(c => IsPinName(c.PinName, "en"));
+            bool hasEnableConnector = component.InputConnectors.Any(c => IsPinName(c.PinName, "en"));
             bool hasEnableOutputConnector = connectors.Any(c => IsPinName(c.PinName, "eno"));
             if (IsBoxLike(component) && !isInput && (hasEnableConnector || hasEnableOutputConnector) && !rows.Any(p => IsPinName(p.Name, "eno")))
             {
@@ -551,7 +551,7 @@ namespace TiaGitAddIn.Services
 
         private static bool IsBoxLike(SactComponentData component)
         {
-            string name = component.name ?? string.Empty;
+            string name = component.Name ?? string.Empty;
             string displayName = component.DisplayName ?? string.Empty;
 
             return name.IndexOf("Box", StringComparison.OrdinalIgnoreCase) >= 0 ||
@@ -560,19 +560,19 @@ namespace TiaGitAddIn.Services
 
         private static LadElementType MapElementType(SactComponentData component)
         {
-            string name = component.name?.ToLowerInvariant() ?? "";
+            string name = component.Name?.ToLowerInvariant() ?? "";
             string displayName = component.DisplayName?.ToLowerInvariant() ?? "";
 
             if (name == "branchwiredata" || name == "powerrail" || displayName == "powerrail")
                 return LadElementType.Powerrail;
 
             if (name.Contains("contact") || displayName.Contains("contact"))
-                return component.negated == true ? LadElementType.NegatedContact : LadElementType.Contact;
+                return component.Negated == true ? LadElementType.NegatedContact : LadElementType.Contact;
 
             if (name.Contains("coil") || displayName.Contains("coil"))
-                return component.negated == true ? LadElementType.NegatedCoil : LadElementType.Coil;
+                return component.Negated == true ? LadElementType.NegatedCoil : LadElementType.Coil;
 
-            switch (component.name)
+            switch (component.Name)
             {
                 case "LadTemplatedContactData":
                     if (component.TemplateType == "P") return LadElementType.PEdgeContact;

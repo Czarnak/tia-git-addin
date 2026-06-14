@@ -59,16 +59,14 @@ namespace TiaGitAddIn.UI
                         "Unable to resolve a VCI workspace path from the selected TIA item.");
                 }
 
-                string resolvedWorkspacePath = workspacePath;
-                string? repositoryRoot = repositoryDiscovery.FindRepositoryRoot(resolvedWorkspacePath);
+                string? repositoryRoot = repositoryDiscovery.FindRepositoryRoot(workspacePath);
                 if (repositoryRoot == null || repositoryRoot.Trim().Length == 0)
                 {
                     return GitPanelLaunchResult.Fail(
                         "The selected VCI workspace is not inside a Git repository.");
                 }
 
-                string resolvedRepositoryRoot = repositoryRoot;
-                GitConfiguration configuration = configurationService.Load(resolvedRepositoryRoot);
+                GitConfiguration configuration = configurationService.Load(repositoryRoot);
                 string gitExecutablePath = string.IsNullOrWhiteSpace(configuration.GitExecutablePath)
                     ? "git"
                     : configuration.GitExecutablePath!;

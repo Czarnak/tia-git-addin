@@ -14,22 +14,16 @@ namespace TiaGitAddIn.Services
             CancellationToken cancellationToken,
             bool waitForTurn = true)
         {
-            bool acquired = waitForTurn
-                ? await WaitAsync(cancellationToken).ConfigureAwait(false)
-                : semaphore.Wait(0);
-
-            if (!acquired)
+            if (waitForTurn)
+            {
+                await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+            }
+            else if (!semaphore.Wait(0))
             {
                 throw new GitOperationInProgressException();
             }
 
             return new Lease(semaphore);
-        }
-
-        private async Task<bool> WaitAsync(CancellationToken cancellationToken)
-        {
-            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-            return true;
         }
 
         private sealed class Lease(SemaphoreSlim semaphore) : IDisposable

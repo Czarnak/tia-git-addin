@@ -117,9 +117,6 @@ namespace TiaGitAddIn.Tests.UI
             public Task<IReadOnlyList<string>> GetCommitFilesAsync(string commitHash, CancellationToken ct = default) =>
                 Task.FromResult<IReadOnlyList<string>>(new List<string>());
 
-            public Task<OperationResult> InitAsync(string path, CancellationToken ct = default) =>
-                Task.FromResult(OperationResult.Ok("Repository initialized."));
-
             public Task<IReadOnlyList<RemoteInfo>> GetRemotesAsync(CancellationToken ct = default) =>
                 Task.FromResult<IReadOnlyList<RemoteInfo>>(new List<RemoteInfo>());
         }

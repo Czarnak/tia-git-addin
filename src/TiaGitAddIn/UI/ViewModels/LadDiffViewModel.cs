@@ -13,32 +13,20 @@ namespace TiaGitAddIn.UI.ViewModels
 {
     public class LadDiffViewModel : ViewModelBase
     {
-        private readonly IGitFileExtractor _gitFileExtractor;
-        private readonly ISactService _sactService;
-        private readonly IAddInLogger _logger;
-        private readonly IUiDispatcher? _uiDispatcher;
+        private readonly IGitFileExtractor gitFileExtractor;
+        private readonly ISactService sactService;
+        private readonly IAddInLogger logger;
 
-        private bool _isLadDiffLoaded;
-        private string _ladDiffError = string.Empty;
-        private bool _isBusy;
-        private string _busyMessage = string.Empty;
-        private string _interfaceTitle = string.Empty;
-        private static readonly string[] InterfaceSectionOrder =
-        {
-            "Input",
-            "Output",
-            "InOut",
-            "Temp",
-            "Constant",
-            "Return"
-        };
+        private bool isLadDiffLoaded;
+        private string ladDiffError = string.Empty;
+        private string interfaceTitle = string.Empty;
 
         public LadDiffViewModel(IGitFileExtractor gitFileExtractor, ISactService sactService, IAddInLogger logger, IUiDispatcher? uiDispatcher)
+            : base(uiDispatcher)
         {
-            _gitFileExtractor = gitFileExtractor;
-            _sactService = sactService;
-            _logger = logger;
-            _uiDispatcher = uiDispatcher;
+            this.gitFileExtractor = gitFileExtractor;
+            this.sactService = sactService;
+            this.logger = logger;
             Networks = new ObservableCollection<LadNetworkPairViewModel>();
             InterfaceRows = new ObservableCollection<LadInterfaceRowViewModel>();
         }
@@ -48,44 +36,32 @@ namespace TiaGitAddIn.UI.ViewModels
 
         public bool IsLadDiffLoaded
         {
-            get => _isLadDiffLoaded;
-            set => SetProperty(ref _isLadDiffLoaded, value);
+            get => isLadDiffLoaded;
+            set => SetProperty(ref isLadDiffLoaded, value);
         }
 
         public string LadDiffError
         {
-            get => _ladDiffError;
-            set => SetProperty(ref _ladDiffError, value);
+            get => ladDiffError;
+            set => SetProperty(ref ladDiffError, value);
         }
 
-        public bool IsSactAvailable => _sactService.IsAvailable;
-
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set => SetProperty(ref _isBusy, value);
-        }
-
-        public string BusyMessage
-        {
-            get => _busyMessage;
-            set => SetProperty(ref _busyMessage, value);
-        }
+        public bool IsSactAvailable => sactService.IsAvailable;
 
         public string InterfaceTitle
         {
-            get => _interfaceTitle;
-            set => SetProperty(ref _interfaceTitle, value);
+            get => interfaceTitle;
+            set => SetProperty(ref interfaceTitle, value);
         }
 
         public async Task LoadLadDiffAsync(string? commitHash, string filePath, CancellationToken ct)
         {
-            _logger.Info($"LoadLadDiffAsync started for {filePath} at commit {commitHash ?? "WORKING_TREE"}");
+            logger.Info($"LoadLadDiffAsync started for {filePath} at commit {commitHash ?? "WORKING_TREE"}");
 
             if (!IsSactAvailable)
             {
-                _logger.Info("LoadLadDiffAsync: SACT is not available.");
-                LadDiffError = "SACT not installed \u2014 install SIMATIC Automation Compare Tool for visual LAD diff.";
+                logger.Info("LoadLadDiffAsync: SACT is not available.");
+                LadDiffError = "SACT not installed — install SIMATIC Automation Compare Tool for visual LAD diff.";
                 IsLadDiffLoaded = false;
                 return;
             }
@@ -94,84 +70,69 @@ namespace TiaGitAddIn.UI.ViewModels
             BusyMessage = "Loading LAD diff...";
             LadDiffError = string.Empty;
 
-            if (_uiDispatcher != null)
-            {
-                _uiDispatcher.Invoke(() =>
-                {
-                    Networks.Clear();
-                    InterfaceRows.Clear();
-                });
-            }
-            else
+            InvokeOnUI(() =>
             {
                 Networks.Clear();
                 InterfaceRows.Clear();
-            }
+            });
 
-            string rightTempPath = string.Empty;
+            string? rightTempPath = null;
             string? leftTempPath = null;
 
             try
             {
-                rightTempPath = await _gitFileExtractor.ExtractFileAsync(commitHash, filePath, ct).ConfigureAwait(false);
-                leftTempPath = await _gitFileExtractor.ExtractParentFileAsync(commitHash, filePath, ct).ConfigureAwait(false);
+                rightTempPath = await gitFileExtractor.ExtractFileAsync(commitHash, filePath, ct).ConfigureAwait(false);
+                leftTempPath = await gitFileExtractor.ExtractParentFileAsync(commitHash, filePath, ct).ConfigureAwait(false);
 
-                _logger.Info("LoadLadDiffAsync: Invoking SACT CompareAsync...");
-                SactCompareResult? sactResult = await _sactService.CompareAsync(leftTempPath, rightTempPath, ct).ConfigureAwait(true);
+                logger.Info("LoadLadDiffAsync: Invoking SACT CompareAsync...");
+                SactCompareResult? sactResult = await sactService.CompareAsync(leftTempPath, rightTempPath, ct).ConfigureAwait(true);
 
                 if (sactResult == null)
                 {
-                    _logger.Info("LoadLadDiffAsync: CompareAsync returned null. Setting error message.");
-                    LadDiffError = "Failed to parse visual logic graph or timeout occurred. Please fall back to text view.";
+                    logger.Info("LoadLadDiffAsync: CompareAsync returned null. Setting error message.");
+                    LadDiffError = "Failed to parse visual logic graph. Please fall back to text view.";
                     IsLadDiffLoaded = false;
                     return;
                 }
 
-                _logger.Info("LoadLadDiffAsync: CompareAsync succeeded. Generating layouts.");
+                logger.Info("LoadLadDiffAsync: CompareAsync succeeded. Generating layouts.");
                 var netPairs = LadLayoutEngine.LayoutAll(sactResult);
-                
+
                 InterfaceTitle = GetInterfaceTitle(sactResult);
                 PopulateInterfaceRows(sactResult.Interface?.Members);
                 PopulateNetworks(netPairs);
                 IsLadDiffLoaded = true;
-                _logger.Info($"LoadLadDiffAsync: Completed successfully. Generated {netPairs.Count} network pairs.");
+                logger.Info($"LoadLadDiffAsync: Completed successfully. Generated {netPairs.Count} network pairs.");
             }
             catch (Exception ex)
             {
-                _logger.Error($"LoadLadDiffAsync: Exception caught: {ex.Message}", ex);
+                logger.Error($"LoadLadDiffAsync: Exception caught: {ex.Message}", ex);
                 LadDiffError = $"Error computing visual diff: {ex.Message}";
                 IsLadDiffLoaded = false;
             }
             finally
             {
+                CleanupTempFile(leftTempPath);
+                CleanupTempFile(rightTempPath);
                 IsBusy = false;
             }
         }
 
         private void PopulateNetworks(List<Models.Lad.LadNetworkPairLayout> layouts)
         {
-            Action action = () =>
+            InvokeOnUI(() =>
             {
                 Networks.Clear();
                 foreach (var layout in layouts)
                 {
                     Networks.Add(new LadNetworkPairViewModel(layout));
                 }
-            };
-
-            if (_uiDispatcher != null)
-            {
-                _uiDispatcher.Invoke(action);
-            }
-            else
-            {
-                action();
-            }
+            });
         }
 
         private void PopulateInterfaceRows(List<SactInterfaceMemberComparison>? rows)
         {
-            Action action = () =>
+            InvokeOnUI(() =>
             {
                 InterfaceRows.Clear();
                 if (rows == null)
@@ -183,16 +144,7 @@ namespace TiaGitAddIn.UI.ViewModels
                 {
                     InterfaceRows.Add(row);
                 }
-            };
-
-            if (_uiDispatcher != null)
-            {
-                _uiDispatcher.Invoke(action);
-            }
-            else
-            {
-                action();
-            }
+            });
         }
 
         public void Clear()
@@ -201,37 +153,30 @@ namespace TiaGitAddIn.UI.ViewModels
             LadDiffError = string.Empty;
             InterfaceTitle = string.Empty;
 
-            if (_uiDispatcher != null)
-            {
-                _uiDispatcher.Invoke(() =>
-                {
-                    Networks.Clear();
-                    InterfaceRows.Clear();
-                });
-            }
-            else
+            InvokeOnUI(() =>
             {
                 Networks.Clear();
                 InterfaceRows.Clear();
-            }
+            });
         }
 
-        private void CleanupTempFile(string? path)
+        private static void CleanupTempFile(string? path)
         {
-            string tempPath = path ?? string.Empty;
-            if (tempPath.Length > 0)
+            if (string.IsNullOrEmpty(path))
             {
-                // Only cleanup if it's actually a temp file (working tree diff uses actual file for rightTempPath)
-                if (File.Exists(tempPath) && tempPath.StartsWith(Path.GetTempPath(), StringComparison.OrdinalIgnoreCase))
+                return;
+            }
+
+            // Only delete genuine temp files; working-tree diffs return the real repo file path.
+            if (File.Exists(path) && path.StartsWith(Path.GetTempPath(), StringComparison.OrdinalIgnoreCase))
+            {
+                try
                 {
-                    try
-                    {
-                        File.Delete(tempPath);
-                    }
-                    catch
-                    {
-                        // Ignore cleanup errors
-                    }
+                    File.Delete(path);
+                }
+                catch
+                {
+                    // Ignore cleanup errors
                 }
             }
         }
@@ -242,8 +187,8 @@ namespace TiaGitAddIn.UI.ViewModels
             var rowsBySection = rows
                 .GroupBy(r => r.Section)
                 .ToDictionary(g => g.Key, g => g.ToList(), StringComparer.OrdinalIgnoreCase);
-            var sectionNames = InterfaceSectionOrder
-                .Concat(rows.Select(r => r.Section).Where(s => !InterfaceSectionOrder.Contains(s, StringComparer.OrdinalIgnoreCase)))
+            var sectionNames = SactInterfaceSections.Order
+                .Concat(rows.Select(r => r.Section).Where(s => !SactInterfaceSections.Order.Contains(s, StringComparer.OrdinalIgnoreCase)))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 

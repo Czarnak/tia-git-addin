@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
 using TiaGitAddIn.UI;
@@ -17,9 +16,6 @@ namespace TiaGitAddIn.UI.ViewModels
         private BranchInfo? selectedBranch;
         private string newBranchName = string.Empty;
         private string lastOperationMessage = string.Empty;
-        private string busyMessage = string.Empty;
-        private bool isBusy;
-        private CancellationTokenSource? cts;
 
         public BranchViewModel(IGitService gitService, IUiDispatcher? uiDispatcher = null)
             : base(uiDispatcher)
@@ -32,7 +28,7 @@ namespace TiaGitAddIn.UI.ViewModels
             FetchCommand = new AsyncCommand(() => FetchAsync(), () => !IsBusy);
             PullCommand = new AsyncCommand(() => PullAsync(), () => !IsBusy);
             PushCommand = new AsyncCommand(() => PushAsync(), () => !IsBusy);
-            CancelCommand = new RelayCommand(_ => cts?.Cancel(), _ => IsBusy);
+            CancelCommand = new RelayCommand(_ => RequestCancel(), _ => IsBusy);
         }
 
         public ObservableCollection<BranchInfo> Branches
@@ -48,7 +44,7 @@ namespace TiaGitAddIn.UI.ViewModels
             {
                 if (SetProperty(selectedBranch, value, updated => selectedBranch = updated))
                 {
-                    InvokeOnUI(() => ((AsyncCommand)SwitchBranchCommand).RaiseCanExecuteChanged());
+                    InvokeOnUI(() => SwitchBranchCommand.RaiseCanExecuteChanged());
                 }
             }
         }
@@ -60,7 +56,7 @@ namespace TiaGitAddIn.UI.ViewModels
             {
                 if (SetProperty(newBranchName, value ?? string.Empty, updated => newBranchName = updated))
                 {
-                    InvokeOnUI(() => ((AsyncCommand)CreateBranchCommand).RaiseCanExecuteChanged());
+                    InvokeOnUI(() => CreateBranchCommand.RaiseCanExecuteChanged());
                 }
             }
         }
@@ -71,222 +67,89 @@ namespace TiaGitAddIn.UI.ViewModels
             private set => SetProperty(lastOperationMessage, value ?? string.Empty, updated => lastOperationMessage = updated);
         }
 
-        public string BusyMessage
+        public AsyncCommand RefreshCommand { get; }
+        public AsyncCommand CreateBranchCommand { get; }
+        public AsyncCommand SwitchBranchCommand { get; }
+        public AsyncCommand FetchCommand { get; }
+        public AsyncCommand PullCommand { get; }
+        public AsyncCommand PushCommand { get; }
+        public RelayCommand CancelCommand { get; }
+
+        public Task RefreshAsync() =>
+            RunBusyAsync("Loading branches…", LoadBranchesCoreAsync);
+
+        // Branch load without the busy/cancel shell, so a post-operation refresh can reuse the
+        // caller's RunBusyAsync scope and token instead of nesting another RunBusyAsync.
+        private async Task LoadBranchesCoreAsync(CancellationToken ct)
         {
-            get => busyMessage;
-            private set => SetProperty(busyMessage, value ?? string.Empty, updated => busyMessage = updated);
+            var branchList = await gitService.GetBranchesAsync(ct).ConfigureAwait(false);
+            InvokeOnUI(() =>
+            {
+                Branches = new ObservableCollection<BranchInfo>(branchList);
+                SelectedBranch = Branches.FirstOrDefault(b => b.IsCurrent) ?? Branches.FirstOrDefault();
+            });
         }
 
-        public bool IsBusy
-        {
-            get => isBusy;
-            private set
-            {
-                if (SetProperty(isBusy, value, updated => isBusy = updated))
-                {
-                    RaiseCommandStates();
-                }
-            }
-        }
-
-        public ICommand RefreshCommand { get; }
-        public ICommand CreateBranchCommand { get; }
-        public ICommand SwitchBranchCommand { get; }
-        public ICommand FetchCommand { get; }
-        public ICommand PullCommand { get; }
-        public ICommand PushCommand { get; }
-        public ICommand CancelCommand { get; }
-
-        public async Task RefreshAsync()
-        {
-            cts?.Cancel();
-            cts = new CancellationTokenSource();
-            var ct = cts.Token;
-            IsBusy = true;
-            BusyMessage = "Loading branches…";
-            try
-            {
-                var branchList = await gitService.GetBranchesAsync(ct).ConfigureAwait(false);
-                InvokeOnUI(() =>
-                {
-                    Branches = new ObservableCollection<BranchInfo>(branchList);
-                    SelectedBranch = Branches.FirstOrDefault(b => b.IsCurrent) ?? Branches.FirstOrDefault();
-                });
-            }
-            catch (OperationCanceledException)
-            {
-                InvokeOnUI(() => LastOperationMessage = "Cancelled.");
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
-        }
-
-        private async Task CreateBranchAsync()
-        {
-            cts?.Cancel();
-            cts = new CancellationTokenSource();
-            var ct = cts.Token;
-            IsBusy = true;
-            BusyMessage = "Creating branch…";
-            try
+        private Task CreateBranchAsync() =>
+            RunBusyAsync("Creating branch…", async ct =>
             {
                 var result = await gitService.CreateBranchAsync(NewBranchName, ct).ConfigureAwait(false);
                 InvokeOnUI(() =>
                 {
-                    LastOperationMessage = BuildOperationMessage(result);
+                    LastOperationMessage = result.DisplayMessage;
                     if (result.Success) NewBranchName = string.Empty;
                 });
-                if (result.Success) await RefreshAsync().ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
+                if (result.Success) await LoadBranchesCoreAsync(ct).ConfigureAwait(false);
+            });
+
+        private Task SwitchBranchAsync()
+        {
+            BranchInfo? target = SelectedBranch;
+            if (target == null) return Task.CompletedTask;
+
+            return RunBusyAsync($"Switching to {target.Name}…", async ct =>
             {
-                InvokeOnUI(() => LastOperationMessage = "Cancelled.");
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
+                var result = await gitService.SwitchBranchAsync(target.Name, ct).ConfigureAwait(false);
+                InvokeOnUI(() => LastOperationMessage = result.DisplayMessage);
+                if (result.Success) await LoadBranchesCoreAsync(ct).ConfigureAwait(false);
+            });
         }
 
-        private async Task SwitchBranchAsync()
-        {
-            if (SelectedBranch == null) return;
-            cts?.Cancel();
-            cts = new CancellationTokenSource();
-            var ct = cts.Token;
-            IsBusy = true;
-            BusyMessage = $"Switching to {SelectedBranch.Name}…";
-            try
-            {
-                var result = await gitService.SwitchBranchAsync(SelectedBranch.Name, ct).ConfigureAwait(false);
-                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
-                if (result.Success) await RefreshAsync().ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-                InvokeOnUI(() => LastOperationMessage = "Cancelled.");
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
-        }
-
-        private async Task FetchAsync()
-        {
-            cts?.Cancel();
-            cts = new CancellationTokenSource();
-            var ct = cts.Token;
-            IsBusy = true;
-            BusyMessage = "Fetching…";
-            try
+        private Task FetchAsync() =>
+            RunBusyAsync("Fetching…", async ct =>
             {
                 var result = await gitService.FetchAsync(ct: ct).ConfigureAwait(false);
-                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
-            }
-            catch (OperationCanceledException)
-            {
-                InvokeOnUI(() => LastOperationMessage = "Cancelled.");
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
-        }
+                InvokeOnUI(() => LastOperationMessage = result.DisplayMessage);
+            });
 
-        private async Task PullAsync()
-        {
-            cts?.Cancel();
-            cts = new CancellationTokenSource();
-            var ct = cts.Token;
-            IsBusy = true;
-            BusyMessage = "Pulling…";
-            try
+        private Task PullAsync() =>
+            RunBusyAsync("Pulling…", async ct =>
             {
                 var result = await gitService.PullAsync(ct: ct).ConfigureAwait(false);
-                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
-                if (result.Success) await RefreshAsync().ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-                InvokeOnUI(() => LastOperationMessage = "Cancelled.");
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
-        }
+                InvokeOnUI(() => LastOperationMessage = result.DisplayMessage);
+                if (result.Success) await LoadBranchesCoreAsync(ct).ConfigureAwait(false);
+            });
 
-        private async Task PushAsync()
-        {
-            cts?.Cancel();
-            cts = new CancellationTokenSource();
-            var ct = cts.Token;
-            IsBusy = true;
-            BusyMessage = "Pushing…";
-            try
+        private Task PushAsync() =>
+            RunBusyAsync("Pushing…", async ct =>
             {
                 var result = await gitService.PushAsync(ct: ct).ConfigureAwait(false);
-                InvokeOnUI(() => LastOperationMessage = BuildOperationMessage(result));
-            }
-            catch (OperationCanceledException)
-            {
-                InvokeOnUI(() => LastOperationMessage = "Cancelled.");
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
-        }
+                InvokeOnUI(() => LastOperationMessage = result.DisplayMessage);
+            });
 
-        private static string BuildOperationMessage(OperationResult result)
-        {
-            return string.IsNullOrWhiteSpace(result.Detail) ? result.Message : $"{result.Message} {result.Detail}";
-        }
+        protected override void ReportStatus(string message) => LastOperationMessage = message;
 
-        private void RaiseCommandStates()
+        protected override void OnBusyChanged()
         {
             InvokeOnUI(() =>
             {
-                ((AsyncCommand)RefreshCommand).RaiseCanExecuteChanged();
-                ((AsyncCommand)CreateBranchCommand).RaiseCanExecuteChanged();
-                ((AsyncCommand)SwitchBranchCommand).RaiseCanExecuteChanged();
-                ((AsyncCommand)FetchCommand).RaiseCanExecuteChanged();
-                ((AsyncCommand)PullCommand).RaiseCanExecuteChanged();
-                ((AsyncCommand)PushCommand).RaiseCanExecuteChanged();
-                ((RelayCommand)CancelCommand).RaiseCanExecuteChanged();
+                RefreshCommand.RaiseCanExecuteChanged();
+                CreateBranchCommand.RaiseCanExecuteChanged();
+                SwitchBranchCommand.RaiseCanExecuteChanged();
+                FetchCommand.RaiseCanExecuteChanged();
+                PullCommand.RaiseCanExecuteChanged();
+                PushCommand.RaiseCanExecuteChanged();
+                CancelCommand.RaiseCanExecuteChanged();
             });
         }
     }

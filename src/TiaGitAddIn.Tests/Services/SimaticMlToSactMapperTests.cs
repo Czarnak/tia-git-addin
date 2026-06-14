@@ -23,15 +23,15 @@ namespace TiaGitAddIn.Tests.Services
 
                 Assert.Equal("deviceState", call.DisplayName);
                 Assert.Empty(call.TopOperandConnector?.DisplayName ?? string.Empty);
-                Assert.Contains(call.inputParameters, p =>
+                Assert.Contains(call.InputParameters, p =>
                     p.Name == "Alarm" && p.Operand == "false");
-                Assert.Contains(call.inputParameters, p =>
+                Assert.Contains(call.InputParameters, p =>
                     p.Name == "Running" && p.Operand == "#tempOut");
-                Assert.Contains(call.inputParameters, p =>
+                Assert.Contains(call.InputParameters, p =>
                     p.Name == "Service" && p.Operand == "#FI_SERVICE");
-                Assert.Contains(call.inputParameters, p =>
+                Assert.Contains(call.InputParameters, p =>
                     p.Name == "deviceIcon" && p.Operand == "#FIQ_Icon");
-                Assert.Contains(call.outputParameters, p =>
+                Assert.Contains(call.OutputParameters, p =>
                     p.Name == "deviceIcon" && p.Operand == "#FIQ_Icon");
             }
             finally
@@ -111,14 +111,14 @@ namespace TiaGitAddIn.Tests.Services
 
             var body = SimaticMlToSactMapper.MapNetworkBody(network);
 
-            Assert.True(body["Powerrail"].isStartElement);
-            Assert.True(body["20"].negated);
+            Assert.True(body["Powerrail"].IsStartElement);
+            Assert.True(body["20"].Negated);
             Assert.Equal("#startSignal", body["20"].TopOperandConnector!.DisplayName);
             Assert.Equal("Start condition", body["20"].Comment);
-            Assert.DoesNotContain(body["20"].outputConnectors, c => c.PinName == "eno");
+            Assert.DoesNotContain(body["20"].OutputConnectors, c => c.PinName == "eno");
             Assert.Equal("SCoil", body["30"].DisplayName);
-            Assert.Equal("LadTemplatedCoilData", body["30"].name);
-            Assert.Contains(body["20"].outputConnectors, c => c.PartnerUId != null);
+            Assert.Equal("LadTemplatedCoilData", body["30"].Name);
+            Assert.Contains(body["20"].OutputConnectors, c => c.PartnerUId != null);
             Assert.Contains(body.Keys, key => key.StartsWith("OpenCon_", System.StringComparison.Ordinal));
         }
 
@@ -195,9 +195,9 @@ namespace TiaGitAddIn.Tests.Services
             var add = SimaticMlToSactMapper.MapNetworkBody(network)["47"];
 
             Assert.Null(add.TopOperandConnector);
-            Assert.Contains(add.inputParameters, p => p.Name == "IN1" && p.Operand == "#deviceIcon");
-            Assert.Contains(add.inputParameters, p => p.Name == "IN2" && p.Operand == "10");
-            Assert.Contains(add.outputParameters, p => p.Name == "OUT" && p.Operand == "#deviceIcon");
+            Assert.Contains(add.InputParameters, p => p.Name == "IN1" && p.Operand == "#deviceIcon");
+            Assert.Contains(add.InputParameters, p => p.Name == "IN2" && p.Operand == "10");
+            Assert.Contains(add.OutputParameters, p => p.Name == "OUT" && p.Operand == "#deviceIcon");
         }
 
         private static string CreateSimaticMlWithCallParameterOperands()

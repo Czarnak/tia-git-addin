@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Input;
 using Microsoft.Win32;
 using TiaGitAddIn.Configuration;
 using TiaGitAddIn.Models;
@@ -68,8 +67,8 @@ namespace TiaGitAddIn.UI.ViewModels
             private set => SetProperty(validationMessage, value ?? string.Empty, updated => validationMessage = updated);
         }
 
-        public ICommand BrowseGitExeCommand { get; }
-        public ICommand SaveCommand { get; }
+        public RelayCommand BrowseGitExeCommand { get; }
+        public RelayCommand SaveCommand { get; }
 
         private void LoadSettings()
         {
@@ -94,8 +93,17 @@ namespace TiaGitAddIn.UI.ViewModels
                 Version = 1
             };
 
-            configurationService.Save(repositoryRoot, config);
-            ValidationMessage = "Settings saved successfully.";
+            try
+            {
+                configurationService.Save(repositoryRoot, config);
+                ValidationMessage = "Settings saved successfully.";
+            }
+            catch (Exception ex)
+            {
+                ValidationMessage = $"Failed to save settings: {ex.Message}";
+            }
+
+            InvokeOnUI(() => SaveCommand.RaiseCanExecuteChanged());
         }
 
         private bool CanSave() => string.IsNullOrEmpty(ValidationMessage) || ValidationMessage == "Settings saved successfully.";
@@ -125,7 +133,7 @@ namespace TiaGitAddIn.UI.ViewModels
             {
                 ValidationMessage = string.Empty;
             }
-            InvokeOnUI(() => ((RelayCommand)SaveCommand).RaiseCanExecuteChanged());
+            InvokeOnUI(() => SaveCommand.RaiseCanExecuteChanged());
         }
 
     }

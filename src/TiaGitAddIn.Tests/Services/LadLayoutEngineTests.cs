@@ -21,28 +21,28 @@ namespace TiaGitAddIn.Tests.Services
                     {
                         "pr", new SactComponentData
                         {
-                            uId = "pr",
-                            name = "BranchWireData",
-                            isStartElement = true,
-                            outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "pr_out", PartnerUId = "contact_in" } }
+                            UId = "pr",
+                            Name = "BranchWireData",
+                            IsStartElement = true,
+                            OutputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "pr_out", PartnerUId = "contact_in" } }
                         }
                     },
                     {
                         "contact", new SactComponentData
                         {
-                            uId = "contact",
-                            name = "LadContactData",
-                            inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "contact_in" } },
-                            outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "contact_out", PartnerUId = "coil_in" } }
+                            UId = "contact",
+                            Name = "LadContactData",
+                            InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "contact_in" } },
+                            OutputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "contact_out", PartnerUId = "coil_in" } }
                         }
                     },
                     {
                         "coil", new SactComponentData
                         {
-                            uId = "coil",
-                            name = "LadCoilData",
-                            inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "coil_in" } },
-                            outputConnectors = new List<SactConnectorData>()
+                            UId = "coil",
+                            Name = "LadCoilData",
+                            InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "coil_in" } },
+                            OutputConnectors = new List<SactConnectorData>()
                         }
                     }
                 }
@@ -79,39 +79,39 @@ namespace TiaGitAddIn.Tests.Services
                     {
                         "pr", new SactComponentData
                         {
-                            uId = "pr",
-                            name = "BranchWireData",
-                            isStartElement = true,
-                            outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "pr_out", PartnerUId = "or_in" } }
+                            UId = "pr",
+                            Name = "BranchWireData",
+                            IsStartElement = true,
+                            OutputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "pr_out", PartnerUId = "or_in" } }
                         }
                     },
                     {
                         "or", new SactComponentData
                         {
-                            uId = "or",
-                            name = "LadOrWireData",
-                            inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "or_in" } },
-                            outputConnectors = new List<SactConnectorData> 
+                            UId = "or",
+                            Name = "LadOrWireData",
+                            InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "or_in" } },
+                            OutputConnectors = new List<SactConnectorData> 
                             { 
-                                new SactConnectorData { uId = "or_out1", PartnerUId = "c1_in" },
-                                new SactConnectorData { uId = "or_out2", PartnerUId = "c2_in" }
+                                new SactConnectorData { UId = "or_out1", PartnerUId = "c1_in" },
+                                new SactConnectorData { UId = "or_out2", PartnerUId = "c2_in" }
                             }
                         }
                     },
                     {
                         "c1", new SactComponentData
                         {
-                            uId = "c1",
-                            name = "LadContactData",
-                            inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "c1_in" } }
+                            UId = "c1",
+                            Name = "LadContactData",
+                            InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "c1_in" } }
                         }
                     },
                     {
                         "c2", new SactComponentData
                         {
-                            uId = "c2",
-                            name = "LadContactData",
-                            inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "c2_in" } }
+                            UId = "c2",
+                            Name = "LadContactData",
+                            InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "c2_in" } }
                         }
                     }
                 }
@@ -147,68 +147,68 @@ namespace TiaGitAddIn.Tests.Services
                 {
                     "pr", new SactComponentData
                     {
-                        uId = "pr",
-                        name = "BranchWireData",
-                        isStartElement = true,
-                        outputConnectors = new List<SactConnectorData>
+                        UId = "pr",
+                        Name = "BranchWireData",
+                        IsStartElement = true,
+                        OutputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "pr_out1", PartnerUId = "fistart_in" },
-                            new SactConnectorData { uId = "pr_out2", PartnerUId = "fiqman_in" }
+                            new SactConnectorData { UId = "pr_out1", PartnerUId = "fistart_in" },
+                            new SactConnectorData { UId = "pr_out2", PartnerUId = "fiqman_in" }
                         }
                     }
                 },
                 {
                     "fistart", new SactComponentData
                     {
-                        uId = "fistart",
-                        name = "LadContactData",
+                        UId = "fistart",
+                        Name = "LadContactData",
                         DisplayName = "FI_START",
-                        inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fistart_in" } },
-                        outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fistart_out", PartnerUId = "fiservice_in" } }
+                        InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "fistart_in" } },
+                        OutputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "fistart_out", PartnerUId = "fiservice_in" } }
                     }
                 },
                 {
                     "fiservice", new SactComponentData
                     {
-                        uId = "fiservice",
-                        name = "LadContactData",
+                        UId = "fiservice",
+                        Name = "LadContactData",
                         DisplayName = "FI_SERVICE",
-                        negated = true,
-                        inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fiservice_in" } },
-                        outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fiservice_out", PartnerUId = "coil1_in_a" } }
+                        Negated = true,
+                        InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "fiservice_in" } },
+                        OutputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "fiservice_out", PartnerUId = "coil1_in_a" } }
                     }
                 },
                 {
                     "fiqman", new SactComponentData
                     {
-                        uId = "fiqman",
-                        name = "LadContactData",
+                        UId = "fiqman",
+                        Name = "LadContactData",
                         DisplayName = "FIQ_MANUAL",
-                        inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fiqman_in" } },
-                        outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "fiqman_out", PartnerUId = "coil1_in_b" } }
+                        InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "fiqman_in" } },
+                        OutputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "fiqman_out", PartnerUId = "coil1_in_b" } }
                     }
                 },
                 {
                     "coil1", new SactComponentData
                     {
-                        uId = "coil1",
-                        name = "LadCoilData",
+                        UId = "coil1",
+                        Name = "LadCoilData",
                         DisplayName = "tempOut",
-                        inputConnectors = new List<SactConnectorData>
+                        InputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "coil1_in_a" },
-                            new SactConnectorData { uId = "coil1_in_b" }
+                            new SactConnectorData { UId = "coil1_in_a" },
+                            new SactConnectorData { UId = "coil1_in_b" }
                         },
-                        outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "coil1_out", PartnerUId = "coil2_in" } }
+                        OutputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "coil1_out", PartnerUId = "coil2_in" } }
                     }
                 },
                 {
                     "coil2", new SactComponentData
                     {
-                        uId = "coil2",
-                        name = "LadCoilData",
+                        UId = "coil2",
+                        Name = "LadCoilData",
                         DisplayName = "FQ_OUTPUT",
-                        inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "coil2_in" } }
+                        InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "coil2_in" } }
                     }
                 }
             };
@@ -266,19 +266,19 @@ namespace TiaGitAddIn.Tests.Services
                 {
                     "pr", new SactComponentData
                     {
-                        uId = "pr",
-                        name = "BranchWireData",
-                        isStartElement = true,
-                        outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "out", PartnerUId = "contact_in" } }
+                        UId = "pr",
+                        Name = "BranchWireData",
+                        IsStartElement = true,
+                        OutputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "out", PartnerUId = "contact_in" } }
                     }
                 },
                 {
                     "contact", new SactComponentData
                     {
-                        uId = "contact",
-                        name = "LadContactData",
+                        UId = "contact",
+                        Name = "LadContactData",
                         State = CompareState.Equal,
-                        inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "contact_in" } }
+                        InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "contact_in" } }
                     }
                 }
             };
@@ -298,19 +298,19 @@ namespace TiaGitAddIn.Tests.Services
                     {
                         "pr", new SactComponentData
                         {
-                            uId = "pr",
-                            name = "BranchWireData",
-                            isStartElement = true,
-                            outputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "out", PartnerUId = "c_in" } }
+                            UId = "pr",
+                            Name = "BranchWireData",
+                            IsStartElement = true,
+                            OutputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "out", PartnerUId = "c_in" } }
                         }
                     },
                     {
                         "c", new SactComponentData
                         {
-                            uId = "c",
-                            name = "LadContactData",
-                            negated = true,
-                            inputConnectors = new List<SactConnectorData> { new SactConnectorData { uId = "c_in" } }
+                            UId = "c",
+                            Name = "LadContactData",
+                            Negated = true,
+                            InputConnectors = new List<SactConnectorData> { new SactConnectorData { UId = "c_in" } }
                         }
                     }
                 }
@@ -329,32 +329,32 @@ namespace TiaGitAddIn.Tests.Services
                 {
                     "pr", new SactComponentData
                     {
-                        uId = "pr",
-                        name = "BranchWireData",
-                        isStartElement = true,
-                        outputConnectors = new List<SactConnectorData>
+                        UId = "pr",
+                        Name = "BranchWireData",
+                        IsStartElement = true,
+                        OutputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "out", PartnerUId = "call_in" }
+                            new SactConnectorData { UId = "out", PartnerUId = "call_in" }
                         }
                     }
                 },
                 {
                     "call", new SactComponentData
                     {
-                        uId = "call",
-                        name = "LadBoxData",
+                        UId = "call",
+                        Name = "LadBoxData",
                         DisplayName = "SCALE_R",
-                        inputConnectors = new List<SactConnectorData>
+                        InputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "call_in" }
+                            new SactConnectorData { UId = "call_in" }
                         },
-                        inputParameters = new List<SactParameterData>
+                        InputParameters = new List<SactParameterData>
                         {
                             new SactParameterData { Name = "X_REAL", Section = "Input", Type = "Real" },
                             new SactParameterData { Name = "I_LO", Section = "Input", Type = "Real" },
                             new SactParameterData { Name = "I_HI", Section = "Input", Type = "Real" }
                         },
-                        outputParameters = new List<SactParameterData>
+                        OutputParameters = new List<SactParameterData>
                         {
                             new SactParameterData { Name = "Ret_Val", Section = "Return", Type = "Real" }
                         }
@@ -378,26 +378,26 @@ namespace TiaGitAddIn.Tests.Services
                 {
                     "pr", new SactComponentData
                     {
-                        uId = "pr",
-                        name = "BranchWireData",
-                        isStartElement = true,
-                        outputConnectors = new List<SactConnectorData>
+                        UId = "pr",
+                        Name = "BranchWireData",
+                        IsStartElement = true,
+                        OutputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "out", PartnerUId = "call_in" }
+                            new SactConnectorData { UId = "out", PartnerUId = "call_in" }
                         }
                     }
                 },
                 {
                     "call", new SactComponentData
                     {
-                        uId = "call",
-                        name = "LadBoxData",
+                        UId = "call",
+                        Name = "LadBoxData",
                         DisplayName = "deviceState",
-                        inputConnectors = new List<SactConnectorData>
+                        InputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "call_in", PinName = "en" }
+                            new SactConnectorData { UId = "call_in", PinName = "en" }
                         },
-                        inputParameters = new List<SactParameterData>
+                        InputParameters = new List<SactParameterData>
                         {
                             new SactParameterData { Name = "Alarm", Section = "Input", Type = "Bool", Operand = "false" },
                             new SactParameterData { Name = "Warning", Section = "Input", Type = "Bool", Operand = "false" },
@@ -406,7 +406,7 @@ namespace TiaGitAddIn.Tests.Services
                             new SactParameterData { Name = "Service", Section = "Input", Type = "Bool", Operand = "#FI_SERVICE" },
                             new SactParameterData { Name = "deviceIcon", Section = "InOut", Type = "Int", Operand = "#FIQ_Icon" }
                         },
-                        outputParameters = new List<SactParameterData>
+                        OutputParameters = new List<SactParameterData>
                         {
                             new SactParameterData { Name = "deviceIcon", Section = "InOut", Type = "Int", Operand = "#FIQ_Icon" }
                         }
@@ -437,29 +437,29 @@ namespace TiaGitAddIn.Tests.Services
                 {
                     "pr", new SactComponentData
                     {
-                        uId = "pr",
-                        name = "BranchWireData",
-                        isStartElement = true,
-                        outputConnectors = new List<SactConnectorData>
+                        UId = "pr",
+                        Name = "BranchWireData",
+                        IsStartElement = true,
+                        OutputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "out", PartnerUId = "box_in1" }
+                            new SactConnectorData { UId = "out", PartnerUId = "box_in1" }
                         }
                     }
                 },
                 {
                     "box", new SactComponentData
                     {
-                        uId = "box",
-                        name = "LadBoxData",
+                        UId = "box",
+                        Name = "LadBoxData",
                         DisplayName = "Add",
-                        inputConnectors = new List<SactConnectorData>
+                        InputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "box_in1", PinName = "in1" },
-                            new SactConnectorData { uId = "box_in2", PinName = "in2" }
+                            new SactConnectorData { UId = "box_in1", PinName = "in1" },
+                            new SactConnectorData { UId = "box_in2", PinName = "in2" }
                         },
-                        outputConnectors = new List<SactConnectorData>
+                        OutputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "box_out", PinName = "out" }
+                            new SactConnectorData { UId = "box_out", PinName = "out" }
                         }
                     }
                 }
@@ -480,26 +480,26 @@ namespace TiaGitAddIn.Tests.Services
                 {
                     "pr", new SactComponentData
                     {
-                        uId = "pr",
-                        name = "BranchWireData",
-                        isStartElement = true,
-                        outputConnectors = new List<SactConnectorData>
+                        UId = "pr",
+                        Name = "BranchWireData",
+                        IsStartElement = true,
+                        OutputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "out", PartnerUId = "box_in" }
+                            new SactConnectorData { UId = "out", PartnerUId = "box_in" }
                         }
                     }
                 },
                 {
                     "box", new SactComponentData
                     {
-                        uId = "box",
-                        name = "LadBoxData",
+                        UId = "box",
+                        Name = "LadBoxData",
                         DisplayName = "Calculate",
                         Equation = "#out := #in + 1",
                         Comment = "Normalize value",
-                        inputConnectors = new List<SactConnectorData>
+                        InputConnectors = new List<SactConnectorData>
                         {
-                            new SactConnectorData { uId = "box_in", PinName = "in" }
+                            new SactConnectorData { UId = "box_in", PinName = "in" }
                         }
                     }
                 }

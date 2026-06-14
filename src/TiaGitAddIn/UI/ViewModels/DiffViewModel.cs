@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using TiaGitAddIn.Logging;
 using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
@@ -23,11 +22,8 @@ namespace TiaGitAddIn.UI.ViewModels
         private DiffEntryViewModel? selectedEntry;
         private ObservableCollection<DiffLineViewModel> displayedLines = new();
         private string lastOperationMessage = string.Empty;
-        private string busyMessage = string.Empty;
-        private bool isBusy;
         private bool showVisualDiff;
         private string? currentDiffCommitHash;
-        private CancellationTokenSource? cts;
 
         public DiffViewModel(
             IGitService gitService,
@@ -42,7 +38,7 @@ namespace TiaGitAddIn.UI.ViewModels
             this.sactService = sactService ?? throw new ArgumentNullException(nameof(sactService));
             this.logger = logger;
             LadDiff = new LadDiffViewModel(gitFileExtractor, sactService, logger ?? new NullLogger(), uiDispatcher);
-            CancelCommand = new RelayCommand(_ => cts?.Cancel(), _ => IsBusy);
+            CancelCommand = new RelayCommand(_ => RequestCancel(), _ => IsBusy);
             ToggleVisualCommand = new RelayCommand(_ => ShowVisualDiff = !ShowVisualDiff, _ => SelectedEntry?.IsTiaArtifact ?? false);
         }
 
@@ -69,7 +65,7 @@ namespace TiaGitAddIn.UI.ViewModels
                 {
                     BuildDisplayedLines(value);
                     UpdateLadDiff(value);
-                    ((RelayCommand)ToggleVisualCommand).RaiseCanExecuteChanged();
+                    ToggleVisualCommand.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -80,7 +76,7 @@ namespace TiaGitAddIn.UI.ViewModels
             set => SetProperty(showVisualDiff, value, updated => showVisualDiff = updated);
         }
 
-        public ICommand ToggleVisualCommand { get; }
+        public RelayCommand ToggleVisualCommand { get; }
 
         public ObservableCollection<DiffLineViewModel> DisplayedLines
         {
@@ -94,84 +90,27 @@ namespace TiaGitAddIn.UI.ViewModels
             private set => SetProperty(lastOperationMessage, value ?? string.Empty, updated => lastOperationMessage = updated);
         }
 
-        public string BusyMessage
-        {
-            get => busyMessage;
-            private set => SetProperty(busyMessage, value ?? string.Empty, updated => busyMessage = updated);
-        }
+        public RelayCommand CancelCommand { get; }
 
-        public bool IsBusy
+        public Task LoadCommitDiffAsync(string commitHash)
         {
-            get => isBusy;
-            private set
-            {
-                if (SetProperty(isBusy, value, updated => isBusy = updated))
-                {
-                    InvokeOnUI(() =>
-                    {
-                        ((RelayCommand)CancelCommand).RaiseCanExecuteChanged();
-                    });
-                }
-            }
-        }
-        public ICommand CancelCommand { get; }
+            if (string.IsNullOrWhiteSpace(commitHash)) return Task.CompletedTask;
 
-        public async Task LoadCommitDiffAsync(string commitHash)
-        {
-            if (string.IsNullOrWhiteSpace(commitHash)) return;
-            cts?.Cancel();
-            cts = new CancellationTokenSource();
-            var ct = cts.Token;
-            IsBusy = true;
-            BusyMessage = "Loading diff…";
-            try
+            return RunBusyAsync("Loading diff…", async ct =>
             {
                 var result = await gitService.GetCommitDiffAsync(commitHash, ct).ConfigureAwait(false);
                 currentDiffCommitHash = commitHash;
                 ApplyDiffResult(result, $"Commit {commitHash.Substring(0, Math.Min(7, commitHash.Length))}");
-            }
-            catch (OperationCanceledException)
-            {
-                InvokeOnUI(() => LastOperationMessage = "Cancelled.");
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error loading diff: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
+            });
         }
 
-        public async Task LoadWorkingTreeDiffAsync()
-        {
-            cts?.Cancel();
-            cts = new CancellationTokenSource();
-            var ct = cts.Token;
-            IsBusy = true;
-            BusyMessage = "Loading working tree diff…";
-            try
+        public Task LoadWorkingTreeDiffAsync() =>
+            RunBusyAsync("Loading working tree diff…", async ct =>
             {
                 var result = await gitService.GetWorkingTreeDiffAsync(ct).ConfigureAwait(false);
                 currentDiffCommitHash = null;
                 ApplyDiffResult(result, "Working tree");
-            }
-            catch (OperationCanceledException)
-            {
-                InvokeOnUI(() => LastOperationMessage = "Cancelled.");
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error loading diff: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
-        }
+            });
 
         private void ApplyDiffResult(DiffResult result, string title)
         {
@@ -221,12 +160,19 @@ namespace TiaGitAddIn.UI.ViewModels
                 ShowVisualDiff = true;
             }
         }
+
+        protected override void ReportStatus(string message) => LastOperationMessage = message;
+
+        protected override void OnBusyChanged()
+        {
+            InvokeOnUI(() => CancelCommand.RaiseCanExecuteChanged());
+        }
     }
 
     public sealed class DiffEntryViewModel
     {
         private static readonly HashSet<string> TiaXmlExtensions = new(StringComparer.OrdinalIgnoreCase)
-            { ".xml", ".db", ".fc", ".fb", ".ob", ".sdb", ".udt" };
+            { ".db", ".fc", ".fb", ".ob", ".sdb", ".udt" };
 
         private static readonly string[] TiaPathKeywords =
             ["Program blocks", "Function blocks", "Data blocks", "Safety blocks", "NetworkSource", "LAD", "FBD", "SFC"];

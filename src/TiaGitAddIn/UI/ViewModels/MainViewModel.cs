@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using TiaGitAddIn.Configuration;
 using TiaGitAddIn.Logging;
 using TiaGitAddIn.Models;
@@ -12,9 +11,6 @@ namespace TiaGitAddIn.UI.ViewModels
 {
     public sealed class MainViewModel : ViewModelBase
     {
-        private bool aggregateBusy;
-        private string aggregateBusyMessage = string.Empty;
-
         public MainViewModel(
             string repositoryPath,
             IGitService gitService,
@@ -62,19 +58,7 @@ namespace TiaGitAddIn.UI.ViewModels
         public DiffViewModel Diff { get; }
         public SettingsViewModel Settings { get; }
 
-        public bool IsBusy
-        {
-            get => aggregateBusy;
-            private set => SetProperty(aggregateBusy, value, updated => aggregateBusy = updated);
-        }
-
-        public string BusyMessage
-        {
-            get => aggregateBusyMessage;
-            private set => SetProperty(aggregateBusyMessage, value ?? string.Empty, updated => aggregateBusyMessage = updated);
-        }
-
-        public ICommand CancelCommand { get; }
+        public RelayCommand CancelCommand { get; }
 
         public Task RefreshAsync() => Status.RefreshAsync();
 
@@ -108,8 +92,12 @@ namespace TiaGitAddIn.UI.ViewModels
             {
                 IsBusy = busy;
                 BusyMessage = msg;
-                ((RelayCommand)CancelCommand).RaiseCanExecuteChanged();
             });
+        }
+
+        protected override void OnBusyChanged()
+        {
+            InvokeOnUI(() => CancelCommand.RaiseCanExecuteChanged());
         }
 
         private void CancelAll()

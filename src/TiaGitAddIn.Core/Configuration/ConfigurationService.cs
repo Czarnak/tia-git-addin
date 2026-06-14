@@ -47,12 +47,19 @@ namespace TiaGitAddIn.Configuration
 
             string path = GetConfigurationPath(repositoryRoot);
 
-            string json = JsonConvert.SerializeObject(
-                configuration,
-                Formatting.Indented
-            );
+            try
+            {
+                string json = JsonConvert.SerializeObject(
+                    configuration,
+                    Formatting.Indented
+                );
 
-            File.WriteAllText(path, json);
+                File.WriteAllText(path, json);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+            {
+                throw new InvalidDataException($"Unable to save configuration to '{path}'.", ex);
+            }
         }
 
         private static string GetConfigurationPath(string repositoryRoot) =>

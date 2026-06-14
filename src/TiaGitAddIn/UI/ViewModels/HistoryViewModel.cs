@@ -2,7 +2,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
 using TiaGitAddIn.UI;
@@ -18,9 +17,6 @@ namespace TiaGitAddIn.UI.ViewModels
         private CommitInfo? selectedCommit;
         private ObservableCollection<string> changedFiles = new();
         private string lastOperationMessage = string.Empty;
-        private string busyMessage = string.Empty;
-        private bool isBusy;
-        private CancellationTokenSource? cts;
         private CancellationTokenSource? changedFilesCts;
 
         public HistoryViewModel(IGitService gitService, IUiDispatcher? uiDispatcher = null)
@@ -28,7 +24,7 @@ namespace TiaGitAddIn.UI.ViewModels
         {
             this.gitService = gitService ?? throw new ArgumentNullException(nameof(gitService));
             RefreshCommand = new AsyncCommand(() => RefreshAsync(), () => !IsBusy);
-            CancelCommand = new RelayCommand(_ => cts?.Cancel(), _ => IsBusy);
+            CancelCommand = new RelayCommand(_ => RequestCancel(), _ => IsBusy);
         }
 
         public ObservableCollection<CommitInfo> Commits
@@ -61,39 +57,11 @@ namespace TiaGitAddIn.UI.ViewModels
             private set => SetProperty(lastOperationMessage, value ?? string.Empty, updated => lastOperationMessage = updated);
         }
 
-        public string BusyMessage
-        {
-            get => busyMessage;
-            private set => SetProperty(busyMessage, value ?? string.Empty, updated => busyMessage = updated);
-        }
+        public AsyncCommand RefreshCommand { get; }
+        public RelayCommand CancelCommand { get; }
 
-        public bool IsBusy
-        {
-            get => isBusy;
-            private set
-            {
-                if (SetProperty(isBusy, value, updated => isBusy = updated))
-                {
-                    InvokeOnUI(() =>
-                    {
-                        ((AsyncCommand)RefreshCommand).RaiseCanExecuteChanged();
-                        ((RelayCommand)CancelCommand).RaiseCanExecuteChanged();
-                    });
-                }
-            }
-        }
-
-        public ICommand RefreshCommand { get; }
-        public ICommand CancelCommand { get; }
-
-        public async Task RefreshAsync()
-        {
-            cts?.Cancel();
-            cts = new CancellationTokenSource();
-            var ct = cts.Token;
-            IsBusy = true;
-            BusyMessage = "Loading history…";
-            try
+        public Task RefreshAsync() =>
+            RunBusyAsync("Loading history…", async ct =>
             {
                 var log = await gitService.GetCommitLogAsync(DefaultMaxCount, ct).ConfigureAwait(false);
                 InvokeOnUI(() =>
@@ -103,21 +71,7 @@ namespace TiaGitAddIn.UI.ViewModels
                     ChangedFiles = new ObservableCollection<string>();
                     LastOperationMessage = $"Loaded {log.Count} commits.";
                 });
-            }
-            catch (OperationCanceledException)
-            {
-                InvokeOnUI(() => LastOperationMessage = "Cancelled.");
-            }
-            catch (Exception ex)
-            {
-                InvokeOnUI(() => LastOperationMessage = $"Error loading history: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-                BusyMessage = string.Empty;
-            }
-        }
+            });
 
         private async void LoadChangedFilesAsync(CommitInfo? commit)
         {
@@ -148,6 +102,17 @@ namespace TiaGitAddIn.UI.ViewModels
             {
                 InvokeOnUI(() => LastOperationMessage = $"Error loading changed files: {ex.Message}");
             }
+        }
+
+        protected override void ReportStatus(string message) => LastOperationMessage = message;
+
+        protected override void OnBusyChanged()
+        {
+            InvokeOnUI(() =>
+            {
+                RefreshCommand.RaiseCanExecuteChanged();
+                CancelCommand.RaiseCanExecuteChanged();
+            });
         }
     }
 }
