@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-15
 
-**Status:** Design approved; document review pending
+**Status:** Approved
 
 **Target:** TIA Portal V21 Add-In, .NET Framework 4.8 WPF shell, .NET Standard 2.0 core
 
