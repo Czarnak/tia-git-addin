@@ -52,9 +52,9 @@ Automation and PLC engineers working in TIA Portal V21 need proper Git workflows
 25. The Add-In must allow comparing the working tree against `HEAD`.
 26. The Add-In must show text diffs for textual files directly inside TIA Portal.
 27. The Add-In must provide TIA-aware comparison for PLC artifacts where possible, especially LAD/FBD blocks.
-28. For LAD/FBD changes, the Add-In should provide an embedded graphical comparison view inside TIA Portal if TIA Portal V21 exposes a supported in-process API for this.
-29. If no supported in-process API exists for graphical LAD/FBD comparison, the Add-In must provide a structured or textual fallback comparison inside TIA Portal and clearly identify the limitation.
-30. The Add-In must investigate whether TIA Portal V21 exposes built-in compare or diff APIs that can be invoked inside an Add-In without opening external windows.
+28. For supported SimaticML LAD revisions, the Add-In must use its embedded, project-owned graphical comparison view inside TIA Portal.
+29. When graphical comparison is unsupported or an artifact cannot be parsed, the Add-In must provide a structured or textual fallback inside TIA Portal and clearly identify the limitation.
+30. The Add-In must use only documented Siemens Public APIs. V21's data-only comparison APIs may support future live-engineering diagnostics, but the Add-In must not use internal Siemens compare UI/command types for Git revision review. See the [resolved V21 comparison decision](#resolved-decisions).
 31. The Add-In must expose functionality through TIA Portal V21 Add-In UI entry points, such as context menu items and/or dockable panes if supported.
 32. The Add-In UI must include repository status, staging and commit, branch and remote state, history, commit details, diff viewer, and settings.
 33. The Add-In must show long-running Git operations with progress and cancellable or background-safe behavior where supported.
@@ -62,6 +62,10 @@ Automation and PLC engineers working in TIA Portal V21 need proper Git workflows
 35. The Add-In must refresh repository state after Git operations and when relevant TIA project or VCI workspace changes occur.
 36. The Add-In must show user-friendly errors in the UI and retain detailed diagnostic logs for troubleshooting.
 37. The Add-In must work without requiring a separate companion desktop application.
+
+## Resolved Decisions
+
+- **TIA V21 comparison API (2026-07-15):** V21 exposes supported, in-process, data-only comparison for TIA engineering objects and coarse VCI mapped-object status. It does not expose a supported Add-In surface for Siemens' graphical LAD/FBD compare editor or accept Git/SimaticML revision files. Retain the custom native SimaticML/LAD renderer and the text/structured fallback. See the [investigation and evidence](docs/tia-v21-compare-api-investigation.md).
 
 ## Out of Scope
 
@@ -71,7 +75,7 @@ Automation and PLC engineers working in TIA Portal V21 need proper Git workflows
 - CI/CD pipeline creation.
 - Replacing TIA Portal's project model or bypassing supported Siemens APIs.
 - Editing PLC logic directly from the diff or history viewer.
-- Full graphical LAD/FBD diff if TIA Portal V21 does not expose a supported in-process API for it.
+- Embedding or automating Siemens' native graphical compare editor, or claiming Siemens-native comparison fidelity, unless a future supported Public API exposes it.
 - Supporting TIA Portal versions before V21.
 - Supporting non-Git version control systems.
 - Mobile UI, web UI, or standalone companion application.
@@ -94,8 +98,5 @@ Automation and PLC engineers working in TIA Portal V21 need proper Git workflows
 
 ## Open Questions
 
-- Does TIA Portal V21 expose supported Add-In APIs for embedded graphical comparison of LAD/FBD blocks?
-- Can any TIA Portal V21 compare functionality be invoked in-process without opening an external application window?
-- If embedded graphical LAD/FBD comparison is not supported, what structured comparison format gives users the most useful in-TIA fallback?
 - Which TIA Add-In UI surfaces are available and stable in V21: context menus, panes, dialogs, embedded controls, or another extension surface?
 - How should merge conflicts in TIA-managed VCI artifacts be detected and presented?
