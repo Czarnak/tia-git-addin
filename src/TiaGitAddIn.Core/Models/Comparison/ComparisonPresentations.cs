@@ -14,6 +14,26 @@ namespace TiaGitAddIn.Models.Comparison
         protected LogicNetworkPresentation() : base(ComparisonPresentationKind.LogicNetwork) { }
     }
 
+    /// <summary>
+    /// Bounds for <see cref="TextDiffLine"/>/<see cref="TextPresentation"/> production: how many lines per
+    /// side, how many characters per line, and how large the O(n*m) alignment matrix may grow before a
+    /// comparer must fall back to a cheaper linear strategy.
+    /// </summary>
+    public sealed class TextComparisonLimits
+    {
+        public TextComparisonLimits(int maximumLinesPerSide, int maximumLineLength, long maximumMatrixCells)
+        {
+            if (maximumLinesPerSide <= 0) throw new ArgumentOutOfRangeException(nameof(maximumLinesPerSide));
+            if (maximumLineLength <= 0) throw new ArgumentOutOfRangeException(nameof(maximumLineLength));
+            if (maximumMatrixCells <= 0) throw new ArgumentOutOfRangeException(nameof(maximumMatrixCells));
+            MaximumLinesPerSide = maximumLinesPerSide; MaximumLineLength = maximumLineLength; MaximumMatrixCells = maximumMatrixCells;
+        }
+        public int MaximumLinesPerSide { get; }
+        public int MaximumLineLength { get; }
+        public long MaximumMatrixCells { get; }
+        public static TextComparisonLimits Default { get; } = new TextComparisonLimits(20_000, 32_768, 4_000_000);
+    }
+
     public sealed class TextDiffLine
     {
         public TextDiffLine(TextDiffLineKind kind, int? leftLineNumber, int? rightLineNumber, string text)
