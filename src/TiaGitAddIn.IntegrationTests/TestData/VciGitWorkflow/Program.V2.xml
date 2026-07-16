@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Document>
+    <SW.Blocks.FC ID="0">
+        <AttributeList>
+            <Name>Program</Name>
+            <ProgrammingLanguage>LAD</ProgrammingLanguage>
+            <Comment>GitAcceptanceV2</Comment>
+        </AttributeList>
+    </SW.Blocks.FC>
+</Document>

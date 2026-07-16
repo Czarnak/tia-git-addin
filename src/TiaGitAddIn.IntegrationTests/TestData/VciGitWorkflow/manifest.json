@@ -1,0 +1,34 @@
+{
+    "schemaVersion": "1.0",
+    "publicApiBuild": "2100.0.121.1",
+    "fixtures": [
+        {
+            "file": "Program.V1.xml",
+            "kind": "VciWorkspaceFile",
+            "sourceType": "synthetic",
+            "encoding": "utf-8",
+            "bom": false,
+            "sanitizationActions": [
+                "Replaced project identity with TiaGitAcceptance",
+                "Replaced block identity with Program",
+                "Removed author, device, network, credential, and machine-path data"
+            ],
+            "sha256": "A787BCD713E3F12753965BE9FA77F1AC9C0F7955E52C6692312C37B0C5053D0B",
+            "expectedSupportLevel": "Full"
+        },
+        {
+            "file": "Program.V2.xml",
+            "kind": "VciWorkspaceFile",
+            "sourceType": "synthetic",
+            "encoding": "utf-8",
+            "bom": false,
+            "sanitizationActions": [
+                "Replaced project identity with TiaGitAcceptance",
+                "Replaced block identity with Program",
+                "Removed author, device, network, credential, and machine-path data"
+            ],
+            "sha256": "6D91A040F47EBBFD38B2F31D9BF7AAD65DF87C8618ECAAA060E52B151127C3A9",
+            "expectedSupportLevel": "Full"
+        }
+    ]
+}

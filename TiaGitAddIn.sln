@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -7,6 +7,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiaGitAddIn.Tests", "src\TiaGitAddIn.Tests\TiaGitAddIn.Tests.csproj", "{B02C1C05-FD9F-4A6B-9B6D-6DFA6E3CC1B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiaGitAddIn.Core", "src\TiaGitAddIn.Core\TiaGitAddIn.Core.csproj", "{3C9A4B7E-1F2D-4E8A-B5C6-7D8E9F0A1B2C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E0D5927B-B6DC-4F80-9500-0C8E9AB3647A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiaGitAddIn.IntegrationTests", "src\TiaGitAddIn.IntegrationTests\TiaGitAddIn.IntegrationTests.csproj", "{400B6914-1662-4268-B717-0E11F0F921ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,8 +30,15 @@ Global
 		{3C9A4B7E-1F2D-4E8A-B5C6-7D8E9F0A1B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C9A4B7E-1F2D-4E8A-B5C6-7D8E9F0A1B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C9A4B7E-1F2D-4E8A-B5C6-7D8E9F0A1B2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{400B6914-1662-4268-B717-0E11F0F921ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{400B6914-1662-4268-B717-0E11F0F921ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{400B6914-1662-4268-B717-0E11F0F921ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{400B6914-1662-4268-B717-0E11F0F921ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{400B6914-1662-4268-B717-0E11F0F921ED} = {E0D5927B-B6DC-4F80-9500-0C8E9AB3647A}
 	EndGlobalSection
 EndGlobal
