@@ -34,7 +34,7 @@
         <Comment>Use external tools.</Comment>
       </System.Security.Permissions.EnvironmentPermission>
       <System.Security.Permissions.FileDialogPermission>
-        <Comment>Set paths to Node and SACT.</Comment>
+        <Comment>Allows the user to select a Git executable path through the Add-In settings dialog.</Comment>
       </System.Security.Permissions.FileDialogPermission>
       <System.Security.Permissions.FileIOPermission>
         <Comment>Read/write access to the VCI workspace and add-in configuration file.</Comment>
