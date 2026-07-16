@@ -65,7 +65,7 @@ Automation and PLC engineers working in TIA Portal V21 need proper Git workflows
 
 ## Resolved Decisions
 
-- **TIA V21 comparison API (2026-07-15):** V21 exposes supported, in-process, data-only comparison for TIA engineering objects and coarse VCI mapped-object status. It does not expose a supported Add-In surface for Siemens' graphical LAD/FBD compare editor or accept Git/SimaticML revision files. Retain the custom native SimaticML/LAD renderer and the text/structured fallback. See the [investigation and evidence](../docs/tia-v21-compare-api-investigation.md).
+- **TIA V21 comparison API (2026-07-15):** V21 exposes supported, in-process, data-only comparison for TIA engineering objects and coarse VCI mapped-object status. It does not expose a supported Add-In surface for Siemens' graphical LAD/FBD compare editor or accept Git/SimaticML revision files. Retain the custom native SimaticML/LAD renderer and the text/structured fallback. See the [investigation and evidence](tia-v21-compare-api-investigation.md).
 
 ## Out of Scope
 
