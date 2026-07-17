@@ -18,11 +18,11 @@ namespace TiaGitAddIn.Services.SimaticMl
     public static partial class SimaticMlParser
     {
         /// <summary>
-        /// Legacy, path-based entry point. Kept only for existing callers (e.g. <c>SactService</c>); it reads
-        /// the file with a bounded <see cref="StreamReader"/>, delegates to the safe <see cref="ParseText"/>
-        /// overload using the default limits, and throws <see cref="InvalidDataException"/> for legacy callers
-        /// when the safe parse does not succeed. New comparison strategies should call <see cref="ParseText"/>
-        /// directly and inspect <see cref="SimaticMlParseResult.IsSuccess"/> instead of catching exceptions.
+        /// Legacy, path-based entry point retained only for test fixtures that already work with a file path;
+        /// it reads the file with a bounded <see cref="StreamReader"/>, delegates to the safe
+        /// <see cref="ParseText"/> overload using the default limits, and throws <see cref="InvalidDataException"/>
+        /// when the safe parse does not succeed. Comparison strategies call <see cref="ParseText"/> directly
+        /// and inspect <see cref="SimaticMlParseResult.IsSuccess"/> instead of catching exceptions.
         /// </summary>
         public static SimaticMlFile Parse(string xmlPath)
         {

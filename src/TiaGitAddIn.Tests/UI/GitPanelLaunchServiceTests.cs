@@ -38,6 +38,29 @@ namespace TiaGitAddIn.Tests.UI
             Assert.Equal("C:\\repo", viewModel.RepositoryPath);
         }
 
+        [Fact]
+        public void CreateViewModel_LogsTheSiemensGitProcessRunnerAdapterAndNoTestOrSystemRunner()
+        {
+            var gitService = new FakeGitService();
+            var configService = new FakeConfigurationService();
+            var locator = new FakeWorkspaceLocator();
+            var discovery = new FakeRepositoryDiscovery();
+            var logger = new FakeLogger();
+
+            var service = new GitPanelLaunchService(
+                locator,
+                discovery,
+                configService,
+                (p1, p2) => gitService,
+                logger);
+
+            GitPanelLaunchResult result = service.CreateViewModel(new object());
+
+            Assert.True(result.Success);
+            Assert.Contains(logger.InfoMessages, m => m.Contains("GitProcessRunner") && m.Contains("SiemensAddIn"));
+            Assert.DoesNotContain(logger.InfoMessages, m => m.Contains("Test") || m.Contains("System.Diagnostics.Process"));
+        }
+
         private sealed class FakeWorkspaceLocator : IVciWorkspaceLocator
         {
             public string? TryGetWorkspacePath(object context) => "C:\\repo\\vci";
@@ -61,7 +84,9 @@ namespace TiaGitAddIn.Tests.UI
 
         private sealed class FakeLogger : IAddInLogger
         {
-            public void Info(string message) { }
+            public List<string> InfoMessages { get; } = new();
+
+            public void Info(string message) => InfoMessages.Add(message);
             public void Warn(string message) { }
             public void Error(string message, Exception? ex = null) { }
             public void Debug(string message) { }

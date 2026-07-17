@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TiaGitAddIn.Models.Comparison;
@@ -130,19 +131,103 @@ namespace TiaGitAddIn.Tests.Revision
         }
 
         [Fact]
-        public async Task GitBlobReaderThrowsForUnsupportedWorkingTreeSourceUntilTask10AddsSupport()
+        public async Task GitBlobReaderReadsWorkingTreeSizeAndContentDirectlyFromDisk()
         {
-            // Working-tree content is not a git object reachable via `git cat-file`; that support is
-            // intentionally deferred to Task 10, which will add a direct filesystem read path. This locks
-            // in the current, deliberate rejection so a future edit to the ValidateRevision switch cannot
-            // silently start returning wrong/empty data for WorkingTree instead of throwing.
+            string root = CreateTestRoot();
+            Directory.CreateDirectory(root);
+            const string relativePath = "Program.xml";
+            byte[] expectedBytes = Encoding.UTF8.GetBytes("<Document>working tree content</Document>");
+            File.WriteAllBytes(Path.Combine(root, relativePath), expectedBytes);
+
+            var reader = new GitBlobReader(
+                new ThrowingGitProcessRunner(), new ThrowingGitBinaryProcessRunner(), "git", root);
+
+            long size = await reader.GetSizeAsync(PlcRevisionSource.WorkingTree, relativePath, CancellationToken.None);
+            IReadOnlyList<byte> bytes = await reader.ReadAsync(
+                PlcRevisionSource.WorkingTree, relativePath, expectedBytes.Length, CancellationToken.None);
+
+            Assert.Equal(expectedBytes.Length, size);
+            Assert.Equal(expectedBytes, bytes);
+        }
+
+        [Fact]
+        public async Task GitBlobReaderRejectsWorkingTreeContentExceedingTheSizeLimitBeforeAFullRead()
+        {
+            string root = CreateTestRoot();
+            Directory.CreateDirectory(root);
+            const string relativePath = "Program.xml";
+            File.WriteAllBytes(Path.Combine(root, relativePath), new byte[16]);
+
+            var reader = new GitBlobReader(
+                new ThrowingGitProcessRunner(), new ThrowingGitBinaryProcessRunner(), "git", root);
+
+            await Assert.ThrowsAsync<RevisionSizeLimitException>(() =>
+                reader.ReadAsync(PlcRevisionSource.WorkingTree, relativePath, maximumBytes: 4, CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task GitBlobReaderRejectsAMissingWorkingTreeFileAsAHardFailure()
+        {
+            string root = CreateTestRoot();
+            Directory.CreateDirectory(root);
+
+            var reader = new GitBlobReader(
+                new ThrowingGitProcessRunner(), new ThrowingGitBinaryProcessRunner(), "git", root);
+
+            await Assert.ThrowsAsync<RevisionLoadException>(() =>
+                reader.GetSizeAsync(PlcRevisionSource.WorkingTree, "DoesNotExist.xml", CancellationToken.None));
+        }
+
+        [Theory]
+        [InlineData("C:\\evil\\Program.xml")]
+        [InlineData("\\\\server\\share\\Program.xml")]
+        [InlineData("../secrets.xml")]
+        [InlineData("Blocks/../../secrets.xml")]
+        [InlineData("Program.xml\0hidden")]
+        public async Task GitBlobReaderRejectsMaliciousPathsForWorkingTreeSourceToo(string maliciousPath)
+        {
             var reader = new GitBlobReader(
                 new ThrowingGitProcessRunner(), new ThrowingGitBinaryProcessRunner(), "git", CreateTestRoot());
 
-            ArgumentException exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                reader.GetSizeAsync(PlcRevisionSource.WorkingTree, "Program.xml", CancellationToken.None));
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                reader.GetSizeAsync(PlcRevisionSource.WorkingTree, maliciousPath, CancellationToken.None));
+        }
 
-            Assert.Contains("WorkingTree", exception.Message);
+        [Fact]
+        public async Task LoadAsyncReadsAWorkingTreeRevisionEndToEnd()
+        {
+            string root = CreateTestRoot();
+            Directory.CreateDirectory(root);
+            const string relativePath = "Program.xml";
+            byte[] expectedBytes = Encoding.UTF8.GetBytes("hello working tree");
+            File.WriteAllBytes(Path.Combine(root, relativePath), expectedBytes);
+
+            var blobReader = new GitBlobReader(
+                new ThrowingGitProcessRunner(), new ThrowingGitBinaryProcessRunner(), "git", root);
+            var provider = new PlcRevisionProvider(
+                blobReader, new PlcRevisionProviderOptions(expectedBytes.Length, CreateTestRoot()));
+
+            using PlcRevisionLease lease = await provider.LoadAsync(
+                PlcRevisionSide.Right, PlcRevisionSource.WorkingTree, relativePath, CancellationToken.None);
+
+            Assert.Equal(expectedBytes, lease.Revision.Bytes);
+            Assert.Equal("hello working tree", lease.Revision.Text);
+        }
+
+        [Fact]
+        public async Task LoadAsyncRejectsAnOversizedWorkingTreeRevisionBeforeReadingItsContent()
+        {
+            string root = CreateTestRoot();
+            Directory.CreateDirectory(root);
+            const string relativePath = "Program.xml";
+            File.WriteAllBytes(Path.Combine(root, relativePath), new byte[16]);
+
+            var blobReader = new GitBlobReader(
+                new ThrowingGitProcessRunner(), new ThrowingGitBinaryProcessRunner(), "git", root);
+            var provider = new PlcRevisionProvider(blobReader, new PlcRevisionProviderOptions(4, CreateTestRoot()));
+
+            await Assert.ThrowsAsync<RevisionSizeLimitException>(() => provider.LoadAsync(
+                PlcRevisionSide.Right, PlcRevisionSource.WorkingTree, relativePath, CancellationToken.None));
         }
 
         private static PlcRevisionProvider CreateProvider(byte[] bytes, int maximumBytes)

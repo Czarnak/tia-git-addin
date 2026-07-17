@@ -5,7 +5,10 @@ using TiaGitAddIn.Configuration;
 using TiaGitAddIn.Logging;
 using TiaGitAddIn.Models;
 using TiaGitAddIn.Services;
+using TiaGitAddIn.Services.Comparison;
+using TiaGitAddIn.Services.Revision;
 using TiaGitAddIn.UI;
+using TiaGitAddIn.UI.Mapping;
 
 namespace TiaGitAddIn.UI.ViewModels
 {
@@ -14,8 +17,9 @@ namespace TiaGitAddIn.UI.ViewModels
         public MainViewModel(
             string repositoryPath,
             IGitService gitService,
-            IGitFileExtractor gitFileExtractor,
-            ISactService sactService,
+            IPlcRevisionProvider revisionProvider,
+            IPlcComparisonCoordinator comparisonCoordinator,
+            IComparisonPresentationMapper mapper,
             IConfigurationService configurationService,
             IAddInLogger? logger = null,
             IUiDispatcher? uiDispatcher = null)
@@ -25,10 +29,12 @@ namespace TiaGitAddIn.UI.ViewModels
                 throw new ArgumentException("Repository path is required.", nameof(repositoryPath));
             if (gitService == null)
                 throw new ArgumentNullException(nameof(gitService));
-            if (gitFileExtractor == null)
-                throw new ArgumentNullException(nameof(gitFileExtractor));
-            if (sactService == null)
-                throw new ArgumentNullException(nameof(sactService));
+            if (revisionProvider == null)
+                throw new ArgumentNullException(nameof(revisionProvider));
+            if (comparisonCoordinator == null)
+                throw new ArgumentNullException(nameof(comparisonCoordinator));
+            if (mapper == null)
+                throw new ArgumentNullException(nameof(mapper));
             if (configurationService == null)
                 throw new ArgumentNullException(nameof(configurationService));
 
@@ -37,7 +43,7 @@ namespace TiaGitAddIn.UI.ViewModels
             Commit = new CommitViewModel(gitService, Status.RefreshAsync, UiDispatcher);
             Branch = new BranchViewModel(gitService, UiDispatcher);
             History = new HistoryViewModel(gitService, UiDispatcher);
-            Diff = new DiffViewModel(gitService, gitFileExtractor, sactService, logger, UiDispatcher);
+            Diff = new DiffViewModel(gitService, revisionProvider, comparisonCoordinator, mapper, logger, UiDispatcher);
             Settings = new SettingsViewModel(configurationService, repositoryPath, UiDispatcher);
 
             CancelCommand = new RelayCommand(_ => CancelAll(), _ => IsBusy);
@@ -62,13 +68,19 @@ namespace TiaGitAddIn.UI.ViewModels
 
         public Task RefreshAsync() => Status.RefreshAsync();
 
-        private async void OnChildPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnChildPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(HistoryViewModel.SelectedCommit) && sender is HistoryViewModel)
             {
                 CommitInfo? commit = History.SelectedCommit;
                 if (commit != null)
-                    await Diff.LoadCommitDiffAsync(commit.Hash).ConfigureAwait(false);
+                {
+                    // Fire-and-forget is safe here: LoadCommitDiffAsync is built on RunBusyAsync, which
+                    // catches every exception (including OperationCanceledException) internally and
+                    // reports it via ReportStatus, so the returned Task never faults or needs observing.
+                    _ = Diff.LoadCommitDiffAsync(commit.Hash);
+                }
+
                 return;
             }
 

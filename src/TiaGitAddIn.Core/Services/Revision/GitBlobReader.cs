@@ -9,13 +9,18 @@ using TiaGitAddIn.Models.Comparison;
 namespace TiaGitAddIn.Services.Revision
 {
     /// <summary>
-    /// Reads git blob size and content via <c>git cat-file</c>, going through the text runner for the
-    /// cheap <c>-s</c> size query and the binary runner for the actual blob bytes. Every repository-relative
-    /// path and every revision is validated before any process argument is built; nothing is ever
+    /// Reads a PLC revision's size and content for one of two source kinds: a committed git blob via
+    /// <c>git cat-file</c> (going through the text runner for the cheap <c>-s</c> size query and the binary
+    /// runner for the actual blob bytes), or -- for <see cref="PlcRevisionSourceKind.WorkingTree"/> -- a
+    /// direct, bounded filesystem read of <c>&lt;repositoryRoot&gt;/&lt;repositoryRelativePath&gt;</c>.
+    /// Every repository-relative path is validated (traversal/rooted-path/NUL rejection) before either path
+    /// is taken, and every git revision is validated before any process argument is built; nothing is ever
     /// concatenated into a shell command (<c>UseShellExecute=false</c> throughout the process seam).
     /// </summary>
     public sealed class GitBlobReader : IGitBlobReader
     {
+        private const int WorkingTreeReadBufferSize = 81920;
+
         private static readonly Regex HexRevisionPattern = new Regex("^[0-9a-fA-F]{7,64}$", RegexOptions.Compiled);
 
         private readonly IGitProcessRunner _textRunner;
@@ -39,8 +44,16 @@ namespace TiaGitAddIn.Services.Revision
         public async Task<long> GetSizeAsync(PlcRevisionSource source, string repositoryRelativePath,
             CancellationToken cancellationToken)
         {
-            string objectExpression = BuildObjectExpression(source, repositoryRelativePath);
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            string path = ValidatePath(repositoryRelativePath);
             cancellationToken.ThrowIfCancellationRequested();
+
+            if (source.Kind == PlcRevisionSourceKind.WorkingTree)
+            {
+                return GetWorkingTreeSize(path);
+            }
+
+            string objectExpression = $"{ValidateRevision(source)}:{path}";
 
             GitProcessResult result = await _textRunner.RunAsync(
                 _gitExecutablePath, _repositoryRoot,
@@ -63,8 +76,16 @@ namespace TiaGitAddIn.Services.Revision
         public async Task<IReadOnlyList<byte>> ReadAsync(PlcRevisionSource source, string repositoryRelativePath,
             int maximumBytes, CancellationToken cancellationToken)
         {
-            string objectExpression = BuildObjectExpression(source, repositoryRelativePath);
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            string path = ValidatePath(repositoryRelativePath);
             cancellationToken.ThrowIfCancellationRequested();
+
+            if (source.Kind == PlcRevisionSourceKind.WorkingTree)
+            {
+                return await ReadWorkingTreeBytesAsync(path, maximumBytes, cancellationToken).ConfigureAwait(false);
+            }
+
+            string objectExpression = $"{ValidateRevision(source)}:{path}";
 
             GitBinaryProcessResult result = await _binaryRunner.RunBinaryAsync(
                 _gitExecutablePath, _repositoryRoot,
@@ -80,11 +101,59 @@ namespace TiaGitAddIn.Services.Revision
             return result.StandardOutput;
         }
 
-        private string BuildObjectExpression(PlcRevisionSource source, string repositoryRelativePath)
+        /// <summary>
+        /// Resolves an already-validated, repository-relative (forward-slash) path to the real filesystem
+        /// path used for a <see cref="PlcRevisionSourceKind.WorkingTree"/> read. Re-derives the combined path
+        /// from the validated relative path rather than trusting a cached value, so it stays correct even if
+        /// <see cref="ValidatePath"/>'s internal traversal check is ever refactored.
+        /// </summary>
+        private string ResolveWorkingTreeFullPath(string validatedRepositoryRelativePath)
+            => Path.GetFullPath(Path.Combine(_repositoryRoot, validatedRepositoryRelativePath));
+
+        private long GetWorkingTreeSize(string validatedRepositoryRelativePath)
         {
-            string path = ValidatePath(repositoryRelativePath);
-            string revision = ValidateRevision(source);
-            return $"{revision}:{path}";
+            string fullPath = ResolveWorkingTreeFullPath(validatedRepositoryRelativePath);
+            var fileInfo = new FileInfo(fullPath);
+            if (!fileInfo.Exists)
+            {
+                throw new RevisionLoadException("The requested working-tree file does not exist.");
+            }
+
+            return fileInfo.Length;
+        }
+
+        /// <summary>
+        /// Streams the working-tree file in bounded chunks, mirroring the same TOCTOU-safe bounding the
+        /// git-blob binary path applies via <c>maximumStandardOutputBytes</c>: the running total is checked
+        /// against <paramref name="maximumBytes"/> on every chunk, so a file that grows after
+        /// <see cref="GetWorkingTreeSize"/> was checked (but before this finishes reading) is still rejected
+        /// rather than silently returning more than the configured limit.
+        /// </summary>
+        private async Task<IReadOnlyList<byte>> ReadWorkingTreeBytesAsync(
+            string validatedRepositoryRelativePath, int maximumBytes, CancellationToken cancellationToken)
+        {
+            string fullPath = ResolveWorkingTreeFullPath(validatedRepositoryRelativePath);
+            if (!File.Exists(fullPath))
+            {
+                throw new RevisionLoadException("The requested working-tree file does not exist.");
+            }
+
+            using FileStream stream = new FileStream(
+                fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, WorkingTreeReadBufferSize, useAsync: true);
+            using MemoryStream accumulated = new MemoryStream();
+            byte[] buffer = new byte[WorkingTreeReadBufferSize];
+            int bytesRead;
+            while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) > 0)
+            {
+                accumulated.Write(buffer, 0, bytesRead);
+                if (accumulated.Length > maximumBytes)
+                {
+                    throw new RevisionSizeLimitException(
+                        $"Working-tree file exceeded the {maximumBytes}-byte limit.");
+                }
+            }
+
+            return accumulated.ToArray();
         }
 
         private string ValidatePath(string? repositoryRelativePath)

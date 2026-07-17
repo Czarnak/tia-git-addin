@@ -2,7 +2,11 @@ using System;
 using TiaGitAddIn.Configuration;
 using TiaGitAddIn.Logging;
 using TiaGitAddIn.Models;
+using TiaGitAddIn.Models.Comparison;
 using TiaGitAddIn.Services;
+using TiaGitAddIn.Services.Comparison;
+using TiaGitAddIn.Services.Revision;
+using TiaGitAddIn.UI.Mapping;
 using TiaGitAddIn.UI.ViewModels;
 
 namespace TiaGitAddIn.UI
@@ -71,24 +75,57 @@ namespace TiaGitAddIn.UI
                     ? "git"
                     : configuration.GitExecutablePath!;
 
-                IGitProcessRunner gitProcessRunner = new GitProcessRunner();
+                // A single Siemens-backed GitProcessRunner instance implements both the text
+                // (IGitProcessRunner) and binary (IGitBinaryProcessRunner) process seams used to load
+                // comparison revisions. No test/System process runner is ever reachable from here.
+                logger.Info("GitPanelLaunchService: adapter GitProcessRunner/SiemensAddIn selected for revision loading.");
+                var gitProcessRunner = new GitProcessRunner();
                 IGitService gitService = createGitService(
                     gitExecutablePath,
                     configuration.RepositoryPath);
 
-                IGitFileExtractor gitFileExtractor = new GitFileExtractor(gitProcessRunner, gitExecutablePath, configuration.RepositoryPath, logger);
+                IGitBlobReader blobReader = new GitBlobReader(
+                    gitProcessRunner, gitProcessRunner, gitExecutablePath, configuration.RepositoryPath);
+                IPlcRevisionProvider revisionProvider = new PlcRevisionProvider(blobReader, PlcRevisionProviderOptions.Default);
 
-                ISactService sactService = new SactService(logger);
+                IPlcArtifactClassifier classifier = new PlcArtifactClassifier();
+                var textComparer = new LineTextComparer(TextComparisonLimits.Default);
+                var resultFactory = new PlcComparisonResultFactory(textComparer);
+                var sanitizer = new ComparisonDiagnosticSanitizer();
+                var strategies = new IPlcComparisonStrategy[]
+                {
+                    new LadComparisonStrategy(resultFactory, sanitizer),
+                    new TextFallbackStrategy(resultFactory),
+                };
+                IPlcComparisonCoordinator comparisonCoordinator = new PlcComparisonCoordinator(
+                    classifier, strategies, resultFactory, sanitizer);
 
                 return GitPanelLaunchResult.Ok(() =>
-                    new MainViewModel(
+                {
+                    // The dispatcher must be captured on the thread that will actually own the WPF panel
+                    // (a dedicated STA thread spun up by the caller), not the thread that called
+                    // CreateViewModel -- so this, and anything that captures it, stays inside the factory.
+                    IUiDispatcher dispatcher = WpfUiDispatcher.FromCurrentThread();
+
+                    var mapper = new ComparisonPresentationMapper(new IComparisonPresentationViewModelFactory[]
+                    {
+                        new InterfacePresentationViewModelFactory(),
+                        new TextPresentationViewModelFactory(),
+                        new UnsupportedPresentationViewModelFactory(),
+                        new ErrorPresentationViewModelFactory(),
+                        new LadPresentationViewModelFactory(logger, dispatcher),
+                    });
+
+                    return new MainViewModel(
                         configuration.RepositoryPath,
                         gitService,
-                        gitFileExtractor,
-                        sactService,
+                        revisionProvider,
+                        comparisonCoordinator,
+                        mapper,
                         configurationService,
                         logger,
-                        WpfUiDispatcher.FromCurrentThread()));
+                        dispatcher);
+                });
             }
             catch (Exception ex)
             {

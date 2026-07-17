@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:TiaGitAddIn.UI.Views"
+             xmlns:comparison="clr-namespace:TiaGitAddIn.UI.Views.Comparison"
              xmlns:conv="clr-namespace:TiaGitAddIn.UI.Converters"
              mc:Ignorable="d"
              d:DesignHeight="600"
@@ -33,6 +33,7 @@
                 <ListBox ItemsSource="{Binding Entries}"
                          SelectedItem="{Binding SelectedEntry}"
                          SelectionMode="Single"
+                         SelectionChanged="OnSelectionChanged"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -40,7 +41,6 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="20"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Change type badge -->
@@ -61,18 +61,6 @@
                                            Margin="5,0"
                                            VerticalAlignment="Center"
                                            TextTrimming="CharacterEllipsis"/>
-
-                                <!-- TIA artifact indicator -->
-                                <Border Grid.Column="2"
-                                        Background="#F57F17"
-                                        CornerRadius="2"
-                                        Padding="3,1"
-                                        Visibility="{Binding IsTiaArtifact, Converter={StaticResource BoolToVis}}">
-                                    <TextBlock Text="TIA"
-                                               FontSize="9"
-                                               FontWeight="Bold"
-                                               Foreground="White"/>
-                                </Border>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -84,121 +72,10 @@
                           HorizontalAlignment="Stretch"
                           Background="#DDDDDD"/>
 
-            <!-- Diff content panel -->
-            <DockPanel Grid.Column="2">
-
-                <!-- TIA heuristic summary bar -->
-                <Border DockPanel.Dock="Top"
-                        Background="#FFFDE7"
-                        BorderBrush="#F9A825"
-                        BorderThickness="0,0,0,1"
-                        Padding="10,6"
-                        Visibility="{Binding SelectedEntry.IsTiaArtifact, Converter={StaticResource BoolToVis}}">
-                    <Grid>
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Left">
-                            <TextBlock Text="TIA Artifact"
-                                       FontWeight="Bold"
-                                       Foreground="#E65100"
-                                       Margin="0,0,12,0"/>
-                            <TextBlock Text="{Binding SelectedEntry.TiaSummary}"
-                                       Foreground="#6D4C41"
-                                       VerticalAlignment="Center"/>
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Right">
-                            <ToggleButton Content="Visual View"
-                                          IsChecked="{Binding ShowVisualDiff}"
-                                          Padding="8,2"
-                                          Margin="5,0"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-
-                <!-- Content Area -->
-                <Grid>
-                    <!-- Text Diff View -->
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                                  VerticalScrollBarVisibility="Auto">
-                        <ScrollViewer.Style>
-                            <Style TargetType="ScrollViewer">
-                                <Setter Property="Visibility"
-                                        Value="Visible"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ShowVisualDiff}"
-                                                 Value="True">
-                                        <Setter Property="Visibility"
-                                                Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ScrollViewer.Style>
-                        <ItemsControl ItemsSource="{Binding DisplayedLines}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Background="{Binding LineType, Converter={StaticResource LineTypeToBackground}}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="42"/>
-                                            <ColumnDefinition Width="42"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <!-- Old line number -->
-                                        <Border Grid.Column="0"
-                                                BorderBrush="#DDDDDD"
-                                                BorderThickness="0,0,1,0">
-                                            <TextBlock Text="{Binding OldLineNumberText}"
-                                                       FontFamily="Consolas"
-                                                       FontSize="11"
-                                                       Foreground="#999999"
-                                                       HorizontalAlignment="Right"
-                                                       Padding="0,1,6,1"/>
-                                        </Border>
-
-                                        <!-- New line number -->
-                                        <Border Grid.Column="1"
-                                                BorderBrush="#DDDDDD"
-                                                BorderThickness="0,0,1,0">
-                                            <TextBlock Text="{Binding NewLineNumberText}"
-                                                       FontFamily="Consolas"
-                                                       FontSize="11"
-                                                       Foreground="#999999"
-                                                       HorizontalAlignment="Right"
-                                                       Padding="0,1,6,1"/>
-                                        </Border>
-
-                                        <!-- Line content -->
-                                        <TextBlock Grid.Column="2"
-                                                   Text="{Binding Content}"
-                                                   FontFamily="Consolas"
-                                                   FontSize="12"
-                                                   Padding="6,1"
-                                                   TextWrapping="NoWrap"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-
-                    <!-- Graphical Diff View -->
-                    <local:LadDiffView DataContext="{Binding LadDiff}">
-                        <local:LadDiffView.Style>
-                            <Style TargetType="local:LadDiffView">
-                                <Setter Property="Visibility"
-                                        Value="Collapsed"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding DataContext.ShowVisualDiff, RelativeSource={RelativeSource AncestorType={x:Type local:DiffView}}}"
-                                                 Value="True">
-                                        <Setter Property="Visibility"
-                                                Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </local:LadDiffView.Style>
-                    </local:LadDiffView>
-                </Grid>
-            </DockPanel>
+            <!-- Diff content panel: every artifact kind (text, LAD, interface-only, unsupported, error)
+                 renders through the one ComparisonPresentationHost, driven entirely by CurrentPresentation. -->
+            <comparison:ComparisonPresentationHost Grid.Column="2"
+                                                    DataContext="{Binding CurrentPresentation}"/>
         </Grid>
 
         <!-- Status bar -->
