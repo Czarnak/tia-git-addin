@@ -1,16 +1,16 @@
-# Graph Report - tia-git-addin  (2026-06-14)
+# Graph Report - tia-git-addin  (2026-07-17)
 
 ## Corpus Check
-- 130 files · ~31,192 words
+- 204 files · ~58,194 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3678 nodes · 4526 edges · 565 communities (195 shown, 370 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 60 edges (avg confidence: 0.8)
+- 4423 nodes · 5579 edges · 644 communities (231 shown, 413 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 63 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6d8f2e62`
+- Built from commit: `02c47adb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -142,6 +142,7 @@
 - [[_COMMUNITY_Community 124|Community 124]]
 - [[_COMMUNITY_Community 125|Community 125]]
 - [[_COMMUNITY_Community 126|Community 126]]
+- [[_COMMUNITY_Community 127|Community 127]]
 - [[_COMMUNITY_Community 128|Community 128]]
 - [[_COMMUNITY_Community 129|Community 129]]
 - [[_COMMUNITY_Community 130|Community 130]]
@@ -189,7 +190,6 @@
 - [[_COMMUNITY_Community 172|Community 172]]
 - [[_COMMUNITY_Community 173|Community 173]]
 - [[_COMMUNITY_Community 174|Community 174]]
-- [[_COMMUNITY_Community 175|Community 175]]
 - [[_COMMUNITY_Community 176|Community 176]]
 - [[_COMMUNITY_Community 177|Community 177]]
 - [[_COMMUNITY_Community 178|Community 178]]
@@ -283,7 +283,6 @@
 - [[_COMMUNITY_Community 266|Community 266]]
 - [[_COMMUNITY_Community 267|Community 267]]
 - [[_COMMUNITY_Community 268|Community 268]]
-- [[_COMMUNITY_Community 269|Community 269]]
 - [[_COMMUNITY_Community 270|Community 270]]
 - [[_COMMUNITY_Community 271|Community 271]]
 - [[_COMMUNITY_Community 272|Community 272]]
@@ -306,6 +305,8 @@
 - [[_COMMUNITY_Community 289|Community 289]]
 - [[_COMMUNITY_Community 290|Community 290]]
 - [[_COMMUNITY_Community 291|Community 291]]
+- [[_COMMUNITY_Community 292|Community 292]]
+- [[_COMMUNITY_Community 293|Community 293]]
 - [[_COMMUNITY_Community 294|Community 294]]
 - [[_COMMUNITY_Community 295|Community 295]]
 - [[_COMMUNITY_Community 296|Community 296]]
@@ -326,6 +327,7 @@
 - [[_COMMUNITY_Community 311|Community 311]]
 - [[_COMMUNITY_Community 312|Community 312]]
 - [[_COMMUNITY_Community 313|Community 313]]
+- [[_COMMUNITY_Community 314|Community 314]]
 - [[_COMMUNITY_Community 315|Community 315]]
 - [[_COMMUNITY_Community 316|Community 316]]
 - [[_COMMUNITY_Community 317|Community 317]]
@@ -347,6 +349,7 @@
 - [[_COMMUNITY_Community 333|Community 333]]
 - [[_COMMUNITY_Community 334|Community 334]]
 - [[_COMMUNITY_Community 335|Community 335]]
+- [[_COMMUNITY_Community 336|Community 336]]
 - [[_COMMUNITY_Community 337|Community 337]]
 - [[_COMMUNITY_Community 338|Community 338]]
 - [[_COMMUNITY_Community 339|Community 339]]
@@ -381,8 +384,6 @@
 - [[_COMMUNITY_Community 368|Community 368]]
 - [[_COMMUNITY_Community 369|Community 369]]
 - [[_COMMUNITY_Community 370|Community 370]]
-- [[_COMMUNITY_Community 371|Community 371]]
-- [[_COMMUNITY_Community 372|Community 372]]
 - [[_COMMUNITY_Community 373|Community 373]]
 - [[_COMMUNITY_Community 374|Community 374]]
 - [[_COMMUNITY_Community 375|Community 375]]
@@ -403,7 +404,6 @@
 - [[_COMMUNITY_Community 390|Community 390]]
 - [[_COMMUNITY_Community 391|Community 391]]
 - [[_COMMUNITY_Community 392|Community 392]]
-- [[_COMMUNITY_Community 393|Community 393]]
 - [[_COMMUNITY_Community 394|Community 394]]
 - [[_COMMUNITY_Community 395|Community 395]]
 - [[_COMMUNITY_Community 396|Community 396]]
@@ -425,7 +425,6 @@
 - [[_COMMUNITY_Community 412|Community 412]]
 - [[_COMMUNITY_Community 413|Community 413]]
 - [[_COMMUNITY_Community 414|Community 414]]
-- [[_COMMUNITY_Community 415|Community 415]]
 - [[_COMMUNITY_Community 416|Community 416]]
 - [[_COMMUNITY_Community 417|Community 417]]
 - [[_COMMUNITY_Community 418|Community 418]]
@@ -456,72 +455,151 @@
 - [[_COMMUNITY_Community 443|Community 443]]
 - [[_COMMUNITY_Community 444|Community 444]]
 - [[_COMMUNITY_Community 445|Community 445]]
+- [[_COMMUNITY_Community 446|Community 446]]
+- [[_COMMUNITY_Community 447|Community 447]]
+- [[_COMMUNITY_Community 448|Community 448]]
+- [[_COMMUNITY_Community 449|Community 449]]
+- [[_COMMUNITY_Community 450|Community 450]]
+- [[_COMMUNITY_Community 451|Community 451]]
+- [[_COMMUNITY_Community 452|Community 452]]
+- [[_COMMUNITY_Community 453|Community 453]]
+- [[_COMMUNITY_Community 454|Community 454]]
+- [[_COMMUNITY_Community 455|Community 455]]
+- [[_COMMUNITY_Community 456|Community 456]]
+- [[_COMMUNITY_Community 457|Community 457]]
+- [[_COMMUNITY_Community 458|Community 458]]
+- [[_COMMUNITY_Community 459|Community 459]]
+- [[_COMMUNITY_Community 460|Community 460]]
+- [[_COMMUNITY_Community 461|Community 461]]
+- [[_COMMUNITY_Community 462|Community 462]]
+- [[_COMMUNITY_Community 463|Community 463]]
+- [[_COMMUNITY_Community 464|Community 464]]
+- [[_COMMUNITY_Community 465|Community 465]]
+- [[_COMMUNITY_Community 466|Community 466]]
+- [[_COMMUNITY_Community 467|Community 467]]
+- [[_COMMUNITY_Community 468|Community 468]]
+- [[_COMMUNITY_Community 469|Community 469]]
+- [[_COMMUNITY_Community 470|Community 470]]
+- [[_COMMUNITY_Community 471|Community 471]]
+- [[_COMMUNITY_Community 472|Community 472]]
+- [[_COMMUNITY_Community 473|Community 473]]
+- [[_COMMUNITY_Community 474|Community 474]]
+- [[_COMMUNITY_Community 475|Community 475]]
+- [[_COMMUNITY_Community 476|Community 476]]
+- [[_COMMUNITY_Community 477|Community 477]]
+- [[_COMMUNITY_Community 478|Community 478]]
+- [[_COMMUNITY_Community 479|Community 479]]
+- [[_COMMUNITY_Community 480|Community 480]]
+- [[_COMMUNITY_Community 481|Community 481]]
+- [[_COMMUNITY_Community 482|Community 482]]
+- [[_COMMUNITY_Community 483|Community 483]]
+- [[_COMMUNITY_Community 484|Community 484]]
+- [[_COMMUNITY_Community 485|Community 485]]
+- [[_COMMUNITY_Community 486|Community 486]]
+- [[_COMMUNITY_Community 487|Community 487]]
+- [[_COMMUNITY_Community 488|Community 488]]
+- [[_COMMUNITY_Community 489|Community 489]]
+- [[_COMMUNITY_Community 490|Community 490]]
+- [[_COMMUNITY_Community 491|Community 491]]
+- [[_COMMUNITY_Community 492|Community 492]]
+- [[_COMMUNITY_Community 493|Community 493]]
+- [[_COMMUNITY_Community 494|Community 494]]
+- [[_COMMUNITY_Community 495|Community 495]]
+- [[_COMMUNITY_Community 496|Community 496]]
+- [[_COMMUNITY_Community 497|Community 497]]
+- [[_COMMUNITY_Community 498|Community 498]]
+- [[_COMMUNITY_Community 499|Community 499]]
+- [[_COMMUNITY_Community 500|Community 500]]
+- [[_COMMUNITY_Community 501|Community 501]]
+- [[_COMMUNITY_Community 502|Community 502]]
+- [[_COMMUNITY_Community 503|Community 503]]
+- [[_COMMUNITY_Community 504|Community 504]]
+- [[_COMMUNITY_Community 505|Community 505]]
+- [[_COMMUNITY_Community 506|Community 506]]
+- [[_COMMUNITY_Community 507|Community 507]]
+- [[_COMMUNITY_Community 508|Community 508]]
+- [[_COMMUNITY_Community 509|Community 509]]
+- [[_COMMUNITY_Community 510|Community 510]]
+- [[_COMMUNITY_Community 511|Community 511]]
+- [[_COMMUNITY_Community 512|Community 512]]
+- [[_COMMUNITY_Community 513|Community 513]]
+- [[_COMMUNITY_Community 514|Community 514]]
+- [[_COMMUNITY_Community 515|Community 515]]
+- [[_COMMUNITY_Community 516|Community 516]]
+- [[_COMMUNITY_Community 517|Community 517]]
+- [[_COMMUNITY_Community 518|Community 518]]
+- [[_COMMUNITY_Community 519|Community 519]]
+- [[_COMMUNITY_Community 520|Community 520]]
+- [[_COMMUNITY_Community 521|Community 521]]
+- [[_COMMUNITY_Community 522|Community 522]]
+- [[_COMMUNITY_Community 523|Community 523]]
+- [[_COMMUNITY_Community 524|Community 524]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `DynamicBox` - 36 edges
-2. `GitService` - 27 edges
-3. `DynamicBoxData` - 27 edges
-4. `SimaticMlParser` - 26 edges
-5. `DynamicBox` - 26 edges
-6. `LadLayoutEngine` - 25 edges
-7. `SimaticMlComparer` - 25 edges
-8. `FakeGitService` - 24 edges
-9. `DataBlock` - 24 edges
-10. `SimaticMlToSactMapper` - 23 edges
+2. `SimaticMlParser` - 30 edges
+3. `string` - 29 edges
+4. `GitService` - 27 edges
+5. `SimaticMlComparer` - 27 edges
+6. `InterfaceComparerTests` - 27 edges
+7. `DynamicBoxData` - 27 edges
+8. `DynamicBox` - 26 edges
+9. `LadLayoutEngine` - 25 edges
+10. `DiffViewModel` - 24 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `GitVciWorkspaceMenu` --references--> `string`  [EXTRACTED]
+  TiaGitAddIn/Entry/GitVciWorkspaceMenu.cs → TiaGitAddIn.Tests/UI/ComparisonSelectionCoordinatorTests.cs
 - `GitVciWorkspaceMenu` --references--> `GitPanelLaunchService`  [EXTRACTED]
   TiaGitAddIn/Entry/GitVciWorkspaceMenu.cs → C:/Users/LCZ/Desktop/RnD/tia-git-addin/src/TiaGitAddIn/Entry/GitVciWorkspaceViewProvider.cs
-- `GitVciWorkspaceMenu` --references--> `string`  [EXTRACTED]
-  TiaGitAddIn/Entry/GitVciWorkspaceMenu.cs → TiaGitAddIn.Tests/Services/SimaticMlSchemaValidatorTests.cs
 - `MenuSelectionContextResolver` --references--> `string`  [EXTRACTED]
-  C:/Users/LCZ/Desktop/RnD/tia-git-addin/src/TiaGitAddIn/Entry/MenuSelectionContextResolver.cs → TiaGitAddIn.Tests/Services/SimaticMlSchemaValidatorTests.cs
+  C:/Users/LCZ/Desktop/RnD/tia-git-addin/src/TiaGitAddIn/Entry/MenuSelectionContextResolver.cs → TiaGitAddIn.Tests/UI/ComparisonSelectionCoordinatorTests.cs
 - `BranchViewModel` --references--> `string`  [EXTRACTED]
-  TiaGitAddIn/UI/ViewModels/BranchViewModel.cs → TiaGitAddIn.Tests/Services/SimaticMlSchemaValidatorTests.cs
+  TiaGitAddIn/UI/ViewModels/BranchViewModel.cs → TiaGitAddIn.Tests/UI/ComparisonSelectionCoordinatorTests.cs
 - `CommitViewModel` --references--> `string`  [EXTRACTED]
-  TiaGitAddIn/UI/ViewModels/CommitViewModel.cs → TiaGitAddIn.Tests/Services/SimaticMlSchemaValidatorTests.cs
+  TiaGitAddIn/UI/ViewModels/CommitViewModel.cs → TiaGitAddIn.Tests/UI/ComparisonSelectionCoordinatorTests.cs
 
-## Communities (565 total, 370 thin omitted)
+## Communities (644 total, 413 thin omitted)
 
 ### Community 0 - "Core Git Models & Types"
 Cohesion: 0.07
 Nodes (3): DynamicBox, FbdLayoutManager, FbdNetworkComponent
 
-### Community 2 - "UI Dispatcher & Testing"
+### Community 1 - "Git & SACT Service Interfaces"
+Cohesion: 0.05
+Nodes (40): IPlcComparisonCoordinator, PlcComparisonCoordinator, RecoverableComparisonException, TiaGitAddIn.Services.Comparison, PlcComparisonResult, TiaGitAddIn.Models.Comparison, Exception, IPlcArtifactClassifier (+32 more)
+
+### Community 3 - "Main & Status ViewModels"
 Cohesion: 0.05
 Nodes (11): CreateService(), i18nextUpdaterPipe, ModelToViewAdapter, TagTableAttributeListComponent, TagTableDataLanguageService, TagTableViewModule, TagTableViewService, TagViewComponent (+3 more)
 
-### Community 3 - "Main & Status ViewModels"
-Cohesion: 0.06
-Nodes (16): IDisposable, IGitProcessRunner, List, SemaphoreSlim, FakeGitProcessRunner, GitFileExtractorTests, TiaGitAddIn.Tests.Services, GitProcessRunner (+8 more)
-
 ### Community 4 - "UI Converters"
-Cohesion: 0.05
-Nodes (11): ISactService, SactService, TiaGitAddIn.Services, DiffViewModelTests, FakeGitService, FakeSactService, TiaGitAddIn.Tests.UI, FakeGitFileExtractor (+3 more)
-
-### Community 5 - "Git Panel Window Management"
-Cohesion: 0.05
-Nodes (11): Dispatcher, IUiDispatcher, Queue, ImmediateUiDispatcher, TiaGitAddIn.UI, FakeGitService, RecordingUiDispatcher, StatusViewModelTests (+3 more)
-
-### Community 6 - "Git Operations Service"
 Cohesion: 0.05
 Nodes (12): CodeBlockAttributeListComponent, CodeBlockContentDirective, CodeBlockContentServiceProvider, CodeblockContentViewComponent, CodeblockViewModule, CreateProvider(), i18nextUpdaterPipe, UiTextLoader (+4 more)
 
-### Community 8 - "History ViewModel Tests"
+### Community 6 - "Git Operations Service"
+Cohesion: 0.06
+Nodes (21): ComparisonPresentationHost, TiaGitAddIn.UI.Views.Comparison, InterfaceDiffView, TiaGitAddIn.UI.Views.Comparison, TextDiffView, TiaGitAddIn.UI.Views.Comparison, UserControl, BranchView (+13 more)
+
+### Community 7 - "Commit ViewModel Tests"
 Cohesion: 0.04
 Nodes (3): DataBlock, DataBlockMember, DataBlockSection
 
+### Community 8 - "History ViewModel Tests"
+Cohesion: 0.06
+Nodes (9): List, Queue, FakeGitProcessRunner, GitFileExtractorTests, TiaGitAddIn.Tests.Services, FakeGitService, RecordingUiDispatcher, StatusViewModelTests (+1 more)
+
 ### Community 9 - "Git Project Tree Menu Integration"
+Cohesion: 0.16
+Nodes (4): SimaticMlParser, TiaGitAddIn.Services.SimaticMl, SimaticMlParser, TiaGitAddIn.Services.SimaticMl
+
+### Community 10 - "Community 10"
 Cohesion: 0.06
 Nodes (9): AttributeListDataLanguageService, AttributeListInfo, AttributelistViewComponent, AttributeListViewModule, AttributeListViewService, CreateService(), i18nextUpdaterPipe, ModelToViewAdapter (+1 more)
 
-### Community 10 - "Community 10"
-Cohesion: 0.14
-Nodes (5): BranchInfo, BranchViewModel, TiaGitAddIn.UI.ViewModels, StatusViewModel, TiaGitAddIn.UI.ViewModels
-
 ### Community 11 - "Community 11"
 Cohesion: 0.05
-Nodes (4): CellComponent, CellFormatter, FunctionPipe, GenericTableModule
+Nodes (4): AsBooleanPipe, CellFormatter, GenericTableModule, ThemeServiceProvider
 
 ### Community 12 - "Community 12"
 Cohesion: 0.07
@@ -529,7 +607,7 @@ Nodes (11): BoolToVisibilityConverter, TiaGitAddIn.UI.Converters, CompareStateTo
 
 ### Community 13 - "Community 13"
 Cohesion: 0.08
-Nodes (15): UserControl, BranchView, TiaGitAddIn.UI.Views, CommitView, TiaGitAddIn.UI.Views, DiffView, TiaGitAddIn.UI.Views, HistoryView (+7 more)
+Nodes (11): IDisposable, PlcRevisionLease, TiaGitAddIn.Services.Revision, SemaphoreSlim, Lease, OperationSerializer, TiaGitAddIn.Services, SimaticMlSchemaLocatorTests (+3 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.07
@@ -540,252 +618,392 @@ Cohesion: 0.06
 Nodes (7): StatementList, StlAccess, StlCallInfo, StlInstruction, StlStatement, StlBody, StlNetworkContent
 
 ### Community 16 - "Community 16"
-Cohesion: 0.07
-Nodes (3): Udt, UdtMember, UdtSection
+Cohesion: 0.08
+Nodes (10): ISactPathResolver, ISactProcessRunner, SactPathResolver, TiaGitAddIn.Services, SactProcessRunner, TiaGitAddIn.Services, FakeSactPathResolver, FakeSactProcessRunner (+2 more)
+
+### Community 17 - "Community 17"
+Cohesion: 0.12
+Nodes (3): InterfaceComparerTests, InterfaceFixture, TiaGitAddIn.Tests.Services
 
 ### Community 18 - "Community 18"
 Cohesion: 0.07
-Nodes (6): CellMarkerThemePipe, DataLanguageSelectorPipe, FunctionPipe, NetworkDirective, NetworkViewModule, UiTextLoader
+Nodes (3): Udt, UdtMember, UdtSection
 
 ### Community 20 - "Community 20"
-Cohesion: 0.12
-Nodes (26): AccessComponentDefinition, AccessDefinition, BlockDefinition, CallDefinition, CallInfoDefinition, CallParameterDefinition, CompileUnitDefinition, ConnectionDefinition (+18 more)
+Cohesion: 0.07
+Nodes (6): CellMarkerThemePipe, DataLanguageSelectorPipe, FunctionPipe, NetworkDirective, NetworkViewModule, UiTextLoader
 
 ### Community 21 - "Community 21"
+Cohesion: 0.11
+Nodes (9): ComparisonSelectionCoordinator, DiffEntryViewModel, HashSet, string, DiffEntryViewModel, DiffLineViewModel, DiffViewModel, NullLogger (+1 more)
+
+### Community 23 - "Community 23"
 Cohesion: 0.07
 Nodes (3): BlockInterfaceData, BlockInterfaceMemberData, BlockInterfaceSectionData
 
-### Community 24 - "Community 24"
+### Community 26 - "Community 26"
 Cohesion: 0.09
 Nodes (4): TaskCompletionSource, FakeGitService, HistoryViewModelTests, TiaGitAddIn.Tests.UI
 
-### Community 27 - "Community 27"
+### Community 28 - "Community 28"
+Cohesion: 0.11
+Nodes (7): LineTextComparer, TiaGitAddIn.Services.Comparison, StubTextComparer, PlcComparisonResultFactory, TiaGitAddIn.Services.Comparison, ITextComparer, TextComparisonLimits
+
+### Community 29 - "Community 29"
 Cohesion: 0.1
 Nodes (3): CommitViewModelTests, FakeGitService, TiaGitAddIn.Tests.UI
 
-### Community 28 - "Community 28"
+### Community 30 - "Community 30"
 Cohesion: 0.15
 Nodes (24): buildCallbox(), buildLabel(), buildOperand(), buildWire(), connectElements(), connectOperands(), connectParts(), createBranch() (+16 more)
 
-### Community 30 - "Community 30"
-Cohesion: 0.13
-Nodes (7): DiffEntryViewModel, HashSet, DiffEntryViewModel, DiffLineViewModel, DiffViewModel, NullLogger, TiaGitAddIn.UI.ViewModels
+### Community 32 - "Community 32"
+Cohesion: 0.08
+Nodes (8): BlockInterfaceMember, BlockInterfaceSection, CommonConstants, ConstantOperand, LineComponent, NetworkComponentViewModule, NetworkThemeConstants, OperandConnector
 
-### Community 33 - "Community 33"
-Cohesion: 0.11
-Nodes (8): ISactPathResolver, ISactProcessRunner, SactProcessRunner, TiaGitAddIn.Services, FakeSactPathResolver, FakeSactProcessRunner, SactServiceTests, TiaGitAddIn.Tests.Services
-
-### Community 34 - "Community 34"
+### Community 35 - "Community 35"
 Cohesion: 0.11
 Nodes (11): ViewModelBase, LadElementViewModel, TiaGitAddIn.UI.ViewModels, LadInterfaceRowViewModel, TiaGitAddIn.UI.ViewModels, LadNetworkPairViewModel, TiaGitAddIn.UI.ViewModels, LadPinViewModel (+3 more)
 
-### Community 39 - "Community 39"
-Cohesion: 0.14
-Nodes (7): ISimaticMlSchemaLocator, SimaticMlSchemaLocator, TiaGitAddIn.Services.SimaticMl, LocalSchemaXmlResolver, SimaticMlSchemaValidator, TiaGitAddIn.Services.SimaticMl, XmlResolver
-
 ### Community 40 - "Community 40"
-Cohesion: 0.1
-Nodes (16): LadComparatorContactComponent__svg_g_9_Template(), LadDynamicBoxComponent, LadDynamicBoxComponent__svg_g_12_Template(), LadDynamicBoxComponent__svg_g_14_Template(), LadDynamicBoxComponent__svg_g_16_Template(), LadDynamicBoxComponent__svg_g_18_Template(), LadDynamicBoxComponent__svg_g_1_Template(), LadDynamicBoxComponent__svg_g_24_Template() (+8 more)
-
-### Community 41 - "Community 41"
-Cohesion: 0.09
-Nodes (7): AddressOperand, BlockInterfaceMember, CommonConstants, ConstantOperand, LineComponent, NetworkComponentViewModule, NetworkThemeConstants
+Cohesion: 0.13
+Nodes (7): CancellationTokenSource, IGitService, INotifyPropertyChanged, CommitViewModel, TiaGitAddIn.UI.ViewModels, TiaGitAddIn.UI.ViewModels, ViewModelBase
 
 ### Community 42 - "Community 42"
 Cohesion: 0.14
-Nodes (7): MenuSelectionContextResolverTests, ProviderWithAmbiguousSelectionMethods, TiaGitAddIn.Tests.Entry, FileLogger, TiaGitAddIn.Logging, long, object
+Nodes (7): ISimaticMlSchemaLocator, SimaticMlSchemaLocator, TiaGitAddIn.Services.SimaticMl, LocalSchemaXmlResolver, SimaticMlSchemaValidator, TiaGitAddIn.Services.SimaticMl, XmlResolver
 
 ### Community 43 - "Community 43"
-Cohesion: 0.13
-Nodes (6): CancellationTokenSource, INotifyPropertyChanged, CommitViewModel, TiaGitAddIn.UI.ViewModels, TiaGitAddIn.UI.ViewModels, ViewModelBase
+Cohesion: 0.1
+Nodes (16): LadComparatorContactComponent__svg_g_9_Template(), LadDynamicBoxComponent, LadDynamicBoxComponent__svg_g_12_Template(), LadDynamicBoxComponent__svg_g_14_Template(), LadDynamicBoxComponent__svg_g_16_Template(), LadDynamicBoxComponent__svg_g_18_Template(), LadDynamicBoxComponent__svg_g_1_Template(), LadDynamicBoxComponent__svg_g_24_Template() (+8 more)
+
+### Community 44 - "Community 44"
+Cohesion: 0.14
+Nodes (7): ContextMenuAddIn, GitVciWorkspaceMenu, TiaGitAddIn.Entry, GitVciWorkspaceViewProvider, TiaGitAddIn.Entry, GitPanelLaunchService, VciWorkspaceViewAddInProvider
 
 ### Community 45 - "Community 45"
 Cohesion: 0.13
-Nodes (10): SimaticMLAttributeList, SimaticMLDocument, SimaticMLObject, SimaticMLObjectList, parseObject(), parseRootObjects(), populateAttributeList(), populateObjectList() (+2 more)
+Nodes (7): IConfigurationService, IVciWorkspaceLocator, FakeConfigurationService, FakeLogger, FakeWorkspaceLocator, GitPanelLaunchServiceTests, TiaGitAddIn.Tests.UI
 
 ### Community 46 - "Community 46"
+Cohesion: 0.1
+Nodes (9): IComparisonPresentationViewModelFactory, ErrorPresentationViewModelFactory, TiaGitAddIn.UI.Mapping, InterfacePresentationViewModelFactory, TiaGitAddIn.UI.Mapping, TextPresentationViewModelFactory, TiaGitAddIn.UI.Mapping, TiaGitAddIn.UI.Mapping (+1 more)
+
+### Community 47 - "Community 47"
+Cohesion: 0.16
+Nodes (4): TraceListener, CollectingTraceListener, ComparisonViewSmokeTests, TiaGitAddIn.Tests.UI
+
+### Community 48 - "Community 48"
+Cohesion: 0.13
+Nodes (10): SimaticMLAttributeList, SimaticMLDocument, SimaticMLObject, SimaticMLObjectList, parseObject(), parseRootObjects(), populateAttributeList(), populateObjectList() (+2 more)
+
+### Community 50 - "Community 50"
 Cohesion: 0.17
 Nodes (3): char, GitOutputParser, TiaGitAddIn.Services
 
-### Community 50 - "Community 50"
-Cohesion: 0.15
-Nodes (6): IVciWorkspaceLocator, FakeConfigurationService, FakeLogger, FakeWorkspaceLocator, GitPanelLaunchServiceTests, TiaGitAddIn.Tests.UI
-
-### Community 52 - "Community 52"
+### Community 57 - "Community 57"
 Cohesion: 0.12
 Nodes (5): ParameterInfo, ConnectorData, OperandConnectorData, ParameterData, PinData
 
-### Community 53 - "Community 53"
-Cohesion: 0.11
-Nodes (3): ElementData, LabelData, NetworkData
+### Community 59 - "Community 59"
+Cohesion: 0.16
+Nodes (3): ParserBoundaryCase, SimaticMlParserSecurityTests, TiaGitAddIn.Tests.Services
 
-### Community 55 - "Community 55"
-Cohesion: 0.15
-Nodes (6): Func, ICommand, AsyncCommand, TiaGitAddIn.UI, RelayCommand, TiaGitAddIn.UI.ViewModels
-
-### Community 56 - "Community 56"
+### Community 60 - "Community 60"
 Cohesion: 0.14
 Nodes (6): CellMarkerThemePipe, RowComponent_li_5_table_row_2_Template(), RowComponent_li_5_Template(), TableComponent, TableComponent_table_row_1_Template(), ThemeService
 
-### Community 57 - "Community 57"
-Cohesion: 0.12
+### Community 61 - "Community 61"
+Cohesion: 0.13
 Nodes (3): Member, Section, SectionInfo
 
-### Community 59 - "Community 59"
-Cohesion: 0.2
-Nodes (5): Action, IGitFileExtractor, RecordingGitFileExtractor, LadDiffViewModel, TiaGitAddIn.UI.ViewModels
+### Community 63 - "Community 63"
+Cohesion: 0.23
+Nodes (3): Action, LadDiffViewModel, TiaGitAddIn.UI.ViewModels
 
-### Community 61 - "Community 61"
+### Community 64 - "Community 64"
+Cohesion: 0.24
+Nodes (3): Dictionary, ComparisonSelectionCoordinatorTests, ControllableRevisionProvider
+
+### Community 68 - "Community 68"
 Cohesion: 0.14
 Nodes (4): AddressOperandData, ConstantOperandData, LabelOperandData, OperandData
 
-### Community 62 - "Community 62"
+### Community 69 - "Community 69"
 Cohesion: 0.12
 Nodes (3): Label, LabelOperand, Operand
 
-### Community 64 - "Community 64"
-Cohesion: 0.16
-Nodes (3): MultilingualRowComponent, RowData, TableData
+### Community 71 - "Community 71"
+Cohesion: 0.28
+Nodes (3): BranchInfo, BranchViewModel, TiaGitAddIn.UI.ViewModels
 
-### Community 65 - "Community 65"
+### Community 72 - "Community 72"
+Cohesion: 0.12
+Nodes (11): ErrorComparisonViewModel, TiaGitAddIn.UI.ViewModels.Comparison, InterfaceComparisonViewModel, LadComparisonViewModel, TiaGitAddIn.UI.ViewModels.Comparison, TextComparisonViewModel, TextDiffLineViewModel, TiaGitAddIn.UI.ViewModels.Comparison (+3 more)
+
+### Community 73 - "Community 73"
+Cohesion: 0.17
+Nodes (4): FakeGitFileExtractor, FakeSactService, LadDiffViewModelTests, TiaGitAddIn.Tests.UI
+
+### Community 74 - "Community 74"
+Cohesion: 0.2
+Nodes (6): ComparisonSelectionCoordinator, TiaGitAddIn.UI.ViewModels.Comparison, IAddInLogger, IUiDispatcher, LadPresentationViewModelFactory, TiaGitAddIn.UI.Mapping
+
+### Community 78 - "Community 78"
+Cohesion: 0.23
+Nodes (3): IPlcArtifactClassifier, PlcArtifactClassifier, TiaGitAddIn.Services.Comparison
+
+### Community 80 - "Community 80"
 Cohesion: 0.22
 Nodes (4): MainViewModel, GitPanelWindow, TiaGitAddIn.UI.Views, Window
 
-### Community 68 - "Community 68"
+### Community 83 - "Community 83"
+Cohesion: 0.15
+Nodes (3): LadComparatorContactComponent, LadDynamicContactComponent, LadTemplatedContactComponent
+
+### Community 86 - "Community 86"
+Cohesion: 0.15
+Nodes (3): ElementData, LabelData, NetworkData
+
+### Community 87 - "Community 87"
 Cohesion: 0.16
 Nodes (3): AutomaticTypedTemplateTypeData, SwitchBoxData, TemplateTypeData
 
-### Community 71 - "Community 71"
+### Community 90 - "Community 90"
+Cohesion: 0.15
+Nodes (6): CreateService$1(), CreateService(), DbAttributeListComponent, DbViewModule, DbViewService, UiTextLoader
+
+### Community 91 - "Community 91"
 Cohesion: 0.26
 Nodes (3): JavaScriptSerializer, SactJsonParser, TiaGitAddIn.Services
 
-### Community 72 - "Community 72"
-Cohesion: 0.24
-Nodes (3): ContextMenuAddIn, GitVciWorkspaceMenu, TiaGitAddIn.Entry
+### Community 97 - "Community 97"
+Cohesion: 0.27
+Nodes (4): DecodedRevision, PlcRevisionProvider, PlcRevisionProviderOptions, TiaGitAddIn.Services.Revision
 
-### Community 74 - "Community 74"
-Cohesion: 0.17
-Nodes (5): LadComparatorContactComponent, LadDynamicBoxComponent__svg_g_10_Template(), LadDynamicBoxComponent__svg_g_23_Template(), LadDynamicBoxComponent__svg_g_31_Template(), LadTemplatedContactComponent
-
-### Community 75 - "Community 75"
-Cohesion: 0.17
-Nodes (6): CreateService$1(), CreateService(), UdtAttributeListComponent, UdtViewModule, UdtViewService, UiTextLoader
-
-### Community 76 - "Community 76"
-Cohesion: 0.17
-Nodes (5): CreateService(), DbAttributeListComponent, DbViewModule, DbViewService, UiTextLoader
-
-### Community 79 - "Community 79"
+### Community 101 - "Community 101"
 Cohesion: 0.29
 Nodes (5): ProjectWithPath, TiaGitAddIn.Tests.Services, VciWorkspaceLocatorTests, WorkspaceFileLikeContext, WorkspaceFolderLikeContext
 
-### Community 80 - "Community 80"
+### Community 102 - "Community 102"
 Cohesion: 0.17
 Nodes (11): FbdDynamicBoxComponent__svg_g_13_Template(), FbdDynamicBoxComponent__svg_g_15_Template(), FbdDynamicBoxComponent__svg_g_17_Template(), FbdDynamicBoxComponent__svg_g_1_Template(), FbdDynamicBoxComponent__svg_g_20_Template(), FbdDynamicBoxComponent__svg_g_24__svg_g_2_Template(), FbdDynamicBoxComponent__svg_g_25__svg_g_2_Template(), FbdDynamicBoxComponent__svg_g_27_Template() (+3 more)
 
-### Community 82 - "Community 82"
+### Community 104 - "Community 104"
 Cohesion: 0.18
 Nodes (3): LadComparatorContactData, LadContactData, LadTemplatedContactData
 
-### Community 84 - "Community 84"
+### Community 107 - "Community 107"
 Cohesion: 0.18
 Nodes (3): NetworkListDataLanguageService, NetworkListViewComponent, NetworkListViewComponent_div_0_Template()
 
-### Community 87 - "Community 87"
+### Community 109 - "Community 109"
+Cohesion: 0.18
+Nodes (5): CreateService(), UdtAttributeListComponent, UdtViewModule, UdtViewService, UiTextLoader
+
+### Community 111 - "Community 111"
 Cohesion: 0.22
 Nodes (4): IRepositoryDiscovery, RepositoryDiscovery, TiaGitAddIn.Services, FakeRepositoryDiscovery
 
-### Community 88 - "Community 88"
-Cohesion: 0.22
-Nodes (5): CommitInfo, IGitService, ObservableCollection, HistoryViewModel, TiaGitAddIn.UI.ViewModels
-
-### Community 89 - "Community 89"
+### Community 112 - "Community 112"
 Cohesion: 0.24
 Nodes (3): bool, MainViewModel, TiaGitAddIn.UI.ViewModels
 
-### Community 95 - "Community 95"
+### Community 113 - "Community 113"
+Cohesion: 0.22
+Nodes (4): CommitInfo, ObservableCollection, HistoryViewModel, TiaGitAddIn.UI.ViewModels
+
+### Community 114 - "Community 114"
+Cohesion: 0.22
+Nodes (4): IGitFileExtractor, GitFileExtractor, TiaGitAddIn.Services, RecordingGitFileExtractor
+
+### Community 119 - "Community 119"
 Cohesion: 0.38
 Nodes (10): decodeXml(), parseBlank(), parseComment(), parseLineComment(), parseMultiLanguageText(), parseNewLine(), parseText(), parseToken() (+2 more)
 
-### Community 105 - "Community 105"
-Cohesion: 0.28
-Nodes (5): GitVciWorkspaceViewProvider, TiaGitAddIn.Entry, GitPanelLaunchService, IAddInLogger, VciWorkspaceViewAddInProvider
-
-### Community 108 - "Community 108"
+### Community 121 - "Community 121"
 Cohesion: 0.31
-Nodes (3): SactPathResolver, TiaGitAddIn.Services, string
+Nodes (4): MenuSelectionContextResolverTests, ProviderWithAmbiguousSelectionMethods, TiaGitAddIn.Tests.Entry, object
 
-### Community 114 - "Community 114"
+### Community 123 - "Community 123"
+Cohesion: 0.2
+Nodes (7): InterfaceSectionOrder, IComparisonPresentationMapper, IReadOnlyList, ComparisonPresentationMapper, TiaGitAddIn.UI.Mapping, SactInterfaceSections, TiaGitAddIn.Models.Sact
+
+### Community 124 - "Community 124"
+Cohesion: 0.24
+Nodes (4): PlcRevision, PlcRevisionSource, PlcTextEncoding, TiaGitAddIn.Models.Comparison
+
+### Community 135 - "Community 135"
+Cohesion: 0.33
+Nodes (3): Func, AsyncCommand, TiaGitAddIn.UI
+
+### Community 136 - "Community 136"
+Cohesion: 0.28
+Nodes (3): ICommand, RelayCommand, TiaGitAddIn.UI.ViewModels
+
+### Community 138 - "Community 138"
+Cohesion: 0.28
+Nodes (4): ISactService, SactService, TiaGitAddIn.Services, FakeSactService
+
+### Community 139 - "Community 139"
+Cohesion: 0.28
+Nodes (3): Dispatcher, TiaGitAddIn.UI, WpfUiDispatcher
+
+### Community 141 - "Community 141"
+Cohesion: 0.33
+Nodes (8): ComparisonPresentation, ErrorPresentation, LogicNetworkPresentation, TextComparisonLimits, TextDiffLine, TextPresentation, TiaGitAddIn.Models.Comparison, UnsupportedPresentation
+
+### Community 142 - "Community 142"
+Cohesion: 0.22
+Nodes (3): PlcComparisonContractTests, StubInterfacePresentation, TiaGitAddIn.Tests.Comparison
+
+### Community 143 - "Community 143"
+Cohesion: 0.28
+Nodes (6): CancellingStrategy, RecordingStrategy, ThrowingStrategy, TiaGitAddIn.Tests.Comparison, IPlcComparisonStrategy, PlcComparisonResult
+
+### Community 144 - "Community 144"
+Cohesion: 0.33
+Nodes (3): ComparisonBoundaryTests, RepositoryRoot, TiaGitAddIn.Tests.Architecture
+
+### Community 152 - "Community 152"
 Cohesion: 0.56
 Nodes (7): mapState(), mapValue(), serializeAttributes(), serializeBody(), serializeConnectors(), serializeContent(), serializeInterface()
 
-### Community 115 - "Community 115"
+### Community 153 - "Community 153"
 Cohesion: 0.32
 Nodes (4): GitVciEditorProvider, TiaGitAddIn.Entry, TiaPortal, VciEditorAddInProvider
 
-### Community 116 - "Community 116"
+### Community 154 - "Community 154"
+Cohesion: 0.25
+Nodes (5): IGitBinaryProcessRunner, IGitProcessRunner, ThrowingGitBinaryProcessRunner, ThrowingGitProcessRunner, TiaGitAddIn.Tests.Revision
+
+### Community 155 - "Community 155"
+Cohesion: 0.36
+Nodes (3): ComparisonDiagnosticSanitizer, TiaGitAddIn.Services.Comparison, Regex
+
+### Community 156 - "Community 156"
 Cohesion: 0.36
 Nodes (3): PathValidator, TiaGitAddIn.Configuration, int
 
-### Community 117 - "Community 117"
+### Community 157 - "Community 157"
 Cohesion: 0.32
 Nodes (3): double, LadNetworkViewModel, TiaGitAddIn.UI.ViewModels
 
-### Community 118 - "Community 118"
+### Community 158 - "Community 158"
+Cohesion: 0.25
+Nodes (5): byte, IGitBlobReader, long, FakeGitBlobReader, TiaGitAddIn.Tests.Revision
+
+### Community 160 - "Community 160"
+Cohesion: 0.32
+Nodes (4): LadComparisonStrategy, TiaGitAddIn.Services.Comparison, ComparisonDiagnosticSanitizer, PlcArtifactKind
+
+### Community 161 - "Community 161"
+Cohesion: 0.25
+Nodes (7): InterfaceFieldChange, InterfaceMemberComparison, InterfacePresentation, InterfaceSectionComparison, TiaGitAddIn.Models.Comparison, StubSclPresentation, ComparisonPresentation
+
+### Community 162 - "Community 162"
+Cohesion: 0.25
+Nodes (6): LadPresentation, TiaGitAddIn.Models.Comparison, StubLogicNetworkPresentation, StubLogicNetworkPresentation, LogicNetworkPresentation, SactCompareResult
+
+### Community 163 - "Community 163"
 Cohesion: 0.25
 Nodes (4): SimaticMlSchemaDiagnostic, SimaticMlSchemaLocation, SimaticMlSchemaValidationResult, TiaGitAddIn.Services.SimaticMl
 
-### Community 123 - "Community 123"
+### Community 171 - "Community 171"
 Cohesion: 0.25
 Nodes (4): FbdDynamicBoxComponent, FbdDynamicBoxComponent__svg_g_11_Template(), FbdDynamicBoxComponent__svg_g_26_Template(), FbdDynamicBoxComponent__svg_g_29_Template()
 
-### Community 148 - "Community 148"
+### Community 184 - "Community 184"
+Cohesion: 0.29
+Nodes (4): IPlcRevisionProvider, PathState, ThrowingRevisionProvider, TiaGitAddIn.Tests.UI
+
+### Community 189 - "Community 189"
+Cohesion: 0.29
+Nodes (3): IPlcComparisonCoordinator, StubComparisonCoordinator, StubMapper
+
+### Community 190 - "Community 190"
+Cohesion: 0.38
+Nodes (3): SclLexicalProbe, TiaGitAddIn.Services.Comparison, TimeSpan
+
+### Community 200 - "Community 200"
 Cohesion: 0.52
 Nodes (6): createLabel(), createPart(), createParts(), getLanguageVariant(), negate(), tryBuildNetwork()
 
-### Community 156 - "Community 156"
-Cohesion: 0.47
-Nodes (3): IConfigurationService, GitPanelLaunchService, TiaGitAddIn.UI
+### Community 207 - "Community 207"
+Cohesion: 0.33
+Nodes (4): InterfaceFieldChangeViewModel, InterfaceMemberRowViewModel, InterfaceSectionRowViewModel, TiaGitAddIn.UI.ViewModels.Comparison
 
-### Community 158 - "Community 158"
+### Community 208 - "Community 208"
+Cohesion: 0.33
+Nodes (4): TextFallbackStrategy, TiaGitAddIn.Services.Comparison, IReadOnlyCollection, PlcComparisonResultFactory
+
+### Community 209 - "Community 209"
+Cohesion: 0.33
+Nodes (4): InterfaceMemberSnapshot, InterfaceSectionSnapshot, InterfaceSnapshot, TiaGitAddIn.Models.Comparison
+
+### Community 211 - "Community 211"
 Cohesion: 0.47
 Nodes (3): InvalidOperationException, GitOperationInProgressException, TiaGitAddIn.Services
 
-### Community 166 - "Community 166"
+### Community 215 - "Community 215"
+Cohesion: 0.4
+Nodes (3): SimaticMlEvidence, SimaticMlEvidenceReader, TiaGitAddIn.Services.Comparison
+
+### Community 216 - "Community 216"
+Cohesion: 0.4
+Nodes (3): ComparisonProjectBoundaryTests, RepositoryRoot, TiaGitAddIn.IntegrationTests.Architecture
+
+### Community 221 - "Community 221"
 Cohesion: 0.6
 Nodes (5): createLabel(), createPart(), createParts(), getLanguageVariant(), tryBuildNetwork()
 
-### Community 173 - "Community 173"
+### Community 229 - "Community 229"
 Cohesion: 0.6
 Nodes (4): buildNetwork(), createCompileUnits(), createObjectProperties(), tryBuild()
 
-### Community 200 - "Community 200"
+### Community 244 - "Community 244"
+Cohesion: 0.4
+Nodes (3): PlcComparisonDiagnostic, PlcSourceLocation, TiaGitAddIn.Models.Comparison
+
+### Community 245 - "Community 245"
+Cohesion: 0.4
+Nodes (4): ComparisonRawText, PlcComparisonContext, PlcComparisonRequest, TiaGitAddIn.Models.Comparison
+
+### Community 256 - "Community 256"
+Cohesion: 0.4
+Nodes (3): GitBinaryProcessResult, IGitBinaryProcessRunner, TiaGitAddIn.Services.Revision
+
+### Community 265 - "Community 265"
 Cohesion: 0.7
 Nodes (4): get(), getFBSectionNames(), getFCSectionNames(), getOBSectionNames()
 
-### Community 221 - "Community 221"
+### Community 288 - "Community 288"
 Cohesion: 0.5
-Nodes (3): IReadOnlyList, SactInterfaceSections, TiaGitAddIn.Models.Sact
+Nodes (3): PlcArtifactDescriptor, PlcArtifactPairDescriptor, TiaGitAddIn.Models.Comparison
+
+### Community 298 - "Community 298"
+Cohesion: 0.5
+Nodes (3): LadDynamicBoxComponent__svg_g_10_Template(), LadDynamicBoxComponent__svg_g_23_Template(), LadDynamicBoxComponent__svg_g_31_Template()
 
 ## Knowledge Gaps
-- **203 isolated node(s):** `TiaPortal`, `Dispatcher`, `BranchInfo`, `DiffEntryViewModel`, `CommitInfo` (+198 more)
+- **316 isolated node(s):** `TiaPortal`, `Dispatcher`, `TiaGitAddIn.UI.Mapping`, `TiaGitAddIn.UI.Mapping`, `TiaGitAddIn.UI.Mapping` (+311 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **370 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **413 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `string` connect `Community 108` to `Community 96`, `Main & Status ViewModels`, `Community 39`, `Community 72`, `Community 10`, `Community 43`, `Community 107`, `Community 78`, `Community 22`, `Community 25`, `Community 88`, `Community 89`, `Community 59`, `Community 30`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
-- **Why does `DiffViewModel` connect `Community 30` to `Community 34`, `UI Converters`, `Community 105`, `Community 43`, `Community 108`, `Community 88`, `Community 89`, `Community 59`?**
-  _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **Why does `FakeGitService` connect `Community 24` to `Community 88`?**
-  _High betweenness centrality (0.007) - this node is a cross-community bridge._
-- **What connects `TiaPortal`, `Dispatcher`, `BranchInfo` to the rest of the system?**
-  _203 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `string` connect `Community 21` to `Community 134`, `Git Project Tree Menu Integration`, `Community 13`, `Community 16`, `Community 22`, `Community 24`, `Community 40`, `Community 41`, `Community 42`, `Community 44`, `Community 49`, `Community 59`, `Community 190`, `Community 62`, `Community 63`, `Community 65`, `Community 64`, `Community 71`, `Community 95`, `Community 96`, `Community 99`, `Community 112`, `Community 113`, `Community 120`?**
+  _High betweenness centrality (0.057) - this node is a cross-community bridge._
+- **Why does `PlcComparisonCoordinatorTests` connect `Community 41` to `Community 208`, `Community 21`, `Community 143`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Why does `GitBlobReader` connect `Community 95` to `Community 21`, `Community 154`, `Community 155`, `Community 156`, `Community 158`?**
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **What connects `TiaPortal`, `Dispatcher`, `TiaGitAddIn.UI.Mapping` to the rest of the system?**
+  _316 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Core Git Models & Types` be split into smaller, more focused modules?**
   _Cohesion score 0.07 - nodes in this community are weakly interconnected._
 - **Should `Git & SACT Service Interfaces` be split into smaller, more focused modules?**
-  _Cohesion score 0.04 - nodes in this community are weakly interconnected._
-- **Should `UI Dispatcher & Testing` be split into smaller, more focused modules?**
   _Cohesion score 0.05 - nodes in this community are weakly interconnected._
+- **Should `UI Dispatcher & Testing` be split into smaller, more focused modules?**
+  _Cohesion score 0.04 - nodes in this community are weakly interconnected._
