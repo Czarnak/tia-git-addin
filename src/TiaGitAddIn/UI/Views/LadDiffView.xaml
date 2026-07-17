@@ -7,6 +7,7 @@
              xmlns:converters="clr-namespace:TiaGitAddIn.UI.Converters"
              xmlns:viewmodels="clr-namespace:TiaGitAddIn.UI.ViewModels"
              xmlns:models="clr-namespace:TiaGitAddIn.Models.Lad;assembly=TiaGitAddIn.Core"
+             xmlns:comparison="clr-namespace:TiaGitAddIn.UI.Views.Comparison"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
@@ -426,199 +427,14 @@
                       HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <ItemsControl ItemsSource="{Binding InterfaceRows}"
-                              Margin="10">
-                    <ItemsControl.Style>
-                        <Style TargetType="ItemsControl">
-                            <Setter Property="Visibility"
-                                    Value="Visible"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding InterfaceRows.Count}"
-                                             Value="0">
-                                    <Setter Property="Visibility"
-                                            Value="Collapsed"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ItemsControl.Style>
-                    <ItemsControl.Template>
-                        <ControlTemplate TargetType="ItemsControl">
-                            <Border BorderBrush="#B6B6B6"
-                                    BorderThickness="1,1,0,0"
-                                    Background="#D9D9D9">
-                                <StackPanel>
-                                    <Border Background="#D0D0D0"
-                                            BorderBrush="#B6B6B6"
-                                            BorderThickness="0,0,1,1"
-                                            Padding="6,2">
-                                        <TextBlock Text="{Binding InterfaceTitle}"
-                                                   FontWeight="Bold"
-                                                   FontSize="12"/>
-                                    </Border>
-                                    <Grid Background="#E7E7E7">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30"/>
-                                            <ColumnDefinition Width="22"/>
-                                            <ColumnDefinition Width="180"/>
-                                            <ColumnDefinition Width="120"/>
-                                            <ColumnDefinition Width="100"/>
-                                            <ColumnDefinition Width="300"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Border BorderBrush="#B6B6B6"
-                                                BorderThickness="0,0,1,1"/>
-                                        <Border Grid.Column="1"
-                                                BorderBrush="#B6B6B6"
-                                                BorderThickness="0,0,1,1"/>
-                                        <Border Grid.Column="2"
-                                                BorderBrush="#B6B6B6"
-                                                BorderThickness="0,0,1,1"
-                                                Padding="4,2">
-                                            <TextBlock Text="Name"/>
-                                        </Border>
-                                        <Border Grid.Column="3"
-                                                BorderBrush="#B6B6B6"
-                                                BorderThickness="0,0,1,1"
-                                                Padding="4,2">
-                                            <TextBlock Text="Data type"/>
-                                        </Border>
-                                        <Border Grid.Column="4"
-                                                BorderBrush="#B6B6B6"
-                                                BorderThickness="0,0,1,1"
-                                                Padding="4,2">
-                                            <TextBlock Text="Default value"/>
-                                        </Border>
-                                        <Border Grid.Column="5"
-                                                BorderBrush="#B6B6B6"
-                                                BorderThickness="0,0,1,1"
-                                                Padding="4,2">
-                                            <TextBlock Text="Comment"/>
-                                        </Border>
-                                    </Grid>
-                                    <ItemsPresenter/>
-                                </StackPanel>
-                            </Border>
-                        </ControlTemplate>
-                    </ItemsControl.Template>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid MinHeight="20">
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Background"
-                                                Value="{Binding State, Converter={StaticResource CompareStateToColorConverter}}"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsSectionHeader}"
-                                                         Value="True">
-                                                <Setter Property="Background"
-                                                        Value="#D9D9D9"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="22"/>
-                                        <ColumnDefinition Width="180"/>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="300"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border BorderBrush="#F8F8F8"
-                                            BorderThickness="0,0,1,1"
-                                            Padding="2,1">
-                                        <TextBlock Text="{Binding RowNumber}"
-                                                   Foreground="#555555"
-                                                   HorizontalAlignment="Right"/>
-                                    </Border>
-                                    <Border Grid.Column="1"
-                                            BorderBrush="#F8F8F8"
-                                            BorderThickness="0,0,1,1"
-                                            Padding="4,0">
-                                        <Grid Width="12"
-                                              Height="12"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center">
-                                            <Path Data="M 2 2 L 8 6 L 2 10 Z"
-                                                  Fill="Black">
-                                                <Path.Style>
-                                                    <Style TargetType="Path">
-                                                        <Setter Property="Visibility"
-                                                                Value="Collapsed"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsSectionHeader}"
-                                                                         Value="True">
-                                                                <Setter Property="Visibility"
-                                                                        Value="Visible"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Path.Style>
-                                            </Path>
-                                            <Rectangle Width="4"
-                                                       Height="4"
-                                                       Fill="#3265C7">
-                                                <Rectangle.Style>
-                                                    <Style TargetType="Rectangle">
-                                                        <Setter Property="Visibility"
-                                                                Value="Visible"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsSectionHeader}"
-                                                                         Value="True">
-                                                                <Setter Property="Visibility"
-                                                                        Value="Collapsed"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Rectangle.Style>
-                                            </Rectangle>
-                                        </Grid>
-                                    </Border>
-                                    <Border Grid.Column="2"
-                                            BorderBrush="#F8F8F8"
-                                            BorderThickness="0,0,1,1"
-                                            Padding="4,1">
-                                        <TextBlock Text="{Binding DisplayName}">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Margin"
-                                                            Value="16,0,0,0"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsSectionHeader}"
-                                                                     Value="True">
-                                                            <Setter Property="FontWeight"
-                                                                    Value="Bold"/>
-                                                            <Setter Property="Margin"
-                                                                    Value="0"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-                                    </Border>
-                                    <Border Grid.Column="3"
-                                            BorderBrush="#F8F8F8"
-                                            BorderThickness="0,0,1,1"
-                                            Padding="4,1">
-                                        <TextBlock Text="{Binding DataType}"/>
-                                    </Border>
-                                    <Border Grid.Column="4"
-                                            BorderBrush="#F8F8F8"
-                                            BorderThickness="0,0,1,1"
-                                            Padding="4,1">
-                                        <TextBlock Text="{Binding DefaultValue}"/>
-                                    </Border>
-                                    <Border Grid.Column="5"
-                                            BorderBrush="#F8F8F8"
-                                            BorderThickness="0,0,1,1"
-                                            Padding="4,1">
-                                        <TextBlock Text="{Binding Comment}"/>
-                                    </Border>
-                                </Grid>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <!--
+                    Deep interface comparison (Task 8/9): renders InterfaceComparison, populated only
+                    by LadDiffViewModel's result-only constructor. The legacy git/SACT-driven
+                    constructor leaves InterfaceComparison null until Task 10 rewires DiffViewModel,
+                    so this binds to nothing (and renders nothing) on that path; expected for one commit.
+                -->
+                <comparison:InterfaceDiffView DataContext="{Binding InterfaceComparison}"
+                                               Margin="10"/>
 
                 <!-- Side-by-side header -->
                 <Grid Margin="10,0,10,0"

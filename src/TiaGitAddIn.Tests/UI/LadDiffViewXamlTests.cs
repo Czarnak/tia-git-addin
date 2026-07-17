@@ -25,11 +25,12 @@ namespace TiaGitAddIn.Tests.UI
         }
 
         [Fact]
-        public void ViewRendersInterfaceRowsAndDynamicBoxPins()
+        public void ViewRendersInterfaceComparisonAndDynamicBoxPins()
         {
             string xaml = File.ReadAllText(GetLadDiffViewPath());
 
-            Assert.Contains("ItemsSource=\"{Binding InterfaceRows}\"", xaml);
+            Assert.Contains("comparison:InterfaceDiffView", xaml);
+            Assert.Contains("DataContext=\"{Binding InterfaceComparison}\"", xaml);
             Assert.Contains("ItemsSource=\"{Binding InputPinRows}\"", xaml);
             Assert.Contains("ItemsSource=\"{Binding OutputPinRows}\"", xaml);
         }
@@ -57,16 +58,16 @@ namespace TiaGitAddIn.Tests.UI
         }
 
         [Fact]
-        public void InterfaceTableUsesTiaPortalColumnsAndSectionRows()
+        public void InterfaceComparisonReplacesLegacyTiaPortalColumnTable()
         {
+            // The right-first flat table (Name/Data type/Default value/Comment columns keyed off
+            // IsSectionHeader) was replaced by the deep InterfaceDiffView per Task 9; this locks
+            // that the legacy markup does not silently return.
             string xaml = File.ReadAllText(GetLadDiffViewPath());
 
-            Assert.Contains("Text=\"{Binding InterfaceTitle}\"", xaml);
-            Assert.Contains("Text=\"Name\"", xaml);
-            Assert.Contains("Text=\"Data type\"", xaml);
-            Assert.Contains("Text=\"Default value\"", xaml);
-            Assert.Contains("Text=\"Comment\"", xaml);
-            Assert.Contains("IsSectionHeader", xaml);
+            Assert.DoesNotContain("Text=\"{Binding InterfaceTitle}\"", xaml);
+            Assert.DoesNotContain("IsSectionHeader", xaml);
+            Assert.Contains("xmlns:comparison=\"clr-namespace:TiaGitAddIn.UI.Views.Comparison\"", xaml);
         }
 
         [Fact]

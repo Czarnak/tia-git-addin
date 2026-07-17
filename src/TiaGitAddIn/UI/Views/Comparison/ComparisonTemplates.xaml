@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:TiaGitAddIn.UI.ViewModels.Comparison"
+                    xmlns:views="clr-namespace:TiaGitAddIn.UI.Views.Comparison"
+                    xmlns:ladviews="clr-namespace:TiaGitAddIn.UI.Views">
+
+    <!--
+        One DataTemplate per concrete ComparisonPresentationViewModel, keyed implicitly by DataType
+        (i.e. a DataTemplateKey(typeof(vm))). ComparisonPresentationHost's semantic ContentControl
+        selects among these automatically; ComparisonViewSmokeTests looks them up the same way
+        production does. FBD/SCL presentations will append their own templates here in a later task.
+    -->
+
+    <DataTemplate DataType="{x:Type vm:InterfaceComparisonViewModel}">
+        <views:InterfaceDiffView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:TextComparisonViewModel}">
+        <views:TextDiffView/>
+    </DataTemplate>
+
+    <!-- Unwraps LadComparisonViewModel.Content: LadDiffView expects the plain LadDiffViewModel. -->
+    <DataTemplate DataType="{x:Type vm:LadComparisonViewModel}">
+        <ladviews:LadDiffView DataContext="{Binding Content}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:UnsupportedComparisonViewModel}">
+        <TextBlock Text="This artifact kind cannot be compared yet."
+                   Margin="16"
+                   TextWrapping="Wrap"
+                   FontStyle="Italic"
+                   Foreground="#555555"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:ErrorComparisonViewModel}">
+        <StackPanel Margin="16"
+                    Orientation="Horizontal">
+            <TextBlock Text="⚠"
+                       FontSize="16"
+                       Margin="0,0,8,0"
+                       Foreground="#B00020"/>
+            <TextBlock Text="An error occurred while comparing this artifact. See diagnostics below."
+                       TextWrapping="Wrap"
+                       FontWeight="Bold"
+                       Foreground="#B00020"/>
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>

@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 using TiaGitAddIn.Models.Sact;
 using TiaGitAddIn.Logging;
 using TiaGitAddIn.Services;
+using TiaGitAddIn.UI.ViewModels.Comparison;
 
 namespace TiaGitAddIn.UI.ViewModels
 {
     public class LadDiffViewModel : ViewModelBase
     {
-        private readonly IGitFileExtractor gitFileExtractor;
-        private readonly ISactService sactService;
+        private readonly IGitFileExtractor gitFileExtractor = null!;
+        private readonly ISactService sactService = null!;
         private readonly IAddInLogger logger;
 
         private bool isLadDiffLoaded;
@@ -31,8 +32,33 @@ namespace TiaGitAddIn.UI.ViewModels
             InterfaceRows = new ObservableCollection<LadInterfaceRowViewModel>();
         }
 
+        /// <summary>
+        /// Result-only constructor used by <see cref="Mapping.LadPresentationViewModelFactory"/>: builds
+        /// the network layout and interface comparison directly from an already-produced <c>SactCompareResult</c>
+        /// clone and <see cref="InterfaceComparisonViewModel"/>, with no git/SACT dependency at all. This is
+        /// the path Task 10 will make the only path once <see cref="LoadLadDiffAsync"/> and its callers
+        /// (<c>DiffViewModel.UpdateLadDiff</c>) are rewired; until then both constructors coexist.
+        /// </summary>
+        public LadDiffViewModel(SactCompareResult result, InterfaceComparisonViewModel interfaceComparison,
+            IAddInLogger logger, IUiDispatcher? uiDispatcher)
+            : base(uiDispatcher)
+        {
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Networks = new ObservableCollection<LadNetworkPairViewModel>(
+                LadLayoutEngine.LayoutAll(result).Select(layout => new LadNetworkPairViewModel(layout)));
+            InterfaceRows = new ObservableCollection<LadInterfaceRowViewModel>();
+            InterfaceComparison = interfaceComparison ?? throw new ArgumentNullException(nameof(interfaceComparison));
+            IsLadDiffLoaded = true;
+        }
+
         public ObservableCollection<LadNetworkPairViewModel> Networks { get; }
         public ObservableCollection<LadInterfaceRowViewModel> InterfaceRows { get; }
+
+        /// <summary>
+        /// The deep interface comparison for this LAD block, populated only via the result-only
+        /// constructor. Remains null on the legacy git/SACT-driven path until Task 10 rewires it.
+        /// </summary>
+        public InterfaceComparisonViewModel? InterfaceComparison { get; }
 
         public bool IsLadDiffLoaded
         {
