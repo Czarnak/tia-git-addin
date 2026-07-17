@@ -59,8 +59,18 @@ namespace TiaGitAddIn.Services.SimaticMl
         public string? Remanence { get; internal set; }
         public string? Accessibility { get; internal set; }
         public bool? Informative { get; internal set; }
+        public string? DefaultValue { get; internal set; }
         public string? StartValue { get; internal set; }
         public string? CommentRawXml { get; internal set; }
+
+        /// <summary>
+        /// Language-keyed comment text extracted from the member's &lt;Comment&gt; element's
+        /// &lt;MultiLanguageText Lang="..."&gt; children, exactly as found in the XML (no trimming or line-
+        /// ending normalization -- that is <see cref="Comparison.InterfaceSnapshotBuilder"/>'s job). Kept
+        /// alongside <see cref="CommentRawXml"/> rather than replacing it; existing consumers of the raw XML
+        /// blob are unaffected, and the interface comparer never parses <see cref="CommentRawXml"/> again.
+        /// </summary>
+        public IReadOnlyDictionary<string, string> Comments { get; internal set; } = SimaticMlEmptyCollections.StringMap;
 
         public IReadOnlyDictionary<string, string?> RawAttributes { get; internal set; } = SimaticMlEmptyCollections.NullableStringMap;
         public IReadOnlyDictionary<string, string?> AttributeList { get; internal set; } = SimaticMlEmptyCollections.NullableStringMap;

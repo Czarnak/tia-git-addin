@@ -131,6 +131,7 @@ namespace TiaGitAddIn.Services.SimaticMl
 
             XElement? comment = Child(memberElement, "Comment");
             string? commentRawXml = comment?.ToString(SaveOptions.DisableFormatting);
+            IReadOnlyDictionary<string, string> comments = ParseMemberComments(comment);
 
             var children = new List<InterfaceMember>();
             foreach (XElement childMember in Children(memberElement, "Member"))
@@ -146,13 +147,48 @@ namespace TiaGitAddIn.Services.SimaticMl
                 Remanence = Attr(memberElement, "Remanence"),
                 Accessibility = Attr(memberElement, "Accessibility"),
                 Informative = BoolAttr(memberElement, "Informative"),
+                // No <DefaultValue> element exists in the current Siemens SimaticML schema (only
+                // <StartValue> does); this reads the same child-element shape defensively so a member-level
+                // default value is captured if a future schema variant ever adds one. Always null today.
+                DefaultValue = Value(memberElement, "DefaultValue"),
                 StartValue = Value(memberElement, "StartValue"),
                 RawAttributes = ToReadOnlyMap(memberElement.Attributes()
                     .ToDictionary(a => a.Name.LocalName, a => (string?)a.Value, StringComparer.Ordinal)),
                 AttributeList = attributeListMap,
                 CommentRawXml = commentRawXml,
+                Comments = comments,
                 Children = children.ToArray(),
             };
+        }
+
+        /// <summary>
+        /// Extracts language-keyed comment text from a member's &lt;Comment&gt; element, whose per-language
+        /// text lives in &lt;MultiLanguageText Lang="..."&gt; children (the same <c>Comment_T</c> shape used
+        /// for Part/Call comments elsewhere in the document). Deliberately reads the raw, untrimmed element
+        /// value -- <see cref="InterfaceSnapshotBuilder"/> in TiaGitAddIn.Services.Comparison performs the
+        /// precise per-line normalization, which needs the original leading/internal whitespace intact.
+        /// </summary>
+        private static IReadOnlyDictionary<string, string> ParseMemberComments(XElement? commentElement)
+        {
+            var result = new Dictionary<string, string>(StringComparer.Ordinal);
+
+            if (commentElement == null)
+            {
+                return ToReadOnlyStringMap(result);
+            }
+
+            foreach (XElement item in Children(commentElement, "MultiLanguageText"))
+            {
+                string? lang = Attr(item, "Lang");
+                if (string.IsNullOrEmpty(lang))
+                {
+                    continue;
+                }
+
+                result[lang!] = item.Value ?? string.Empty;
+            }
+
+            return ToReadOnlyStringMap(result);
         }
 
         private static CompileUnitDefinition ParseCompileUnit(XElement compileUnitElement)
@@ -563,6 +599,9 @@ namespace TiaGitAddIn.Services.SimaticMl
 
         private static IReadOnlyDictionary<string, string?> ToReadOnlyMap(Dictionary<string, string?> source)
             => new ReadOnlyDictionary<string, string?>(source);
+
+        private static IReadOnlyDictionary<string, string> ToReadOnlyStringMap(Dictionary<string, string> source)
+            => new ReadOnlyDictionary<string, string>(source);
 
         private static XElement? Child(XElement? element, string localName)
         {

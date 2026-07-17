@@ -159,6 +159,39 @@ namespace TiaGitAddIn.Tests.Services
                 result.Interface!.Members.ConvertAll(r => r.Name).ToArray());
         }
 
+        [Fact]
+        public void Compare_InterfaceMembersWithWhitespaceOnlyStartValueDifference_ConsideredUnchanged()
+        {
+            // Precision improvement from delegating to InterfaceSnapshotBuilder/InterfaceComparer (Task 8):
+            // the old comparer's raw ordinal StartValue comparison treated CRLF/whitespace-only differences
+            // as a real change. The new normalization matrix (CRLF -> LF, then outer Trim()) recognizes these
+            // as the same value, so interface metadata noise from re-exports no longer reports as Changed.
+            var left = CreateFileWithInterface(
+                new InterfaceSection
+                {
+                    Name = "Input",
+                    Members = new List<InterfaceMember>
+                    {
+                        new InterfaceMember { Name = "Preset", Datatype = "Int", StartValue = "  10\r\n" }
+                    }
+                });
+            var right = CreateFileWithInterface(
+                new InterfaceSection
+                {
+                    Name = "Input",
+                    Members = new List<InterfaceMember>
+                    {
+                        new InterfaceMember { Name = "Preset", Datatype = "Int", StartValue = "10" }
+                    }
+                });
+
+            var result = SimaticMlComparer.Compare(left, right);
+
+            Assert.Equal(CompareState.Equal, result.Interface!.State);
+            Assert.Contains(result.Interface.Members, r =>
+                r.Section == "Input" && r.Name == "Preset" && r.State == CompareState.Equal);
+        }
+
         private static SimaticMlFile CreateFile(params PartDefinition[] parts)
         {
             return CreateFile(parts, new WireDefinition[0]);

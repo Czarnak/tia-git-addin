@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TiaGitAddIn.Models.Comparison;
 using TiaGitAddIn.Models.Sact;
+using TiaGitAddIn.Services.Comparison;
 
 namespace TiaGitAddIn.Services.SimaticMl
 {
@@ -66,37 +68,65 @@ namespace TiaGitAddIn.Services.SimaticMl
             return result;
         }
 
+        /// <summary>
+        /// Delegates the interface diff to the immutable, precisely-normalized pipeline
+        /// (<see cref="InterfaceSnapshotBuilder"/>/<see cref="InterfaceComparer"/>) and flattens the
+        /// resulting recursive <see cref="InterfacePresentation"/> back into the legacy, flat
+        /// <see cref="SactInterfaceMemberComparison"/> row shape existing callers still expect. Only the
+        /// interface path is rewritten here; network/content comparison below is untouched.
+        /// </summary>
         private static SactInterfaceResult CompareInterfaces(BlockDefinition left, BlockDefinition right)
         {
             var result = SimaticMlToSactMapper.Map(new SimaticMlFile { Blocks = new[] { right } }).Interface!;
-            var leftMembers = FlattenMembers(left);
-            var rightMembers = FlattenMembers(right);
 
-            var keys = CreateOrderedInterfaceKeys(left, right, leftMembers, rightMembers);
+            InterfaceSnapshot leftSnapshot = InterfaceSnapshotBuilder.Build(left);
+            InterfaceSnapshot rightSnapshot = InterfaceSnapshotBuilder.Build(right);
+            InterfacePresentation presentation = new InterfaceComparer().Compare(leftSnapshot, rightSnapshot);
 
             var rows = new List<SactInterfaceMemberComparison>();
-            foreach (string key in keys)
+            foreach (InterfaceSectionComparison section in presentation.Sections)
             {
-                bool hasLeft = leftMembers.TryGetValue(key, out InterfaceMember? leftMember);
-                bool hasRight = rightMembers.TryGetValue(key, out InterfaceMember? rightMember);
-                string[] parts = key.Split(new[] { '|' }, 2);
-
-                rows.Add(new SactInterfaceMemberComparison
-                {
-                    Section = parts[0],
-                    Name = parts.Length > 1 ? parts[1] : string.Empty,
-                    LeftDatatype = leftMember?.Datatype ?? string.Empty,
-                    RightDatatype = rightMember?.Datatype ?? string.Empty,
-                    LeftStartValue = leftMember?.StartValue ?? string.Empty,
-                    RightStartValue = rightMember?.StartValue ?? string.Empty,
-                    State = GetInterfaceMemberState(hasLeft, hasRight, leftMember, rightMember)
-                });
+                AppendLegacyRows(rows, section.Members);
             }
 
             result.Members = rows;
             result.State = rows.Any(r => r.State != CompareState.Equal) ? CompareState.Changed : CompareState.Equal;
             return result;
         }
+
+        /// <summary>
+        /// Walks the recursive member tree depth-first, adding one legacy row per level (parent, then its
+        /// children), reproducing the old flattening's "every hierarchy level is its own row" behavior. Uses
+        /// a dot-joined name (not the snapshot's '/'-joined <see cref="InterfaceMemberSnapshot.Path"/>) so the
+        /// legacy row shape is unaffected by the new path convention.
+        /// </summary>
+        private static void AppendLegacyRows(List<SactInterfaceMemberComparison> rows, IReadOnlyList<InterfaceMemberComparison> members)
+        {
+            foreach (InterfaceMemberComparison member in members)
+            {
+                InterfaceMemberSnapshot anchor = member.Left ?? member.Right!;
+                rows.Add(new SactInterfaceMemberComparison
+                {
+                    Section = anchor.Section,
+                    Name = anchor.Path.Replace('/', '.'),
+                    LeftDatatype = member.Left?.Datatype ?? string.Empty,
+                    RightDatatype = member.Right?.Datatype ?? string.Empty,
+                    LeftStartValue = member.Left?.StartValue ?? string.Empty,
+                    RightStartValue = member.Right?.StartValue ?? string.Empty,
+                    State = ToLegacyState(member.ChangeKind)
+                });
+
+                AppendLegacyRows(rows, member.Children);
+            }
+        }
+
+        private static CompareState ToLegacyState(InterfaceChangeKind kind) => kind switch
+        {
+            InterfaceChangeKind.Added => CompareState.MissingOnLeft,
+            InterfaceChangeKind.Removed => CompareState.MissingOnRight,
+            InterfaceChangeKind.Modified => CompareState.Changed,
+            _ => CompareState.Equal
+        };
 
         private static SactContentResult CompareContent(BlockDefinition left, BlockDefinition right)
         {
@@ -363,132 +393,6 @@ namespace TiaGitAddIn.Services.SimaticMl
                     .Select(CopyConnector)
                     .ToList()
             };
-        }
-
-        private static Dictionary<string, InterfaceMember> FlattenMembers(BlockDefinition block)
-        {
-            var result = new Dictionary<string, InterfaceMember>(StringComparer.Ordinal);
-            foreach (InterfaceSection section in block.InterfaceSections)
-            {
-                AddMembers(result, section.Name, section.Members, string.Empty);
-            }
-
-            return result;
-        }
-
-        private static List<string> CreateOrderedInterfaceKeys(
-            BlockDefinition left,
-            BlockDefinition right,
-            Dictionary<string, InterfaceMember> leftMembers,
-            Dictionary<string, InterfaceMember> rightMembers)
-        {
-            var keys = new List<string>();
-            var seen = new HashSet<string>(StringComparer.Ordinal);
-            var sectionNames = SactInterfaceSections.Order
-                .Concat(right.InterfaceSections.Select(s => s.Name))
-                .Concat(left.InterfaceSections.Select(s => s.Name))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-            foreach (string sectionName in sectionNames)
-            {
-                AddInterfaceKeysForSection(keys, seen, right, sectionName);
-                AddInterfaceKeysForSection(keys, seen, left, sectionName);
-            }
-
-            foreach (string key in leftMembers.Keys.Concat(rightMembers.Keys).OrderBy(k => k, StringComparer.Ordinal))
-            {
-                if (seen.Add(key))
-                {
-                    keys.Add(key);
-                }
-            }
-
-            return keys;
-        }
-
-        private static void AddInterfaceKeysForSection(
-            List<string> keys,
-            HashSet<string> seen,
-            BlockDefinition block,
-            string sectionName)
-        {
-            foreach (InterfaceSection section in block.InterfaceSections
-                .Where(s => string.Equals(s.Name, sectionName, StringComparison.OrdinalIgnoreCase)))
-            {
-                AddInterfaceKeys(keys, seen, section.Name, section.Members, string.Empty);
-            }
-        }
-
-        private static void AddInterfaceKeys(
-            List<string> keys,
-            HashSet<string> seen,
-            string section,
-            IEnumerable<InterfaceMember> members,
-            string parentPath)
-        {
-            foreach (InterfaceMember member in members)
-            {
-                string path = string.IsNullOrEmpty(parentPath)
-                    ? member.Name
-                    : parentPath + "." + member.Name;
-                string key = section + "|" + path;
-                if (seen.Add(key))
-                {
-                    keys.Add(key);
-                }
-
-                AddInterfaceKeys(keys, seen, section, member.Children, path);
-            }
-        }
-
-        private static void AddMembers(
-            Dictionary<string, InterfaceMember> result,
-            string section,
-            IEnumerable<InterfaceMember> members,
-            string parentPath)
-        {
-            foreach (InterfaceMember member in members)
-            {
-                string path = string.IsNullOrEmpty(parentPath)
-                    ? member.Name
-                    : parentPath + "." + member.Name;
-
-                result[section + "|" + path] = member;
-                AddMembers(result, section, member.Children, path);
-            }
-        }
-
-        private static CompareState GetInterfaceMemberState(
-            bool hasLeft,
-            bool hasRight,
-            InterfaceMember? left,
-            InterfaceMember? right)
-        {
-            if (hasLeft && !hasRight)
-            {
-                return CompareState.MissingOnRight;
-            }
-
-            if (!hasLeft && hasRight)
-            {
-                return CompareState.MissingOnLeft;
-            }
-
-            return InterfaceMembersAreEqual(left, right) ? CompareState.Equal : CompareState.Changed;
-        }
-
-        private static bool InterfaceMembersAreEqual(InterfaceMember? left, InterfaceMember? right)
-        {
-            if (left == null || right == null)
-            {
-                return left == right;
-            }
-
-            return string.Equals(left.Datatype, right.Datatype, StringComparison.Ordinal) &&
-                   string.Equals(left.StartValue, right.StartValue, StringComparison.Ordinal) &&
-                   string.Equals(left.Accessibility, right.Accessibility, StringComparison.Ordinal) &&
-                   string.Equals(left.Remanence, right.Remanence, StringComparison.Ordinal);
         }
 
         private static SactParameterData CopyParameter(SactParameterData parameter)
