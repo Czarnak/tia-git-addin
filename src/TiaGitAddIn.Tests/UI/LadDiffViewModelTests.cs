@@ -90,7 +90,7 @@ namespace TiaGitAddIn.Tests.UI
 
             Assert.True(viewModel.IsLadDiffLoaded);
             Assert.Single(viewModel.Networks);
-            Assert.Equal(7, viewModel.InterfaceRows.Count);
+            Assert.Equal(8, viewModel.InterfaceRows.Count);
             Assert.Equal("Input", viewModel.InterfaceRows[0].DisplayName);
             Assert.Equal("Alarm", viewModel.InterfaceRows[1].DisplayName);
             Assert.Equal(CompareState.Changed, viewModel.Networks[0].DiffState);
@@ -158,13 +158,13 @@ namespace TiaGitAddIn.Tests.UI
 
             Assert.Equal("deviceState", viewModel.InterfaceTitle);
             Assert.Equal(
-                new[] { "Input", "Output", "InOut", "Temp", "Constant", "Return" },
+                new[] { "Input", "Output", "InOut", "Static", "Temp", "Constant", "Return" },
                 viewModel.InterfaceRows.Where(r => r.IsSectionHeader).Select(r => r.DisplayName).ToArray());
             Assert.Equal("Alarm", viewModel.InterfaceRows[1].DisplayName);
             Assert.Equal("Warning", viewModel.InterfaceRows[2].DisplayName);
             Assert.Equal("Running", viewModel.InterfaceRows[3].DisplayName);
             Assert.Equal("deviceIcon", viewModel.InterfaceRows[6].DisplayName);
-            Assert.Equal("Ret_Val", viewModel.InterfaceRows[10].DisplayName);
+            Assert.Equal("Ret_Val", viewModel.InterfaceRows[11].DisplayName);
         }
 
         [Fact]
