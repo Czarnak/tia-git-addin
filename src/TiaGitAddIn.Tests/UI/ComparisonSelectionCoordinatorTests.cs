@@ -93,8 +93,40 @@ namespace TiaGitAddIn.Tests.UI
             Assert.True(provider.LeasesFor("Removed.xml").Single(l => l.Revision.Side == PlcRevisionSide.Right).Revision.IsMissing);
         }
 
+        /// <summary>
+        /// Proves the "recheck generation/token before calling apply" step in
+        /// <see cref="ComparisonSelectionCoordinator.SelectAsync"/> genuinely marshals to the captured
+        /// dispatcher's thread: the revision load resumes on a thread-pool thread (via
+        /// <c>ConfigureAwait(false)</c> throughout the coordinator), yet <c>apply</c> must still observe
+        /// the original STA dispatcher thread, not whichever thread the background load happened to land on.
+        /// </summary>
+        [Fact]
+        public async Task ApplyCallbackRunsOnTheCapturedDispatcherThreadEvenThoughLoadingResumesOnAThreadPoolThread()
+        {
+            await WpfTestHost.RunAsync(async dispatcher =>
+            {
+                int staThreadId = Thread.CurrentThread.ManagedThreadId;
+                var uiDispatcher = new WpfUiDispatcher(dispatcher);
+                var provider = new ControllableRevisionProvider();
+                int? appliedOnThreadId = null;
+
+                var sut = CreateSelectionCoordinator(
+                    provider, vm => appliedOnThreadId = Thread.CurrentThread.ManagedThreadId, uiDispatcher);
+
+                Task selection = sut.SelectAsync(new ComparisonSelection("D.xml", null, PlcPairChangeKind.Modified), CancellationToken.None);
+
+                // Completing from a thread-pool thread proves the load's continuation (and everything
+                // through CompareAsync/Map) can run off the STA thread entirely; only the final apply must
+                // land back on it.
+                await Task.Run(() => provider.Complete("D.xml", "D"));
+                await selection;
+
+                Assert.Equal(staThreadId, appliedOnThreadId);
+            });
+        }
+
         private static ComparisonSelectionCoordinator CreateSelectionCoordinator(
-            IPlcRevisionProvider provider, Action<ComparisonPresentationViewModel> apply)
+            IPlcRevisionProvider provider, Action<ComparisonPresentationViewModel> apply, IUiDispatcher? dispatcher = null)
         {
             var classifier = new PlcArtifactClassifier();
             var textComparer = new LineTextComparer(TextComparisonLimits.Default);
@@ -110,7 +142,7 @@ namespace TiaGitAddIn.Tests.UI
             });
 
             return new ComparisonSelectionCoordinator(
-                provider, comparisonCoordinator, mapper, ImmediateUiDispatcher.Instance, apply, new FileLogger());
+                provider, comparisonCoordinator, mapper, dispatcher ?? ImmediateUiDispatcher.Instance, apply, new FileLogger());
         }
 
         private static ComparisonPresentationViewModel BuildPlaceholderViewModel()
