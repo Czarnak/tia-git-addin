@@ -427,12 +427,7 @@
                       HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <!--
-                    Deep interface comparison (Task 8/9): renders InterfaceComparison, populated only
-                    by LadDiffViewModel's result-only constructor. The legacy git/SACT-driven
-                    constructor leaves InterfaceComparison null until Task 10 rewires DiffViewModel,
-                    so this binds to nothing (and renders nothing) on that path; expected for one commit.
-                -->
+                <!-- Deep interface comparison (Task 8/9): renders the InterfaceComparisonViewModel built by LadDiffViewModel's result-only constructor. -->
                 <comparison:InterfaceDiffView DataContext="{Binding InterfaceComparison}"
                                                Margin="10"/>
 

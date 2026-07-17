@@ -21,7 +21,6 @@ namespace TiaGitAddIn.UI.ViewModels
 
         private bool isLadDiffLoaded;
         private string ladDiffError = string.Empty;
-        private string interfaceTitle = string.Empty;
 
         public LadDiffViewModel(SactCompareResult result, InterfaceComparisonViewModel interfaceComparison,
             IAddInLogger logger, IUiDispatcher? uiDispatcher)
@@ -30,13 +29,11 @@ namespace TiaGitAddIn.UI.ViewModels
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             Networks = new ObservableCollection<LadNetworkPairViewModel>(
                 LadLayoutEngine.LayoutAll(result).Select(layout => new LadNetworkPairViewModel(layout)));
-            InterfaceRows = new ObservableCollection<LadInterfaceRowViewModel>();
             InterfaceComparison = interfaceComparison ?? throw new ArgumentNullException(nameof(interfaceComparison));
             IsLadDiffLoaded = true;
         }
 
         public ObservableCollection<LadNetworkPairViewModel> Networks { get; }
-        public ObservableCollection<LadInterfaceRowViewModel> InterfaceRows { get; }
 
         /// <summary>The deep interface comparison for this LAD block.</summary>
         public InterfaceComparisonViewModel InterfaceComparison { get; }
@@ -51,12 +48,6 @@ namespace TiaGitAddIn.UI.ViewModels
         {
             get => ladDiffError;
             set => SetProperty(ref ladDiffError, value);
-        }
-
-        public string InterfaceTitle
-        {
-            get => interfaceTitle;
-            set => SetProperty(ref interfaceTitle, value);
         }
     }
 }
