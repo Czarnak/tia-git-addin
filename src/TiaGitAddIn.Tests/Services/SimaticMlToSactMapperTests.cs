@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TiaGitAddIn.Models.Sact;
@@ -48,25 +49,25 @@ namespace TiaGitAddIn.Tests.Services
         {
             var network = new NetworkSourceDefinition
             {
-                Accesses =
+                Accesses = new List<AccessDefinition>
                 {
                     new AccessDefinition
                     {
                         UId = 10,
                         Scope = "LocalVariable",
-                        SymbolComponents = { "startSignal" },
+                        SymbolComponents = new List<string> { "startSignal" },
                         SymbolPath = "startSignal"
                     }
                 },
-                Parts =
+                Parts = new List<PartDefinition>
                 {
                     new PartDefinition
                     {
                         UId = 20,
                         Name = "Contact",
                         CommentText = "Start condition",
-                        Negated = { "in" },
-                        Invisible = { "eno" },
+                        Negated = new List<string> { "in" },
+                        Invisible = new List<string> { "eno" },
                         RawXml = "<Part UId=\"20\" Name=\"Contact\"><Negated Name=\"in\" /><Invisible Name=\"eno\" /></Part>"
                     },
                     new PartDefinition
@@ -76,12 +77,12 @@ namespace TiaGitAddIn.Tests.Services
                         RawXml = "<Part UId=\"30\" Name=\"SCoil\" />"
                     }
                 },
-                Wires =
+                Wires = new List<WireDefinition>
                 {
                     new WireDefinition
                     {
                         UId = 1,
-                        Connections =
+                        Connections = new List<ConnectionDefinition>
                         {
                             new PowerrailConDefinition(),
                             new NameConDefinition { UId = 20, Name = "in" }
@@ -90,7 +91,7 @@ namespace TiaGitAddIn.Tests.Services
                     new WireDefinition
                     {
                         UId = 2,
-                        Connections =
+                        Connections = new List<ConnectionDefinition>
                         {
                             new IdentConDefinition { UId = 10 },
                             new NameConDefinition { UId = 20, Name = "operand" }
@@ -99,7 +100,7 @@ namespace TiaGitAddIn.Tests.Services
                     new WireDefinition
                     {
                         UId = 3,
-                        Connections =
+                        Connections = new List<ConnectionDefinition>
                         {
                             new NameConDefinition { UId = 20, Name = "out" },
                             new NameConDefinition { UId = 30, Name = "in" },
@@ -127,13 +128,13 @@ namespace TiaGitAddIn.Tests.Services
         {
             var network = new NetworkSourceDefinition
             {
-                Accesses =
+                Accesses = new List<AccessDefinition>
                 {
                     new AccessDefinition
                     {
                         UId = 30,
                         Scope = "LocalVariable",
-                        SymbolComponents = { "deviceIcon" },
+                        SymbolComponents = new List<string> { "deviceIcon" },
                         SymbolPath = "deviceIcon"
                     },
                     new AccessDefinition
@@ -143,13 +144,13 @@ namespace TiaGitAddIn.Tests.Services
                         ConstantValue = "10"
                     }
                 },
-                Parts =
+                Parts = new List<PartDefinition>
                 {
                     new PartDefinition
                     {
                         UId = 47,
                         Name = "Add",
-                        TemplateValues =
+                        TemplateValues = new List<TemplateValueDefinition>
                         {
                             new TemplateValueDefinition
                             {
@@ -160,12 +161,12 @@ namespace TiaGitAddIn.Tests.Services
                         }
                     }
                 },
-                Wires =
+                Wires = new List<WireDefinition>
                 {
                     new WireDefinition
                     {
                         UId = 65,
-                        Connections =
+                        Connections = new List<ConnectionDefinition>
                         {
                             new IdentConDefinition { UId = 30 },
                             new NameConDefinition { UId = 47, Name = "in1" }
@@ -174,7 +175,7 @@ namespace TiaGitAddIn.Tests.Services
                     new WireDefinition
                     {
                         UId = 66,
-                        Connections =
+                        Connections = new List<ConnectionDefinition>
                         {
                             new IdentConDefinition { UId = 31 },
                             new NameConDefinition { UId = 47, Name = "in2" }
@@ -183,7 +184,7 @@ namespace TiaGitAddIn.Tests.Services
                     new WireDefinition
                     {
                         UId = 68,
-                        Connections =
+                        Connections = new List<ConnectionDefinition>
                         {
                             new NameConDefinition { UId = 47, Name = "out" },
                             new IdentConDefinition { UId = 30 }

@@ -78,7 +78,7 @@ namespace TiaGitAddIn.Tests.Services
                 new InterfaceSection
                 {
                     Name = "Input",
-                    Members =
+                    Members = new List<InterfaceMember>
                     {
                         new InterfaceMember { Name = "Alarm", Datatype = "Bool" },
                         new InterfaceMember { Name = "Mode", Datatype = "Int" }
@@ -88,7 +88,7 @@ namespace TiaGitAddIn.Tests.Services
                 new InterfaceSection
                 {
                     Name = "Input",
-                    Members =
+                    Members = new List<InterfaceMember>
                     {
                         new InterfaceMember { Name = "Alarm", Datatype = "Word" },
                         new InterfaceMember { Name = "Reset", Datatype = "Bool" }
@@ -125,7 +125,7 @@ namespace TiaGitAddIn.Tests.Services
                 new InterfaceSection
                 {
                     Name = "Input",
-                    Members =
+                    Members = new List<InterfaceMember>
                     {
                         new InterfaceMember { Name = "Alarm", Datatype = "Bool" },
                         new InterfaceMember { Name = "Warning", Datatype = "Bool" },
@@ -136,7 +136,7 @@ namespace TiaGitAddIn.Tests.Services
                 new InterfaceSection
                 {
                     Name = "Input",
-                    Members =
+                    Members = new List<InterfaceMember>
                     {
                         new InterfaceMember { Name = "Alarm", Datatype = "Bool" },
                         new InterfaceMember { Name = "Warning", Datatype = "Bool" },
@@ -146,7 +146,7 @@ namespace TiaGitAddIn.Tests.Services
                 new InterfaceSection
                 {
                     Name = "InOut",
-                    Members =
+                    Members = new List<InterfaceMember>
                     {
                         new InterfaceMember { Name = "deviceIcon", Datatype = "Int" }
                     }
@@ -168,7 +168,7 @@ namespace TiaGitAddIn.Tests.Services
         {
             return new SimaticMlFile
             {
-                Blocks =
+                Blocks = new List<BlockDefinition>
                 {
                     new BlockDefinition
                     {
@@ -183,12 +183,12 @@ namespace TiaGitAddIn.Tests.Services
         {
             return new SimaticMlFile
             {
-                Blocks =
+                Blocks = new List<BlockDefinition>
                 {
                     new BlockDefinition
                     {
                         Name = "Block",
-                        CompileUnits =
+                        CompileUnits = new List<CompileUnitDefinition>
                         {
                             new CompileUnitDefinition
                             {
@@ -218,7 +218,7 @@ namespace TiaGitAddIn.Tests.Services
             {
                 UId = uid,
                 RawXml = $"<Wire UId=\"{uid}\"><NameCon UId=\"{sourceUid}\" Name=\"{sourceName}\" /><NameCon UId=\"{targetUid}\" Name=\"{targetName}\" /></Wire>",
-                Connections =
+                Connections = new List<ConnectionDefinition>
                 {
                     new NameConDefinition { UId = sourceUid, Name = sourceName },
                     new NameConDefinition { UId = targetUid, Name = targetName }

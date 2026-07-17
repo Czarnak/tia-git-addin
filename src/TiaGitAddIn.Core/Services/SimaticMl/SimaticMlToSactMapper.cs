@@ -123,7 +123,7 @@ namespace TiaGitAddIn.Services.SimaticMl
             };
         }
 
-        private static List<Dictionary<string, object>> MapMembers(List<InterfaceMember> members)
+        private static List<Dictionary<string, object>> MapMembers(IReadOnlyList<InterfaceMember> members)
         {
             var result = new List<Dictionary<string, object>>();
             foreach (var member in members)

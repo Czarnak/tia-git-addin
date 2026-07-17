@@ -1,67 +1,93 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml.Linq;
+using TiaGitAddIn.Models.Comparison;
 
 namespace TiaGitAddIn.Services.SimaticMl
 {
-    public static class SimaticMlParser
+    /// <summary>
+    /// Domain extraction half of the SimaticML parser (block/interface/network/wire structure). The safe
+    /// XML-loading boundary (DTD/entity rejection, character/element/depth limits, cancellation) lives in the
+    /// other half of this <c>partial class</c>, <see cref="SimaticMlReader"/>'s counterpart file.
+    /// </summary>
+    public static partial class SimaticMlParser
     {
+        /// <summary>
+        /// Legacy, path-based entry point. Kept only for existing callers (e.g. <c>SactService</c>); it reads
+        /// the file with a bounded <see cref="StreamReader"/>, delegates to the safe <see cref="ParseText"/>
+        /// overload using the default limits, and throws <see cref="InvalidDataException"/> for legacy callers
+        /// when the safe parse does not succeed. New comparison strategies should call <see cref="ParseText"/>
+        /// directly and inspect <see cref="SimaticMlParseResult.IsSuccess"/> instead of catching exceptions.
+        /// </summary>
         public static SimaticMlFile Parse(string xmlPath)
         {
+            if (xmlPath == null) throw new ArgumentNullException(nameof(xmlPath));
             if (!File.Exists(xmlPath))
             {
                 throw new FileNotFoundException("SimaticML file not found.", xmlPath);
             }
 
-            XDocument doc = XDocument.Load(xmlPath, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
-            XElement root = doc.Root ?? throw new InvalidDataException("XML document has no root element.");
+            SimaticMlParserLimits limits = SimaticMlParserLimits.Default;
 
-            var result = new SimaticMlFile
+            var fileInfo = new FileInfo(xmlPath);
+            if (fileInfo.Length > limits.MaximumCharactersInDocument)
             {
-                EngineeringVersion = Child(root, "Engineering")?.Attribute("version")?.Value
-            };
-
-            foreach (XElement blockElement in root.Elements().Where(e => e.Name.LocalName.StartsWith("SW.Blocks.", StringComparison.Ordinal)))
-            {
-                result.Blocks.Add(ParseBlock(blockElement));
+                throw new InvalidDataException("SimaticML document exceeds the maximum supported size.");
             }
 
-            return result;
+            string xml;
+            using (var streamReader = new StreamReader(xmlPath))
+            {
+                xml = streamReader.ReadToEnd();
+            }
+
+            SimaticMlParseResult result = ParseText(xml, limits, PlcRevisionSide.Left, CancellationToken.None);
+
+            if (!result.IsSuccess || result.Model == null)
+            {
+                string reason = result.Diagnostics.Count > 0 ? result.Diagnostics[0].Code : "unknown";
+                throw new InvalidDataException($"SimaticML document could not be parsed safely ({reason}).");
+            }
+
+            return result.Model;
         }
 
         private static BlockDefinition ParseBlock(XElement blockElement)
         {
             XElement? attr = Child(blockElement, "AttributeList");
 
-            var block = new BlockDefinition
+            XElement? interfaceElement = Child(attr, "Interface");
+            List<InterfaceSection> interfaceSections = ParseInterface(interfaceElement);
+
+            XElement? objectList = Child(blockElement, "ObjectList");
+            List<MultilingualTextDefinition> texts = ParseDirectMultilingualTexts(objectList);
+
+            var compileUnits = new List<CompileUnitDefinition>();
+            foreach (XElement compileUnit in Children(objectList, "SW.Blocks.CompileUnit"))
+            {
+                compileUnits.Add(ParseCompileUnit(compileUnit));
+            }
+
+            return new BlockDefinition
             {
                 XmlElementName = blockElement.Name.LocalName,
                 BlockKind = blockElement.Name.LocalName.Replace("SW.Blocks.", ""),
                 Id = Attr(blockElement, "ID"),
-                RawAttributes = ReadScalarChildren(attr)
+                RawAttributes = ReadScalarChildren(attr),
+                Name = Value(attr, "Name"),
+                Namespace = Value(attr, "Namespace"),
+                Number = IntValue(attr, "Number"),
+                ProgrammingLanguage = Value(attr, "ProgrammingLanguage"),
+                MemoryLayout = Value(attr, "MemoryLayout"),
+                InterfaceSections = interfaceSections.ToArray(),
+                Texts = texts.ToArray(),
+                CompileUnits = compileUnits.ToArray(),
             };
-
-            block.Name = Value(attr, "Name");
-            block.Namespace = Value(attr, "Namespace");
-            block.Number = IntValue(attr, "Number");
-            block.ProgrammingLanguage = Value(attr, "ProgrammingLanguage");
-            block.MemoryLayout = Value(attr, "MemoryLayout");
-
-            XElement? interfaceElement = Child(attr, "Interface");
-            block.InterfaceSections.AddRange(ParseInterface(interfaceElement));
-
-            XElement? objectList = Child(blockElement, "ObjectList");
-            block.Texts.AddRange(ParseDirectMultilingualTexts(objectList));
-
-            foreach (XElement compileUnit in Children(objectList, "SW.Blocks.CompileUnit"))
-            {
-                block.CompileUnits.Add(ParseCompileUnit(compileUnit));
-            }
-
-            return block;
         }
 
         private static List<InterfaceSection> ParseInterface(XElement? interfaceElement)
@@ -82,17 +108,17 @@ namespace TiaGitAddIn.Services.SimaticMl
 
             foreach (XElement sectionElement in Children(sectionsRoot, "Section"))
             {
-                var section = new InterfaceSection
-                {
-                    Name = Attr(sectionElement, "Name") ?? "(unnamed)"
-                };
-
+                var members = new List<InterfaceMember>();
                 foreach (XElement memberElement in Children(sectionElement, "Member"))
                 {
-                    section.Members.Add(ParseMember(memberElement));
+                    members.Add(ParseMember(memberElement));
                 }
 
-                sections.Add(section);
+                sections.Add(new InterfaceSection
+                {
+                    Name = Attr(sectionElement, "Name") ?? "(unnamed)",
+                    Members = members.ToArray(),
+                });
             }
 
             return sections;
@@ -100,7 +126,19 @@ namespace TiaGitAddIn.Services.SimaticMl
 
         private static InterfaceMember ParseMember(XElement memberElement)
         {
-            var member = new InterfaceMember
+            XElement? attributeList = Child(memberElement, "AttributeList");
+            IReadOnlyDictionary<string, string?> attributeListMap = ReadScalarChildren(attributeList);
+
+            XElement? comment = Child(memberElement, "Comment");
+            string? commentRawXml = comment?.ToString(SaveOptions.DisableFormatting);
+
+            var children = new List<InterfaceMember>();
+            foreach (XElement childMember in Children(memberElement, "Member"))
+            {
+                children.Add(ParseMember(childMember));
+            }
+
+            return new InterfaceMember
             {
                 Name = Attr(memberElement, "Name") ?? "(unnamed)",
                 Datatype = Attr(memberElement, "Datatype") ?? "(unknown)",
@@ -109,50 +147,32 @@ namespace TiaGitAddIn.Services.SimaticMl
                 Accessibility = Attr(memberElement, "Accessibility"),
                 Informative = BoolAttr(memberElement, "Informative"),
                 StartValue = Value(memberElement, "StartValue"),
-                RawAttributes = memberElement.Attributes()
-                    .ToDictionary(a => a.Name.LocalName, a => (string?)a.Value)
+                RawAttributes = ToReadOnlyMap(memberElement.Attributes()
+                    .ToDictionary(a => a.Name.LocalName, a => (string?)a.Value, StringComparer.Ordinal)),
+                AttributeList = attributeListMap,
+                CommentRawXml = commentRawXml,
+                Children = children.ToArray(),
             };
-
-            XElement? attributeList = Child(memberElement, "AttributeList");
-            member.AttributeList = ReadScalarChildren(attributeList);
-
-            XElement? comment = Child(memberElement, "Comment");
-            if (comment != null)
-            {
-                member.CommentRawXml = comment.ToString(SaveOptions.DisableFormatting);
-            }
-
-            foreach (XElement childMember in Children(memberElement, "Member"))
-            {
-                member.Children.Add(ParseMember(childMember));
-            }
-
-            return member;
         }
 
         private static CompileUnitDefinition ParseCompileUnit(XElement compileUnitElement)
         {
             XElement? attr = Child(compileUnitElement, "AttributeList");
+            XElement? networkSource = Child(attr, "NetworkSource");
+            NetworkSourceDefinition? network = networkSource != null ? ParseNetworkSource(networkSource) : null;
 
-            var cu = new CompileUnitDefinition
+            XElement? objectList = Child(compileUnitElement, "ObjectList");
+            List<MultilingualTextDefinition> texts = ParseDirectMultilingualTexts(objectList);
+
+            return new CompileUnitDefinition
             {
                 Id = Attr(compileUnitElement, "ID"),
                 CompositionName = Attr(compileUnitElement, "CompositionName"),
                 ProgrammingLanguage = Value(attr, "ProgrammingLanguage"),
-                RawAttributes = ReadScalarChildren(attr)
+                RawAttributes = ReadScalarChildren(attr),
+                Network = network,
+                Texts = texts.ToArray(),
             };
-
-            XElement? networkSource = Child(attr, "NetworkSource");
-
-            if (networkSource != null)
-            {
-                cu.Network = ParseNetworkSource(networkSource);
-            }
-
-            XElement? objectList = Child(compileUnitElement, "ObjectList");
-            cu.Texts.AddRange(ParseDirectMultilingualTexts(objectList));
-
-            return cu;
         }
 
         private static NetworkSourceDefinition? ParseNetworkSource(XElement networkSource)
@@ -164,18 +184,15 @@ namespace TiaGitAddIn.Services.SimaticMl
                 return new NetworkSourceDefinition
                 {
                     Format = "Unknown",
-                    RawXml = networkSource.ToString(SaveOptions.DisableFormatting)
+                    RawXml = networkSource.ToString(SaveOptions.DisableFormatting),
                 };
             }
 
-            var network = new NetworkSourceDefinition
-            {
-                Format = "FlgNet",
-                RawXml = flgNet.ToString(SaveOptions.DisableFormatting)
-            };
+            var accesses = new List<AccessDefinition>();
+            var parts = new List<PartDefinition>();
+            var calls = new List<CallDefinition>();
 
             XElement? partsRoot = Child(flgNet, "Parts");
-
             if (partsRoot != null)
             {
                 foreach (XElement node in partsRoot.Elements())
@@ -183,45 +200,57 @@ namespace TiaGitAddIn.Services.SimaticMl
                     switch (node.Name.LocalName)
                     {
                         case "Access":
-                            network.Accesses.Add(ParseAccess(node));
+                            accesses.Add(ParseAccess(node));
                             break;
 
                         case "Part":
-                            network.Parts.Add(ParsePart(node));
+                            parts.Add(ParsePart(node));
                             break;
 
                         case "Call":
-                            network.Calls.Add(ParseCall(node));
+                            calls.Add(ParseCall(node));
                             break;
                     }
                 }
             }
 
+            var wires = new List<WireDefinition>();
             XElement? wiresRoot = Child(flgNet, "Wires");
-
             if (wiresRoot != null)
             {
                 foreach (XElement wireElement in Children(wiresRoot, "Wire"))
                 {
-                    network.Wires.Add(ParseWire(wireElement));
+                    wires.Add(ParseWire(wireElement));
                 }
             }
 
-            // FlgNet can directly contain Openbranch and Powerrail
+            // FlgNet can directly contain Openbranch and Powerrail.
+            var openbranches = new List<OpenbranchDefinition>();
+            PowerrailDefinition? powerrail = null;
             foreach (XElement node in flgNet.Elements())
             {
-                 switch (node.Name.LocalName)
-                 {
-                     case "Openbranch":
-                         network.Openbranches.Add(new OpenbranchDefinition { RawXml = node.ToString(SaveOptions.DisableFormatting) });
-                         break;
-                     case "Powerrail":
-                         network.Powerrail = new PowerrailDefinition { RawXml = node.ToString(SaveOptions.DisableFormatting) };
-                         break;
-                 }
+                switch (node.Name.LocalName)
+                {
+                    case "Openbranch":
+                        openbranches.Add(new OpenbranchDefinition { RawXml = node.ToString(SaveOptions.DisableFormatting) });
+                        break;
+                    case "Powerrail":
+                        powerrail = new PowerrailDefinition { RawXml = node.ToString(SaveOptions.DisableFormatting) };
+                        break;
+                }
             }
 
-            return network;
+            return new NetworkSourceDefinition
+            {
+                Format = "FlgNet",
+                RawXml = flgNet.ToString(SaveOptions.DisableFormatting),
+                Accesses = accesses.ToArray(),
+                Parts = parts.ToArray(),
+                Calls = calls.ToArray(),
+                Wires = wires.ToArray(),
+                Openbranches = openbranches.ToArray(),
+                Powerrail = powerrail,
+            };
         }
 
         private static AccessDefinition ParseAccess(XElement accessElement)
@@ -229,31 +258,27 @@ namespace TiaGitAddIn.Services.SimaticMl
             XElement? constant = Child(accessElement, "Constant");
             XElement? symbol = Child(accessElement, "Symbol");
 
-            var access = new AccessDefinition
+            List<AccessComponentDefinition> components = symbol != null
+                ? Descendants(symbol, "Component")
+                    .Select(ParseAccessComponent)
+                    .Where(c => !string.IsNullOrWhiteSpace(c.Name))
+                    .ToList()
+                : new List<AccessComponentDefinition>();
+
+            List<string> symbolComponents = components.Select(c => c.Name).ToList();
+            string? symbolPath = symbolComponents.Count > 0 ? string.Join(".", symbolComponents) : null;
+
+            return new AccessDefinition
             {
                 UId = IntAttr(accessElement, "UId"),
                 Scope = Attr(accessElement, "Scope"),
                 ConstantType = Value(constant, "ConstantType"),
                 ConstantValue = Value(constant, "ConstantValue"),
-                RawXml = accessElement.ToString(SaveOptions.DisableFormatting)
+                RawXml = accessElement.ToString(SaveOptions.DisableFormatting),
+                Components = components.ToArray(),
+                SymbolComponents = symbolComponents.ToArray(),
+                SymbolPath = symbolPath,
             };
-
-            if (symbol != null)
-            {
-                access.Components = Descendants(symbol, "Component")
-                    .Select(ParseAccessComponent)
-                    .Where(c => !string.IsNullOrWhiteSpace(c.Name))
-                    .ToList();
-                access.SymbolComponents = access.Components
-                    .Select(c => c.Name)
-                    .ToList();
-
-                access.SymbolPath = access.SymbolComponents.Count > 0
-                    ? string.Join(".", access.SymbolComponents)
-                    : null;
-            }
-
-            return access;
         }
 
         private static AccessComponentDefinition ParseAccessComponent(XElement componentElement)
@@ -264,118 +289,131 @@ namespace TiaGitAddIn.Services.SimaticMl
                 AccessModifier = Attr(componentElement, "AccessModifier"),
                 SliceAccessModifier = Attr(componentElement, "SliceAccessModifier"),
                 SimpleAccessModifier = Attr(componentElement, "SimpleAccessModifier"),
-                RawAttributes = componentElement.Attributes()
-                    .ToDictionary(a => a.Name.LocalName, a => (string?)a.Value)
+                RawAttributes = ToReadOnlyMap(componentElement.Attributes()
+                    .ToDictionary(a => a.Name.LocalName, a => (string?)a.Value, StringComparer.Ordinal)),
             };
         }
 
         private static PartDefinition ParsePart(XElement partElement)
         {
-            var part = new PartDefinition
+            var templateValues = new List<TemplateValueDefinition>();
+            foreach (XElement tv in Children(partElement, "TemplateValue"))
+            {
+                templateValues.Add(new TemplateValueDefinition
+                {
+                    Name = Attr(tv, "Name"),
+                    Type = Attr(tv, "Type"),
+                    Value = tv.Value?.Trim(),
+                });
+            }
+
+            var automaticTyped = new List<string>();
+            foreach (XElement at in Children(partElement, "AutomaticTyped"))
+            {
+                automaticTyped.Add(Attr(at, "Name") ?? "");
+            }
+
+            var negated = new List<string>();
+            foreach (XElement negatedElement in Children(partElement, "Negated"))
+            {
+                AddNamedPin(negated, negatedElement);
+            }
+
+            var invisible = new List<string>();
+            foreach (XElement invisibleElement in Children(partElement, "Invisible"))
+            {
+                AddNamedPin(invisible, invisibleElement);
+            }
+
+            XElement? comment = Child(partElement, "Comment");
+            string? commentRawXml = comment?.ToString(SaveOptions.DisableFormatting);
+            string? commentText = comment != null ? ReadTextContent(comment) : null;
+
+            return new PartDefinition
             {
                 UId = IntAttr(partElement, "UId"),
                 Name = Attr(partElement, "Name"),
                 Version = Attr(partElement, "Version"),
                 DisabledENO = BoolAttr(partElement, "DisabledENO") ?? false,
-                Attributes = partElement.Attributes()
-                    .ToDictionary(a => a.Name.LocalName, a => a.Value),
+                Attributes = new ReadOnlyDictionary<string, string>(
+                    partElement.Attributes().ToDictionary(a => a.Name.LocalName, a => a.Value, StringComparer.Ordinal)),
                 Equation = Value(partElement, "Equation"),
-                RawXml = partElement.ToString(SaveOptions.DisableFormatting)
+                RawXml = partElement.ToString(SaveOptions.DisableFormatting),
+                TemplateValues = templateValues.ToArray(),
+                AutomaticTyped = automaticTyped.ToArray(),
+                Negated = negated.ToArray(),
+                Invisible = invisible.ToArray(),
+                CommentRawXml = commentRawXml,
+                CommentText = commentText,
+                Instance = ParseInstance(Child(partElement, "Instance")),
             };
-
-            foreach (XElement tv in Children(partElement, "TemplateValue"))
-            {
-                part.TemplateValues.Add(new TemplateValueDefinition
-                {
-                    Name = Attr(tv, "Name"),
-                    Type = Attr(tv, "Type"),
-                    Value = tv.Value?.Trim()
-                });
-            }
-
-            foreach (XElement at in Children(partElement, "AutomaticTyped"))
-            {
-                part.AutomaticTyped.Add(Attr(at, "Name") ?? "");
-            }
-
-            foreach (XElement negated in Children(partElement, "Negated"))
-            {
-                AddNamedPin(part.Negated, negated);
-            }
-
-            foreach (XElement invisible in Children(partElement, "Invisible"))
-            {
-                AddNamedPin(part.Invisible, invisible);
-            }
-
-            XElement? comment = Child(partElement, "Comment");
-            if (comment != null)
-            {
-                part.CommentRawXml = comment.ToString(SaveOptions.DisableFormatting);
-                part.CommentText = ReadTextContent(comment);
-            }
-
-            part.Instance = ParseInstance(Child(partElement, "Instance"));
-
-            return part;
         }
 
         private static CallDefinition ParseCall(XElement callElement)
         {
-            var call = new CallDefinition
-            {
-                UId = IntAttr(callElement, "UId"),
-                RawXml = callElement.ToString(SaveOptions.DisableFormatting)
-            };
+            CallInfoDefinition? callInfo = ParseCallInfo(Child(callElement, "CallInfo"));
 
-            XElement? callInfo = Child(callElement, "CallInfo");
-            if (callInfo != null)
-            {
-                call.CallInfo = new CallInfoDefinition
-                {
-                    Name = Attr(callInfo, "Name"),
-                    BlockType = Attr(callInfo, "BlockType"),
-                    Instance = Attr(callInfo, "Instance")
-                };
-
-                foreach (XElement parameter in Children(callInfo, "Parameter"))
-                {
-                    call.CallInfo.Parameters.Add(new CallParameterDefinition
-                    {
-                        Name = Attr(parameter, "Name"),
-                        Section = Attr(parameter, "Section"),
-                        Type = Attr(parameter, "Type"),
-                        TemplateReference = Attr(parameter, "TemplateReference"),
-                        Informative = BoolAttr(parameter, "Informative")
-                    });
-                }
-            }
-
+            var templateValues = new List<TemplateValueDefinition>();
             foreach (XElement tv in Children(callElement, "TemplateValue"))
             {
-                call.TemplateValues.Add(new TemplateValueDefinition
+                templateValues.Add(new TemplateValueDefinition
                 {
                     Name = Attr(tv, "Name"),
                     Type = Attr(tv, "Type"),
-                    Value = tv.Value?.Trim()
+                    Value = tv.Value?.Trim(),
                 });
             }
 
+            var automaticTyped = new List<string>();
             foreach (XElement at in Children(callElement, "AutomaticTyped"))
             {
-                call.AutomaticTyped.Add(Attr(at, "Name") ?? "");
+                automaticTyped.Add(Attr(at, "Name") ?? "");
             }
 
             XElement? comment = Child(callElement, "Comment");
-            if (comment != null)
+            string? commentRawXml = comment?.ToString(SaveOptions.DisableFormatting);
+            string? commentText = comment != null ? ReadTextContent(comment) : null;
+
+            return new CallDefinition
             {
-                call.CommentRawXml = comment.ToString(SaveOptions.DisableFormatting);
-                call.CommentText = ReadTextContent(comment);
+                UId = IntAttr(callElement, "UId"),
+                RawXml = callElement.ToString(SaveOptions.DisableFormatting),
+                CallInfo = callInfo,
+                TemplateValues = templateValues.ToArray(),
+                AutomaticTyped = automaticTyped.ToArray(),
+                CommentRawXml = commentRawXml,
+                CommentText = commentText,
+                Instance = ParseInstance(Child(callElement, "Instance")),
+            };
+        }
+
+        private static CallInfoDefinition? ParseCallInfo(XElement? callInfoElement)
+        {
+            if (callInfoElement == null)
+            {
+                return null;
             }
 
-            call.Instance = ParseInstance(Child(callElement, "Instance"));
+            var parameters = new List<CallParameterDefinition>();
+            foreach (XElement parameter in Children(callInfoElement, "Parameter"))
+            {
+                parameters.Add(new CallParameterDefinition
+                {
+                    Name = Attr(parameter, "Name"),
+                    Section = Attr(parameter, "Section"),
+                    Type = Attr(parameter, "Type"),
+                    TemplateReference = Attr(parameter, "TemplateReference"),
+                    Informative = BoolAttr(parameter, "Informative"),
+                });
+            }
 
-            return call;
+            return new CallInfoDefinition
+            {
+                Name = Attr(callInfoElement, "Name"),
+                BlockType = Attr(callInfoElement, "BlockType"),
+                Instance = Attr(callInfoElement, "Instance"),
+                Parameters = parameters.ToArray(),
+            };
         }
 
         private static void AddNamedPin(List<string> target, XElement pinElement)
@@ -399,7 +437,7 @@ namespace TiaGitAddIn.Services.SimaticMl
                 Name = Attr(instanceElement, "Name"),
                 Scope = Attr(instanceElement, "Scope"),
                 UId = IntAttr(instanceElement, "UId"),
-                RawXml = instanceElement.ToString(SaveOptions.DisableFormatting)
+                RawXml = instanceElement.ToString(SaveOptions.DisableFormatting),
             };
         }
 
@@ -418,11 +456,7 @@ namespace TiaGitAddIn.Services.SimaticMl
 
         private static WireDefinition ParseWire(XElement wireElement)
         {
-            var wire = new WireDefinition
-            {
-                UId = IntAttr(wireElement, "UId"),
-                RawXml = wireElement.ToString(SaveOptions.DisableFormatting)
-            };
+            var connections = new List<ConnectionDefinition>();
 
             foreach (XElement connectionElement in wireElement.Elements())
             {
@@ -445,16 +479,21 @@ namespace TiaGitAddIn.Services.SimaticMl
                         connection = new OpenbranchConDefinition();
                         break;
                     default:
-                        // Fallback for unknown connection types
-                        connection = new IdentConDefinition { UId = IntAttr(connectionElement, "UId") }; 
+                        // Fallback for unknown connection types.
+                        connection = new IdentConDefinition { UId = IntAttr(connectionElement, "UId") };
                         break;
                 }
 
                 connection.Kind = connectionElement.Name.LocalName;
-                wire.Connections.Add(connection);
+                connections.Add(connection);
             }
 
-            return wire;
+            return new WireDefinition
+            {
+                UId = IntAttr(wireElement, "UId"),
+                RawXml = wireElement.ToString(SaveOptions.DisableFormatting),
+                Connections = connections.ToArray(),
+            };
         }
 
         private static List<MultilingualTextDefinition> ParseDirectMultilingualTexts(XElement? objectList)
@@ -468,37 +507,37 @@ namespace TiaGitAddIn.Services.SimaticMl
 
             foreach (XElement textElement in Children(objectList, "MultilingualText"))
             {
-                var text = new MultilingualTextDefinition
-                {
-                    Id = Attr(textElement, "ID"),
-                    CompositionName = Attr(textElement, "CompositionName")
-                };
-
+                var items = new List<MultilingualTextItemDefinition>();
                 foreach (XElement item in Descendants(textElement, "MultilingualTextItem"))
                 {
                     XElement? attr = Child(item, "AttributeList");
 
-                    text.Items.Add(new MultilingualTextItemDefinition
+                    items.Add(new MultilingualTextItemDefinition
                     {
                         Id = Attr(item, "ID"),
                         Culture = Value(attr, "Culture"),
-                        Text = Value(attr, "Text") ?? ""
+                        Text = Value(attr, "Text") ?? "",
                     });
                 }
 
-                result.Add(text);
+                result.Add(new MultilingualTextDefinition
+                {
+                    Id = Attr(textElement, "ID"),
+                    CompositionName = Attr(textElement, "CompositionName"),
+                    Items = items.ToArray(),
+                });
             }
 
             return result;
         }
 
-        private static Dictionary<string, string?> ReadScalarChildren(XElement? element)
+        private static IReadOnlyDictionary<string, string?> ReadScalarChildren(XElement? element)
         {
-            var result = new Dictionary<string, string?>();
+            var result = new Dictionary<string, string?>(StringComparer.Ordinal);
 
             if (element == null)
             {
-                return result;
+                return ToReadOnlyMap(result);
             }
 
             foreach (XElement child in element.Elements())
@@ -506,7 +545,7 @@ namespace TiaGitAddIn.Services.SimaticMl
                 if (!child.HasElements)
                 {
                     string key = child.Name.LocalName;
-                    // If it's a generic attribute type, use its 'Name' attribute as the key
+                    // If it's a generic attribute type, use its 'Name' attribute as the key.
                     if (key.EndsWith("Attribute", StringComparison.Ordinal) || key == "Attribute")
                     {
                         string? nameAttr = Attr(child, "Name");
@@ -519,8 +558,11 @@ namespace TiaGitAddIn.Services.SimaticMl
                 }
             }
 
-            return result;
+            return ToReadOnlyMap(result);
         }
+
+        private static IReadOnlyDictionary<string, string?> ToReadOnlyMap(Dictionary<string, string?> source)
+            => new ReadOnlyDictionary<string, string?>(source);
 
         private static XElement? Child(XElement? element, string localName)
         {

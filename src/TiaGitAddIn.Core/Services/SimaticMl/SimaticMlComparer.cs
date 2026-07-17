@@ -68,7 +68,7 @@ namespace TiaGitAddIn.Services.SimaticMl
 
         private static SactInterfaceResult CompareInterfaces(BlockDefinition left, BlockDefinition right)
         {
-            var result = SimaticMlToSactMapper.Map(new SimaticMlFile { Blocks = { right } }).Interface!;
+            var result = SimaticMlToSactMapper.Map(new SimaticMlFile { Blocks = new[] { right } }).Interface!;
             var leftMembers = FlattenMembers(left);
             var rightMembers = FlattenMembers(right);
 
