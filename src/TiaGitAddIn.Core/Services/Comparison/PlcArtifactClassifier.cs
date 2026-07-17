@@ -56,6 +56,10 @@ namespace TiaGitAddIn.Services.Comparison
             string suffix = NormalizeSuffix(revision.OriginalSuffix);
             SimaticMlEvidence xmlEvidence = SimaticMlEvidenceReader.Probe(boundedText);
 
+            // Deliberately does not require xmlEvidence.IsWellFormed: full XML well-formedness enforcement
+            // belongs to the Task 7 safe-parser seam, not classification here. Requiring it in this rule
+            // would misclassify legitimately valid LAD/FBD files that exceed MaxInspectionLength, since
+            // Bound() truncation always makes truncated-but-otherwise-valid content look "not well-formed".
             if (xmlEvidence.BlockElementName != null
                 && TryMapProgrammingLanguage(xmlEvidence.ProgrammingLanguageValue, out PlcArtifactKind visualKind))
             {

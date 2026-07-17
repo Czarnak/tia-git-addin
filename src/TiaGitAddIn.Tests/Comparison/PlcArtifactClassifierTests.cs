@@ -129,6 +129,56 @@ namespace TiaGitAddIn.Tests.Comparison
             Assert.Equal(PlcComparisonMode.Text, result.PreferredMode);
         }
 
+        // --- Rule 3 (SimaticML -> Lad/Fbd, Visual) deliberately never checks xmlEvidence.IsWellFormed.
+        //     Full XML well-formedness enforcement belongs to the Task 7 safe-parser seam, not classification.
+        //     These two tests lock in that decision: truncation of a large, genuinely valid file must not
+        //     misclassify it, and genuine mid-document corruption before the truncation point is still
+        //     classified from the evidence captured so far (current, deliberate behavior, not a bug). ---
+
+        /// <summary>Matches <see cref="PlcArtifactClassifier"/>'s private MaxInspectionLength.</summary>
+        private const int MaxInspectionLength = 1_048_576;
+
+        [Fact]
+        public void LargeWellFormedLadFileStillClassifiesAsLadAfterTruncationMakesItNotWellFormed()
+        {
+            // The full document below is well-formed XML, but it is longer than MaxInspectionLength, so
+            // Classify() truncates it before probing. The truncated text is missing its closing tags (the
+            // "</Filler></SW.Blocks.FB>" suffix falls after the cut), so xmlEvidence.IsWellFormed is false
+            // for the bounded text even though the original, untruncated file was perfectly valid LAD.
+            string prefix = "<SW.Blocks.FB><AttributeList><ProgrammingLanguage>LAD</ProgrammingLanguage></AttributeList><Filler>";
+            string padding = new string('x', MaxInspectionLength * 2);
+            string suffix = "</Filler></SW.Blocks.FB>";
+            string oversizedValidLad = prefix + padding + suffix;
+            Assert.True(oversizedValidLad.Length > MaxInspectionLength);
+
+            PlcRevision revision = ComparisonTestData.TextRevision(PlcRevisionSide.Left, oversizedValidLad, "Program.xml");
+
+            PlcArtifactDescriptor result = new PlcArtifactClassifier().Classify(revision);
+
+            Assert.Equal(PlcArtifactKind.Lad, result.ArtifactKind);
+            Assert.Equal(PlcComparisonMode.Visual, result.PreferredMode);
+        }
+
+        [Fact]
+        public void GenuinelyCorruptFbdContentBeforeTruncationPointStillClassifiesAsFbdByDesign()
+        {
+            // Short document (well under MaxInspectionLength, so Classify() never truncates it). The block
+            // element and ProgrammingLanguage value are captured, then the document is deliberately
+            // corrupted with invalid markup ("<<<") that is never closed. Probe() catches the resulting
+            // XmlException and returns IsWellFormed=false along with the evidence already captured. Rule 3
+            // ignores IsWellFormed, so this still classifies as Fbd/Visual -- this is today's real,
+            // intentional behavior, locked in so an accidental future IsWellFormed check here fails loudly.
+            const string genuinelyCorruptFbd =
+                "<SW.Blocks.FB><AttributeList><ProgrammingLanguage>FBD</ProgrammingLanguage></AttributeList><Corrupt><<<not-xml>>>";
+
+            PlcRevision revision = ComparisonTestData.TextRevision(PlcRevisionSide.Left, genuinelyCorruptFbd, "Program.xml");
+
+            PlcArtifactDescriptor result = new PlcArtifactClassifier().Classify(revision);
+
+            Assert.Equal(PlcArtifactKind.Fbd, result.ArtifactKind);
+            Assert.Equal(PlcComparisonMode.Visual, result.PreferredMode);
+        }
+
         [Fact]
         public void PlainTextWithoutSpecialSuffixFallsBackToText()
         {

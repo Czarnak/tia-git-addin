@@ -129,6 +129,22 @@ namespace TiaGitAddIn.Tests.Revision
                 reader.GetSizeAsync(PlcRevisionSource.Commit(hash), "Program.xml", CancellationToken.None));
         }
 
+        [Fact]
+        public async Task GitBlobReaderThrowsForUnsupportedWorkingTreeSourceUntilTask10AddsSupport()
+        {
+            // Working-tree content is not a git object reachable via `git cat-file`; that support is
+            // intentionally deferred to Task 10, which will add a direct filesystem read path. This locks
+            // in the current, deliberate rejection so a future edit to the ValidateRevision switch cannot
+            // silently start returning wrong/empty data for WorkingTree instead of throwing.
+            var reader = new GitBlobReader(
+                new ThrowingGitProcessRunner(), new ThrowingGitBinaryProcessRunner(), "git", CreateTestRoot());
+
+            ArgumentException exception = await Assert.ThrowsAsync<ArgumentException>(() =>
+                reader.GetSizeAsync(PlcRevisionSource.WorkingTree, "Program.xml", CancellationToken.None));
+
+            Assert.Contains("WorkingTree", exception.Message);
+        }
+
         private static PlcRevisionProvider CreateProvider(byte[] bytes, int maximumBytes)
             => CreateProvider(new FakeGitBlobReader(size: bytes.Length, bytes: bytes), maximumBytes);
 
