@@ -141,7 +141,7 @@ namespace TiaGitAddIn.Services
             {
                 if (line.StartsWith("diff --git", StringComparison.Ordinal))
                 {
-                    currentEntry = new DiffEntry();
+                    currentEntry = new DiffEntry { ChangeType = "M" };
                     entries.Add(currentEntry);
                     currentHunk = null;
 
@@ -150,6 +150,14 @@ namespace TiaGitAddIn.Services
                     {
                         currentEntry.FilePath = match.Groups[2].Value;
                     }
+                }
+                else if (currentEntry != null && line.StartsWith("new file mode", StringComparison.Ordinal))
+                {
+                    currentEntry.ChangeType = "A";
+                }
+                else if (currentEntry != null && line.StartsWith("deleted file mode", StringComparison.Ordinal))
+                {
+                    currentEntry.ChangeType = "D";
                 }
                 else if (currentEntry != null && line.StartsWith("--- ", StringComparison.Ordinal))
                 {
