@@ -89,6 +89,7 @@ namespace TiaGitAddIn.Tests.Services
 
             DiffEntry entry = Assert.Single(result.Entries);
             Assert.Equal("file.txt", entry.FilePath);
+            Assert.Equal("M", entry.ChangeType);
             DiffHunk hunk = Assert.Single(entry.Hunks);
 
             // context1 -> old 1 / new 1
@@ -109,6 +110,42 @@ namespace TiaGitAddIn.Tests.Services
             // context2 -> old 3 / new 4
             Assert.Equal(3, hunk.Lines[4].OldLineNumber);
             Assert.Equal(4, hunk.Lines[4].NewLineNumber);
+        }
+
+        [Fact]
+        public void ParseDiffMarksNewFileAsAdded()
+        {
+            DiffResult result = GitOutputParser.ParseDiff(
+                "diff --git a/New.txt b/New.txt\n" +
+                "new file mode 100644\n" +
+                "index 0000000..abcd123\n" +
+                "--- /dev/null\n" +
+                "+++ b/New.txt\n" +
+                "@@ -0,0 +1,2 @@\n" +
+                "+line1\n" +
+                "+line2\n");
+
+            DiffEntry entry = Assert.Single(result.Entries);
+            Assert.Equal("New.txt", entry.FilePath);
+            Assert.Equal("A", entry.ChangeType);
+        }
+
+        [Fact]
+        public void ParseDiffMarksRemovedFileAsDeleted()
+        {
+            DiffResult result = GitOutputParser.ParseDiff(
+                "diff --git a/Old.txt b/Old.txt\n" +
+                "deleted file mode 100644\n" +
+                "index abcd123..0000000\n" +
+                "--- a/Old.txt\n" +
+                "+++ /dev/null\n" +
+                "@@ -1,2 +0,0 @@\n" +
+                "-line1\n" +
+                "-line2\n");
+
+            DiffEntry entry = Assert.Single(result.Entries);
+            Assert.Equal("Old.txt", entry.FilePath);
+            Assert.Equal("D", entry.ChangeType);
         }
     }
 }
